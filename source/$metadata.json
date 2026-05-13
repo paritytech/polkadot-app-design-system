@@ -1,0 +1,11 @@
+{
+  "tokenSetOrder": [
+    "Theme/Polkadot App Default",
+    "Theme/Dark",
+    "Theme/Light",
+    "New Colors Primitives/Values",
+    "Typography/Polkadot App Default",
+    "Typography/Value",
+    "New Number/Strings/Values"
+  ]
+}
