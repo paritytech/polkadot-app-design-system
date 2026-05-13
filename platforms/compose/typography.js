@@ -1,18 +1,21 @@
 import StyleDictionary from 'style-dictionary';
-import { pascal, camel, isReference } from '../../lib/utils.js';
-import { analyseTypographyRoles, roleShape } from '../../lib/typography-analysis.js';
-import { propertyName, FONT_WEIGHT_CONSTANT } from './kotlin.js';
+import { camel, pascal, isReference } from '../../lib/utils.js';
+import { parseTypescale, roleShape } from '../../lib/typography-analysis.js';
+import { FONT_WEIGHT_CONSTANT } from './kotlin.js';
 
-const ROOT = 'Typography';
-const FONT_FAMILIES_OBJECT = 'NovaFontFamilies';
-export const BASE_CLASS = 'NovaTypography';
+const PRIMITIVES_ROOT = 'Typography';
+const THEME_ROOT = 'Typescale';
+const FONT_FAMILIES_OBJECT = 'PolkadotFontFamilies';
+export const BASE_CLASS = 'PolkadotTypography';
 const PACKAGE = 'io.pcf.polkadotapp.designsystem.typography';
 
 const fontFamilySlug = (fontName) => camel(fontName);
 
 const inlineFamily = (entry) =>
   `${FONT_FAMILIES_OBJECT}.${fontFamilySlug(String(entry.resolved))}`;
-const inlineSize = (entry) => `${entry.resolved}.sp`;
+
+const inlineSp = (entry) => `${entry.resolved}.sp`;
+
 const inlineWeight = (entry) => {
   if (isReference(entry.ref)) {
     const leaf = String(entry.ref.slice(1, -1).split('.').pop()).toLowerCase();
@@ -21,20 +24,19 @@ const inlineWeight = (entry) => {
   return `FontWeight(${entry.resolved})`;
 };
 
-const renderTextStyle = (familyEntry, weightEntry, fontSizeEntry, lineHeightEntry, indent) => [
+const renderTextStyle = (variant, indent) => [
   `TextStyle(`,
-  `${indent}    fontFamily = ${inlineFamily(familyEntry)},`,
-  `${indent}    fontWeight = ${inlineWeight(weightEntry)},`,
-  `${indent}    fontSize = ${inlineSize(fontSizeEntry)},`,
-  `${indent}    lineHeight = ${inlineSize(lineHeightEntry)}`,
+  `${indent}    fontFamily = ${inlineFamily(variant.font)},`,
+  `${indent}    fontWeight = ${inlineWeight(variant.weight)},`,
+  `${indent}    fontSize = ${inlineSp(variant.size)},`,
+  `${indent}    lineHeight = ${inlineSp(variant.lineHeight)},`,
+  `${indent}    letterSpacing = ${inlineSp(variant.tracking)}`,
   `${indent})`,
 ].join('\n');
 
-const sortedByCamelKey = (items, keyFn) =>
-  items.slice().sort((a, b) => camel(keyFn(a)).localeCompare(camel(keyFn(b))));
-
 const formatFontFamiliesObject = (primitives) => {
-  const fontStyles = primitives.filter((t) => t.path[1] === 'font-style');
+  // Source shape: path = ['Typography', 'fontStyle', 'sans|mono|accent'] with the font name as $value.
+  const fontStyles = primitives.filter((t) => t.path[1] === 'fontStyle');
   const uniqueNames = [...new Set(fontStyles.map((t) => String(t.$value ?? t.value)))].sort();
   const lines = uniqueNames.map(
     (name) =>
@@ -61,51 +63,71 @@ const formatFontFamiliesObject = (primitives) => {
   ].join('\n');
 };
 
-const formatTypographyBaseClass = (roles) => {
-  const sortedRoles = roles.slice().sort((a, b) => a.role.localeCompare(b.role));
+// Render the inner data-class blocks for a role's base class shape.
+const baseClassRoleBlocks = (role) => {
+  const className = pascal(role.name);
+  const shape = roleShape(role);
 
-  const fields = sortedRoles.map((r) => {
-    const propName = propertyName(r.role);
-    const shape = roleShape(r);
-    if (shape.kind === 'single') return `    abstract val ${propName}: TextStyle`;
-    return `    abstract val ${propName}: ${pascal(r.role)}`;
-  });
-
-  const classBlocks = sortedRoles
-    .filter((r) => roleShape(r).kind !== 'single')
-    .flatMap((r) => {
-      const shape = roleShape(r);
-      const className = pascal(r.role);
-      if (shape.kind === 'sizes') {
-        const sortedSizes = sortedByCamelKey(r.sizes, (s) => s.size || 'regular');
-        const params = sortedSizes.map((s, i) => {
-          const tail = i < sortedSizes.length - 1 ? ',' : '';
-          return `        val ${propertyName(s.size || 'regular')}: TextStyle${tail}`;
-        });
-        return ['', `    data class ${className}(`, ...params, `    )`];
-      }
-      const sortedWeights = sortedByCamelKey(r.weights, (w) => w.name || 'regular');
-      const sortedSizes = sortedByCamelKey(r.sizes, (s) => s.size || 'regular');
-      const weightParams = sortedWeights.map((w, i) => {
-        const tail = i < sortedWeights.length - 1 ? ',' : '';
-        return `        val ${propertyName(w.name || 'regular')}: Sizes${tail}`;
-      });
-      const sizeParams = sortedSizes.map((s, i) => {
-        const tail = i < sortedSizes.length - 1 ? ',' : '';
-        return `            val ${propertyName(s.size || 'regular')}: TextStyle${tail}`;
-      });
-      return [
-        '',
-        `    data class ${className}(`,
-        ...weightParams,
-        `    ) {`,
-        '',
-        `        data class Sizes(`,
-        ...sizeParams,
-        `        )`,
-        `    }`,
-      ];
+  if (shape.kind === 'flat') {
+    const params = role.sizes.map((s, i) => {
+      const tail = i < role.sizes.length - 1 ? ',' : '';
+      return `        val ${camel(s.name)}: TextStyle${tail}`;
     });
+    return ['', `    data class ${className}(`, ...params, `    )`];
+  }
+
+  if (shape.kind === 'uniform') {
+    const params = role.sizes.map((s, i) => {
+      const tail = i < role.sizes.length - 1 ? ',' : '';
+      return `        val ${camel(s.name)}: Sizes${tail}`;
+    });
+    const sizesParams = shape.variantKeys.map((k, i) => {
+      const tail = i < shape.variantKeys.length - 1 ? ',' : '';
+      return `            val ${k}: TextStyle${tail}`;
+    });
+    return [
+      '',
+      `    data class ${className}(`,
+      ...params,
+      `    ) {`,
+      '',
+      `        data class Sizes(`,
+      ...sizesParams,
+      `        )`,
+      `    }`,
+    ];
+  }
+
+  // mixed
+  const outerParams = role.sizes.map((s, i) => {
+    const tail = i < role.sizes.length - 1 ? ',' : '';
+    return `        val ${camel(s.name)}: ${pascal(s.name)}${tail}`;
+  });
+  const sizeBlocks = role.sizes.flatMap((s) => {
+    const params = s.variants.map((v, i) => {
+      const tail = i < s.variants.length - 1 ? ',' : '';
+      return `            val ${v.key}: TextStyle${tail}`;
+    });
+    return [
+      '',
+      `        data class ${pascal(s.name)}(`,
+      ...params,
+      `        )`,
+    ];
+  });
+  return [
+    '',
+    `    data class ${className}(`,
+    ...outerParams,
+    `    ) {`,
+    ...sizeBlocks,
+    `    }`,
+  ];
+};
+
+const formatTypographyBaseClass = (roles) => {
+  const fields = roles.map((r) => `    abstract val ${camel(r.name)}: ${pascal(r.name)}`);
+  const blocks = roles.flatMap(baseClassRoleBlocks);
 
   return [
     `package ${PACKAGE}`,
@@ -114,57 +136,63 @@ const formatTypographyBaseClass = (roles) => {
     '',
     `abstract class ${BASE_CLASS} {`,
     ...fields,
-    ...classBlocks,
+    ...blocks,
     '}',
     '',
   ].join('\n');
 };
 
-const formatTypographyConcrete = (roles, className) => {
-  const sortedRoles = roles.slice().sort((a, b) => a.role.localeCompare(b.role));
+const concreteRoleOverride = (role) => {
+  const propName = camel(role.name);
+  const className = pascal(role.name);
+  const shape = roleShape(role);
 
-  const overrides = sortedRoles.map((r) => {
-    const propName = propertyName(r.role);
-    const shape = roleShape(r);
+  if (shape.kind === 'flat') {
+    const lines = role.sizes.map((s, i) => {
+      const tail = i < role.sizes.length - 1 ? ',' : '';
+      const style = renderTextStyle(s.variants[0], '        ');
+      return `        ${camel(s.name)} = ${style}${tail}`;
+    });
+    return [`    override val ${propName} = ${className}(`, ...lines, '    )'].join('\n');
+  }
 
-    if (shape.kind === 'single') {
-      const weight = r.weights[0];
-      const size = r.sizes[0];
-      const style = renderTextStyle(r.family, weight.entry, size.fontSize, size.lineHeight, '    ');
-      return `    override val ${propName} = ${style}`;
-    }
-
-    const ctor = pascal(r.role);
-
-    if (shape.kind === 'sizes') {
-      const weight = r.weights[0];
-      const sortedSizes = sortedByCamelKey(r.sizes, (s) => s.size || 'regular');
-      const lines = sortedSizes.map((s, i) => {
-        const tail = i < sortedSizes.length - 1 ? ',' : '';
-        const style = renderTextStyle(r.family, weight.entry, s.fontSize, s.lineHeight, '        ');
-        return `        ${propertyName(s.size || 'regular')} = ${style}${tail}`;
-      });
-      return [`    override val ${propName} = ${ctor}(`, ...lines, '    )'].join('\n');
-    }
-
-    const sortedWeights = sortedByCamelKey(r.weights, (w) => w.name || 'regular');
-    const sortedSizes = sortedByCamelKey(r.sizes, (s) => s.size || 'regular');
-    const weightLines = sortedWeights.map((w, wi) => {
-      const wTail = wi < sortedWeights.length - 1 ? ',' : '';
-      const sizeLines = sortedSizes.map((s, si) => {
-        const sTail = si < sortedSizes.length - 1 ? ',' : '';
-        const style = renderTextStyle(r.family, w.entry, s.fontSize, s.lineHeight, '            ');
-        return `            ${propertyName(s.size || 'regular')} = ${style}${sTail}`;
+  if (shape.kind === 'uniform') {
+    const lines = role.sizes.map((s, i) => {
+      const tail = i < role.sizes.length - 1 ? ',' : '';
+      const variantLines = s.variants.map((v, vi) => {
+        const vTail = vi < s.variants.length - 1 ? ',' : '';
+        const style = renderTextStyle(v, '            ');
+        return `            ${v.key} = ${style}${vTail}`;
       });
       return [
-        `        ${propertyName(w.name || 'regular')} = ${ctor}.Sizes(`,
-        ...sizeLines,
-        `        )${wTail}`,
+        `        ${camel(s.name)} = ${className}.Sizes(`,
+        ...variantLines,
+        `        )${tail}`,
       ].join('\n');
     });
-    return [`    override val ${propName} = ${ctor}(`, ...weightLines, '    )'].join('\n');
-  });
+    return [`    override val ${propName} = ${className}(`, ...lines, '    )'].join('\n');
+  }
 
+  // mixed
+  const lines = role.sizes.map((s, i) => {
+    const tail = i < role.sizes.length - 1 ? ',' : '';
+    const sizeClass = pascal(s.name);
+    const variantLines = s.variants.map((v, vi) => {
+      const vTail = vi < s.variants.length - 1 ? ',' : '';
+      const style = renderTextStyle(v, '            ');
+      return `            ${v.key} = ${style}${vTail}`;
+    });
+    return [
+      `        ${camel(s.name)} = ${className}.${sizeClass}(`,
+      ...variantLines,
+      `        )${tail}`,
+    ].join('\n');
+  });
+  return [`    override val ${propName} = ${className}(`, ...lines, '    )'].join('\n');
+};
+
+const formatTypographyConcrete = (roles, className) => {
+  const overrides = roles.map(concreteRoleOverride);
   return [
     `package ${PACKAGE}`,
     '',
@@ -183,7 +211,7 @@ export const register = () => {
   StyleDictionary.registerFormat({
     name: 'compose/typography-font-families',
     format: ({ dictionary }) => {
-      const primitives = dictionary.allTokens.filter((t) => t.path[0] === ROOT);
+      const primitives = dictionary.allTokens.filter((t) => t.path[0] === PRIMITIVES_ROOT);
       return formatFontFamiliesObject(primitives);
     },
   });
@@ -191,8 +219,8 @@ export const register = () => {
   StyleDictionary.registerFormat({
     name: 'compose/typography-base',
     format: ({ dictionary }) => {
-      const themeTokens = dictionary.allTokens.filter((t) => t.path[0] !== ROOT);
-      const { roles, skipLog } = analyseTypographyRoles(themeTokens);
+      const themeTokens = dictionary.allTokens.filter((t) => t.path[0] === THEME_ROOT);
+      const { roles, skipLog } = parseTypescale(themeTokens);
       if (skipLog.length > 0) {
         console.log('\n[typography] Skipped during base-class analysis:');
         for (const line of skipLog) console.log(line);
@@ -204,8 +232,8 @@ export const register = () => {
   StyleDictionary.registerFormat({
     name: 'compose/typography-concrete',
     format: ({ dictionary, options }) => {
-      const themeTokens = dictionary.allTokens.filter((t) => t.path[0] !== ROOT);
-      const { roles, skipLog } = analyseTypographyRoles(themeTokens);
+      const themeTokens = dictionary.allTokens.filter((t) => t.path[0] === THEME_ROOT);
+      const { roles, skipLog } = parseTypescale(themeTokens);
       if (skipLog.length > 0) {
         console.log(`\n[typography] Skipped while generating ${options.className}:`);
         for (const line of skipLog) console.log(line);
@@ -215,17 +243,12 @@ export const register = () => {
   });
 };
 
-export const primitivesSource = 'source/New Number:String/Strings/Values.json';
+export const primitivesSource = 'source/Number Primitives/Values.json';
 export const outputDir = 'out/android/typography/';
 export const themes = [
   {
     source: 'source/Typography/Polkadot App Default.json',
-    className: 'DefaultTypography',
-    file: 'DefaultTypography.kt',
-  },
-  {
-    source: 'source/Typography/Value.json',
-    className: 'ValueTypography',
-    file: 'ValueTypography.kt',
+    className: 'PolkadotDefaultTypography',
+    file: 'PolkadotDefaultTypography.kt',
   },
 ];

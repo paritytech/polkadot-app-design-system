@@ -5,26 +5,26 @@ import { propertyName } from './kotlin.js';
 // to an abstract+concrete Kotlin class pair.
 export const dimensionConfigs = [
   {
-    root: 'Spacer',
-    baseClass: 'NovaSpacings',
-    concreteClass: 'RealNovaSpacings',
+    root: 'Space',
+    baseClass: 'PolkadotSpacings',
+    concreteClass: 'PolkadotDefaultSpacings',
     package: 'io.pcf.polkadotapp.designsystem.spacings',
     baseFormat: 'compose/spacings-base',
     concreteFormat: 'compose/spacings-concrete',
-    baseFile: 'NovaSpacings.kt',
-    concreteFile: 'RealNovaSpacings.kt',
+    baseFile: 'PolkadotSpacings.kt',
+    concreteFile: 'PolkadotDefaultSpacings.kt',
     outputDir: 'out/android/spacings/',
     kind: 'dp',
   },
   {
     root: 'Radius',
-    baseClass: 'NovaRadii',
-    concreteClass: 'RealNovaRadii',
+    baseClass: 'PolkadotRadii',
+    concreteClass: 'PolkadotDefaultRadii',
     package: 'io.pcf.polkadotapp.designsystem.radii',
     baseFormat: 'compose/radii-base',
     concreteFormat: 'compose/radii-concrete',
-    baseFile: 'NovaRadii.kt',
-    concreteFile: 'RealNovaRadii.kt',
+    baseFile: 'PolkadotRadii.kt',
+    concreteFile: 'PolkadotDefaultRadii.kt',
     outputDir: 'out/android/radii/',
     kind: 'shape',
     // Leaf names matching this key are emitted as CircleShape rather than RoundedCornerShape.
@@ -32,19 +32,19 @@ export const dimensionConfigs = [
   },
   {
     root: 'Border',
-    baseClass: 'NovaBorders',
-    concreteClass: 'RealNovaBorders',
+    baseClass: 'PolkadotBorders',
+    concreteClass: 'PolkadotDefaultBorders',
     package: 'io.pcf.polkadotapp.designsystem.borders',
     baseFormat: 'compose/borders-base',
     concreteFormat: 'compose/borders-concrete',
-    baseFile: 'NovaBorders.kt',
-    concreteFile: 'RealNovaBorders.kt',
+    baseFile: 'PolkadotBorders.kt',
+    concreteFile: 'PolkadotDefaultBorders.kt',
     outputDir: 'out/android/borders/',
     kind: 'dp',
   },
 ];
 
-export const primitivesSource = 'source/New Number:String/Strings/Values.json';
+export const primitivesSource = 'source/Number Primitives/Values.json';
 
 const sortByValueAsc = (a, b) => (a.$value ?? a.value) - (b.$value ?? b.value);
 

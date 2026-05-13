@@ -4,8 +4,8 @@ import { buildTree, sortedEntries } from '../../lib/token-tree.js';
 import { propertyName, hexToComposeColor } from './kotlin.js';
 
 const ROOT = 'Color';
-const PRIMITIVES_OBJECT = 'NovaColorsPrimitives';
-export const BASE_CLASS = 'NovaColorsPalette';
+const PRIMITIVES_OBJECT = 'PolkadotColorsPrimitives';
+export const BASE_CLASS = 'PolkadotColorsPalette';
 const PACKAGE = 'io.pcf.polkadotapp.designsystem.colors';
 
 const primitiveName = (path) => {
@@ -151,12 +151,12 @@ export const register = () => {
   });
 };
 
-export const primitivesSource = 'source/New Colors Primitives/Values.json';
+export const primitivesSource = 'source/Color Primitives/Values.json';
 export const outputDir = 'out/android/colors/';
 export const themes = [
   {
     source: 'source/Theme/Polkadot App Default.json',
-    className: 'DefaultPalette',
-    file: 'DefaultPalette.kt',
+    className: 'PolkadotDefaultPalette',
+    file: 'PolkadotDefaultPalette.kt',
   },
 ];

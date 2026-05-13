@@ -11,7 +11,7 @@
         "com.figma.hiddenFromPublishing": false
       },
       "$type": "color",
-      "$value": "{Color.red.600}"
+      "$value": "{Color.red.red600}"
     },
     "link-hover": {
       "$extensions": {
@@ -24,7 +24,7 @@
         "com.figma.hiddenFromPublishing": false
       },
       "$type": "color",
-      "$value": "{Color.blue.400}"
+      "$value": "{Color.blue.blue400}"
     },
     "link": {
       "$extensions": {
@@ -37,7 +37,7 @@
         "com.figma.hiddenFromPublishing": false
       },
       "$type": "color",
-      "$value": "{Color.blue.500}"
+      "$value": "{Color.blue.blue500}"
     },
     "tertiary": {
       "$extensions": {
@@ -50,7 +50,7 @@
         "com.figma.hiddenFromPublishing": false
       },
       "$type": "color",
-      "$value": "{Color.zinc.600}"
+      "$value": "{Color.zinc.zinc600}"
     },
     "secondary": {
       "$extensions": {
@@ -63,7 +63,7 @@
         "com.figma.hiddenFromPublishing": false
       },
       "$type": "color",
-      "$value": "{Color.zinc.400}"
+      "$value": "{Color.zinc.zinc400}"
     },
     "warning": {
       "$extensions": {
@@ -76,7 +76,7 @@
         "com.figma.hiddenFromPublishing": false
       },
       "$type": "color",
-      "$value": "{Color.amber.500}"
+      "$value": "{Color.amber.amber500}"
     },
     "success": {
       "$extensions": {
@@ -89,7 +89,7 @@
         "com.figma.hiddenFromPublishing": false
       },
       "$type": "color",
-      "$value": "{Color.green.500}"
+      "$value": "{Color.green.green500}"
     },
     "primary": {
       "$extensions": {
@@ -102,7 +102,7 @@
         "com.figma.hiddenFromPublishing": false
       },
       "$type": "color",
-      "$value": "{Color.zinc.100}"
+      "$value": "{Color.zinc.zinc100}"
     },
     "primary-inverted": {
       "$extensions": {
@@ -115,7 +115,7 @@
         "com.figma.hiddenFromPublishing": false
       },
       "$type": "color",
-      "$value": "{Color.zinc.950}"
+      "$value": "{Color.zinc.zinc950}"
     },
     "secondary-inverted": {
       "$extensions": {
@@ -128,7 +128,7 @@
         "com.figma.hiddenFromPublishing": false
       },
       "$type": "color",
-      "$value": "{Color.zinc.500}"
+      "$value": "{Color.zinc.zinc500}"
     },
     "tertiary-inverted": {
       "$extensions": {
@@ -141,7 +141,7 @@
         "com.figma.hiddenFromPublishing": false
       },
       "$type": "color",
-      "$value": "{Color.zinc.400}"
+      "$value": "{Color.zinc.zinc400}"
     },
     "static-white": {
       "$extensions": {
@@ -167,7 +167,7 @@
         "com.figma.hiddenFromPublishing": false
       },
       "$type": "color",
-      "$value": "{Color.zinc.150}"
+      "$value": "{Color.zinc.zinc150}"
     },
     "secondary-inverted-hover": {
       "$extensions": {
@@ -193,7 +193,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.zinc.950}"
+        "$value": "{Color.zinc.zinc950}"
       },
       "container": {
         "$extensions": {
@@ -204,7 +204,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.zinc.900}"
+        "$value": "{Color.zinc.zinc900}"
       },
       "container-inverted": {
         "$extensions": {
@@ -226,7 +226,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.zinc.100}"
+        "$value": "{Color.zinc.zinc100}"
       },
       "overlay": {
         "$extensions": {
@@ -237,7 +237,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.neutral.opacity 48}"
+        "$value": "{Color.Alpha.black.blackAlpha48}"
       },
       "nested": {
         "$extensions": {
@@ -248,7 +248,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.zinc.850}"
+        "$value": "{Color.zinc.zinc850}"
       }
     },
     "selection": {
@@ -261,7 +261,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.zinc.850}"
+        "$value": "{Color.zinc.zinc850}"
       },
       "container-active": {
         "$extensions": {
@@ -272,7 +272,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.zinc.800}"
+        "$value": "{Color.zinc.zinc800}"
       },
       "container-hover-inverted": {
         "$extensions": {
@@ -283,7 +283,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.zinc.50}"
+        "$value": "{Color.zinc.zinc50}"
       },
       "container-active-inverted": {
         "$extensions": {
@@ -294,7 +294,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.zinc.100}"
+        "$value": "{Color.zinc.zinc100}"
       }
     },
     "status": {
@@ -307,7 +307,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.red.600}"
+        "$value": "{Color.red.red600}"
       },
       "warning": {
         "$extensions": {
@@ -318,7 +318,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.amber.500}"
+        "$value": "{Color.amber.amber500}"
       },
       "error-hover": {
         "$extensions": {
@@ -329,7 +329,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.red.700}"
+        "$value": "{Color.red.red700}"
       },
       "warning-hover": {
         "$extensions": {
@@ -340,7 +340,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.amber.400}"
+        "$value": "{Color.amber.amber400}"
       }
     },
     "accent": {
@@ -352,7 +352,7 @@
         "com.figma.hiddenFromPublishing": false
       },
       "$type": "color",
-      "$value": "{Color.blue.500}"
+      "$value": "{Color.blue.blue500}"
     },
     "action": {
       "primary": {
@@ -364,7 +364,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.zinc.150}"
+        "$value": "{Color.zinc.zinc150}"
       },
       "secondary": {
         "$extensions": {
@@ -375,7 +375,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.zinc.800}"
+        "$value": "{Color.zinc.zinc800}"
       },
       "primary-inverted": {
         "$extensions": {
@@ -386,7 +386,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.zinc.950}",
+        "$value": "{Color.zinc.zinc950}",
         "$description": "Icon container on inverted"
       },
       "secondary-inverted": {
@@ -398,7 +398,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.zinc.200}"
+        "$value": "{Color.zinc.zinc200}"
       },
       "primary-hover": {
         "$extensions": {
@@ -409,7 +409,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.zinc.200}"
+        "$value": "{Color.zinc.zinc200}"
       },
       "secondary-hover": {
         "$extensions": {
@@ -420,7 +420,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.zinc.700}"
+        "$value": "{Color.zinc.zinc700}"
       },
       "primary-inverted-hover": {
         "$extensions": {
@@ -431,7 +431,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.zinc.850}",
+        "$value": "{Color.zinc.zinc850}",
         "$description": "Icon container on inverted"
       },
       "secondary-inverted-hover": {
@@ -443,7 +443,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.zinc.300}"
+        "$value": "{Color.zinc.zinc300}"
       },
       "tertiary": {
         "$extensions": {
@@ -454,7 +454,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.zinc.700}"
+        "$value": "{Color.zinc.zinc700}"
       },
       "tertiary-hover": {
         "$extensions": {
@@ -464,7 +464,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.zinc.600}"
+        "$value": "{Color.zinc.zinc600}"
       },
       "tertiary-inverted": {
         "$extensions": {
@@ -474,7 +474,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.zinc.100}"
+        "$value": "{Color.zinc.zinc100}"
       },
       "tertiary-inverted-hover": {
         "$extensions": {
@@ -484,7 +484,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.zinc.150}"
+        "$value": "{Color.zinc.zinc150}"
       },
       "active": {
         "$extensions": {
@@ -494,7 +494,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.zinc.600}"
+        "$value": "{Color.zinc.zinc600}"
       }
     },
     "illustration": {
@@ -507,7 +507,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.zinc.150}"
+        "$value": "{Color.zinc.zinc150}"
       },
       "light": {
         "$extensions": {
@@ -518,7 +518,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.zinc.900}"
+        "$value": "{Color.zinc.zinc900}"
       }
     }
   },
@@ -532,7 +532,7 @@
         "com.figma.hiddenFromPublishing": false
       },
       "$type": "color",
-      "$value": "{Color.zinc.850}"
+      "$value": "{Color.zinc.zinc850}"
     },
     "error": {
       "$extensions": {
@@ -543,7 +543,7 @@
         "com.figma.hiddenFromPublishing": false
       },
       "$type": "color",
-      "$value": "{Color.red.600}"
+      "$value": "{Color.red.red600}"
     },
     "warning": {
       "$extensions": {
@@ -554,7 +554,7 @@
         "com.figma.hiddenFromPublishing": false
       },
       "$type": "color",
-      "$value": "{Color.amber.500}"
+      "$value": "{Color.amber.amber500}"
     },
     "success": {
       "$extensions": {
@@ -565,7 +565,7 @@
         "com.figma.hiddenFromPublishing": false
       },
       "$type": "color",
-      "$value": "{Color.green.500}"
+      "$value": "{Color.green.green500}"
     },
     "tertiary": {
       "$extensions": {
@@ -576,7 +576,7 @@
         "com.figma.hiddenFromPublishing": false
       },
       "$type": "color",
-      "$value": "{Color.zinc.400}"
+      "$value": "{Color.zinc.zinc400}"
     },
     "primary-inverted": {
       "$extensions": {
@@ -587,7 +587,7 @@
         "com.figma.hiddenFromPublishing": false
       },
       "$type": "color",
-      "$value": "{Color.zinc.150}"
+      "$value": "{Color.zinc.zinc150}"
     },
     "secondary": {
       "$extensions": {
@@ -598,7 +598,7 @@
         "com.figma.hiddenFromPublishing": false
       },
       "$type": "color",
-      "$value": "{Color.zinc.700}"
+      "$value": "{Color.zinc.zinc700}"
     },
     "cutout": {
       "$extensions": {
@@ -620,7 +620,7 @@
         "com.figma.hiddenFromPublishing": false
       },
       "$type": "color",
-      "$value": "#dc26263d"
+      "$value": "{Color.Alpha.red.redAlpha24}"
     },
     "ring": {
       "$extensions": {
@@ -630,11 +630,11 @@
         "com.figma.hiddenFromPublishing": false
       },
       "$type": "color",
-      "$value": "#ffffff29"
+      "$value": "{Color.Alpha.white.whiteAlpha16}"
     }
   },
   "shadow": {
-    "1": {
+    "soft": {
       "$extensions": {
         "com.figma.scopes": [
           "FRAME_FILL",
@@ -644,9 +644,9 @@
         "com.figma.hiddenFromPublishing": false
       },
       "$type": "color",
-      "$value": "#0000003d"
+      "$value": "{Color.Alpha.black.blackAlpha24}"
     },
-    "2": {
+    "medium": {
       "$extensions": {
         "com.figma.scopes": [
           "FRAME_FILL",
@@ -656,7 +656,7 @@
         "com.figma.hiddenFromPublishing": false
       },
       "$type": "color",
-      "$value": "#0000007a"
+      "$value": "{Color.Alpha.black.blackAlpha48}"
     }
   },
   "avatar": {
@@ -669,7 +669,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.Advanced.amethyst.500}"
+        "$value": "{Color.Advanced.amethyst.amethyst500}"
       },
       "opal": {
         "$extensions": {
@@ -679,7 +679,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.Advanced.opal.300}"
+        "$value": "{Color.Advanced.opal.opal300}"
       },
       "turquoise": {
         "$extensions": {
@@ -689,7 +689,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.Advanced.turquoise.600}"
+        "$value": "{Color.Advanced.turquoise.turquoise600}"
       },
       "onyx": {
         "$extensions": {
@@ -699,7 +699,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.Advanced.onyx.700}"
+        "$value": "{Color.Advanced.onyx.onyx700}"
       },
       "pearl": {
         "$extensions": {
@@ -709,7 +709,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.Advanced.pearl.200}"
+        "$value": "{Color.Advanced.pearl.pearl900}"
       },
       "emerald": {
         "$extensions": {
@@ -719,7 +719,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.Advanced.emerald.800}"
+        "$value": "{Color.Advanced.emerald.emerald800}"
       },
       "topaz": {
         "$extensions": {
@@ -729,7 +729,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.Advanced.topaz.600}"
+        "$value": "{Color.Advanced.topaz.topaz600}"
       },
       "ruby": {
         "$extensions": {
@@ -739,7 +739,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.Advanced.ruby.700}"
+        "$value": "{Color.Advanced.ruby.ruby700}"
       },
       "sapphire": {
         "$extensions": {
@@ -749,7 +749,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.Advanced.sapphire.800}"
+        "$value": "{Color.Advanced.sapphire.sapphire800}"
       },
       "garnet": {
         "$extensions": {
@@ -759,7 +759,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.Advanced.garnet.800}"
+        "$value": "{Color.Advanced.garnet.garnet800}"
       }
     },
     "fg": {
@@ -771,7 +771,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.Advanced.amethyst.100}"
+        "$value": "{Color.Advanced.amethyst.amethyst100}"
       },
       "opal": {
         "$extensions": {
@@ -781,7 +781,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.Advanced.opal.950}"
+        "$value": "{Color.Advanced.opal.opal300}"
       },
       "turquoise": {
         "$extensions": {
@@ -791,7 +791,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.Advanced.turquoise.100}"
+        "$value": "{Color.Advanced.turquoise.turquoise100}"
       },
       "onyx": {
         "$extensions": {
@@ -801,7 +801,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.Advanced.onyx.100}"
+        "$value": "{Color.Advanced.onyx.onyx100}"
       },
       "pearl": {
         "$extensions": {
@@ -811,7 +811,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.Advanced.pearl.900}"
+        "$value": "{Color.Advanced.pearl.pearl200}"
       },
       "emerald": {
         "$extensions": {
@@ -821,7 +821,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.Advanced.emerald.100}"
+        "$value": "{Color.Advanced.emerald.emerald100}"
       },
       "topaz": {
         "$extensions": {
@@ -831,7 +831,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.Advanced.topaz.100}"
+        "$value": "{Color.Advanced.topaz.topaz100}"
       },
       "ruby": {
         "$extensions": {
@@ -841,7 +841,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.Advanced.ruby.100}"
+        "$value": "{Color.Advanced.ruby.ruby100}"
       },
       "sapphire": {
         "$extensions": {
@@ -851,7 +851,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.Advanced.sapphire.100}"
+        "$value": "{Color.Advanced.sapphire.sapphire100}"
       },
       "garnet": {
         "$extensions": {
@@ -861,7 +861,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.Advanced.garnet.100}"
+        "$value": "{Color.Advanced.garnet.garnet100}"
       }
     }
   }

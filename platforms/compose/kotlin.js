@@ -24,6 +24,7 @@ export const FONT_WEIGHT_CONSTANT = {
   extralight: 'FontWeight.ExtraLight',
   light: 'FontWeight.Light',
   normal: 'FontWeight.Normal',
+  regular: 'FontWeight.Normal',
   medium: 'FontWeight.Medium',
   semibold: 'FontWeight.SemiBold',
   bold: 'FontWeight.Bold',

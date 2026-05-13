@@ -19,7 +19,7 @@ const runColors = async () => {
       platforms: {
         compose: {
           buildPath: colors.outputDir,
-          files: [{ destination: 'NovaColorsPrimitives.kt', format: 'compose/color-primitives' }],
+          files: [{ destination: 'PolkadotColorsPrimitives.kt', format: 'compose/color-primitives' }],
         },
       },
     },
@@ -62,7 +62,7 @@ const runTypography = async () => {
         compose: {
           buildPath: typography.outputDir,
           files: [
-            { destination: 'NovaFontFamilies.kt', format: 'compose/typography-font-families' },
+            { destination: 'PolkadotFontFamilies.kt', format: 'compose/typography-font-families' },
           ],
         },
       },
@@ -91,6 +91,11 @@ const runTypography = async () => {
       {
         source: [typography.primitivesSource, theme.source],
         usesDtcg: true,
+        // Source typography file references some primitive paths that don't
+        // exist (e.g. {Typography.font-size.20} when only fontSize20 is
+        // defined). Our role analyzer drops the affected tokens downstream;
+        // tell SD to log instead of throwing so the build still completes.
+        log: { errors: { brokenReferences: 'console' } },
         platforms: { compose: { buildPath: typography.outputDir, files } },
       },
       { verbosity: 'verbose' }

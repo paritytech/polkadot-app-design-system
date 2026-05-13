@@ -1,7 +1,7 @@
 {
   "Color": {
     "neutral": {
-      "50": {
+      "neutral50": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -11,7 +11,7 @@
         "$type": "color",
         "$value": "#f7f7f7"
       },
-      "100": {
+      "neutral100": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -21,7 +21,7 @@
         "$type": "color",
         "$value": "#ececec"
       },
-      "150": {
+      "neutral150": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -31,7 +31,7 @@
         "$type": "color",
         "$value": "#dadada"
       },
-      "200": {
+      "neutral200": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -41,7 +41,7 @@
         "$type": "color",
         "$value": "#c2c2c2"
       },
-      "300": {
+      "neutral300": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -51,7 +51,7 @@
         "$type": "color",
         "$value": "#a3a3a3"
       },
-      "400": {
+      "neutral400": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -61,7 +61,7 @@
         "$type": "color",
         "$value": "#868686"
       },
-      "500": {
+      "neutral500": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -71,7 +71,7 @@
         "$type": "color",
         "$value": "#6b6b6b"
       },
-      "600": {
+      "neutral600": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -81,7 +81,7 @@
         "$type": "color",
         "$value": "#525252"
       },
-      "700": {
+      "neutral700": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -91,7 +91,7 @@
         "$type": "color",
         "$value": "#3a3a3a"
       },
-      "800": {
+      "neutral800": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -101,7 +101,7 @@
         "$type": "color",
         "$value": "#2b2b2b"
       },
-      "850": {
+      "neutral850": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -111,7 +111,7 @@
         "$type": "color",
         "$value": "#222222"
       },
-      "900": {
+      "neutral900": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -121,7 +121,7 @@
         "$type": "color",
         "$value": "#1a1a1a"
       },
-      "950": {
+      "neutral950": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -150,20 +150,68 @@
         },
         "$type": "color",
         "$value": "#000000"
-      },
-      "opacity 48": {
-        "$extensions": {
-          "com.figma.scopes": [
-            "ALL_SCOPES"
-          ],
-          "com.figma.hiddenFromPublishing": true
+      }
+    },
+    "Alpha": {
+      "black": {
+        "blackAlpha48": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "ALL_SCOPES"
+            ],
+            "com.figma.hiddenFromPublishing": true
+          },
+          "$type": "color",
+          "$value": "#0000007a"
         },
-        "$type": "color",
-        "$value": "#0000007a"
+        "blackAlpha24": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "ALL_SCOPES"
+            ],
+            "com.figma.hiddenFromPublishing": false
+          },
+          "$type": "color",
+          "$value": "#0000003d"
+        }
+      },
+      "white": {
+        "whiteAlpha48": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "ALL_SCOPES"
+            ],
+            "com.figma.hiddenFromPublishing": false
+          },
+          "$type": "color",
+          "$value": "#ffffff7a"
+        },
+        "whiteAlpha16": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "ALL_SCOPES"
+            ],
+            "com.figma.hiddenFromPublishing": false
+          },
+          "$type": "color",
+          "$value": "#ffffff29"
+        }
+      },
+      "red": {
+        "redAlpha24": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "ALL_SCOPES"
+            ],
+            "com.figma.hiddenFromPublishing": false
+          },
+          "$type": "color",
+          "$value": "#d9363e3d"
+        }
       }
     },
     "red": {
-      "50": {
+      "red50": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -173,7 +221,7 @@
         "$type": "color",
         "$value": "#fff5f5"
       },
-      "100": {
+      "red100": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -183,7 +231,7 @@
         "$type": "color",
         "$value": "#ffe5e5"
       },
-      "200": {
+      "red200": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -193,7 +241,7 @@
         "$type": "color",
         "$value": "#ffcaca"
       },
-      "300": {
+      "red300": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -203,7 +251,7 @@
         "$type": "color",
         "$value": "#ffa8a8"
       },
-      "400": {
+      "red400": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -213,7 +261,7 @@
         "$type": "color",
         "$value": "#ff7a7a"
       },
-      "500": {
+      "red500": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -223,7 +271,7 @@
         "$type": "color",
         "$value": "#f25555"
       },
-      "600": {
+      "red600": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -233,7 +281,7 @@
         "$type": "color",
         "$value": "#d9363e"
       },
-      "700": {
+      "red700": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -243,7 +291,7 @@
         "$type": "color",
         "$value": "#b4232f"
       },
-      "800": {
+      "red800": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -253,7 +301,7 @@
         "$type": "color",
         "$value": "#8f1d27"
       },
-      "900": {
+      "red900": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -263,7 +311,7 @@
         "$type": "color",
         "$value": "#671a20"
       },
-      "950": {
+      "red950": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -275,7 +323,7 @@
       }
     },
     "amber": {
-      "50": {
+      "amber50": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -285,7 +333,7 @@
         "$type": "color",
         "$value": "#fff9ed"
       },
-      "100": {
+      "amber100": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -295,7 +343,7 @@
         "$type": "color",
         "$value": "#fff1cc"
       },
-      "200": {
+      "amber200": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -305,7 +353,7 @@
         "$type": "color",
         "$value": "#ffe199"
       },
-      "300": {
+      "amber300": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -315,7 +363,7 @@
         "$type": "color",
         "$value": "#ffd066"
       },
-      "400": {
+      "amber400": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -325,7 +373,7 @@
         "$type": "color",
         "$value": "#ffbb33"
       },
-      "500": {
+      "amber500": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -335,7 +383,7 @@
         "$type": "color",
         "$value": "#f59e0b"
       },
-      "600": {
+      "amber600": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -345,7 +393,7 @@
         "$type": "color",
         "$value": "#d17f00"
       },
-      "700": {
+      "amber700": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -355,7 +403,7 @@
         "$type": "color",
         "$value": "#a86300"
       },
-      "800": {
+      "amber800": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -365,7 +413,7 @@
         "$type": "color",
         "$value": "#7f4a00"
       },
-      "900": {
+      "amber900": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -375,7 +423,7 @@
         "$type": "color",
         "$value": "#5c3505"
       },
-      "950": {
+      "amber950": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -387,7 +435,7 @@
       }
     },
     "green": {
-      "50": {
+      "green50": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -397,7 +445,7 @@
         "$type": "color",
         "$value": "#f2fcf5"
       },
-      "100": {
+      "green100": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -407,7 +455,7 @@
         "$type": "color",
         "$value": "#ddf8e5"
       },
-      "200": {
+      "green200": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -417,7 +465,7 @@
         "$type": "color",
         "$value": "#b8f0c8"
       },
-      "300": {
+      "green300": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -427,7 +475,7 @@
         "$type": "color",
         "$value": "#84e3a0"
       },
-      "400": {
+      "green400": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -437,7 +485,7 @@
         "$type": "color",
         "$value": "#4fd07a"
       },
-      "500": {
+      "green500": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -447,7 +495,7 @@
         "$type": "color",
         "$value": "#22c55e"
       },
-      "600": {
+      "green600": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -457,7 +505,7 @@
         "$type": "color",
         "$value": "#16a34a"
       },
-      "700": {
+      "green700": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -467,7 +515,7 @@
         "$type": "color",
         "$value": "#12803c"
       },
-      "800": {
+      "green800": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -477,7 +525,7 @@
         "$type": "color",
         "$value": "#166534"
       },
-      "900": {
+      "green900": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -487,7 +535,7 @@
         "$type": "color",
         "$value": "#124a29"
       },
-      "950": {
+      "green950": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -499,7 +547,7 @@
       }
     },
     "blue": {
-      "50": {
+      "blue50": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -509,7 +557,7 @@
         "$type": "color",
         "$value": "#f4f9ff"
       },
-      "100": {
+      "blue100": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -519,7 +567,7 @@
         "$type": "color",
         "$value": "#e6f0ff"
       },
-      "200": {
+      "blue200": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -529,7 +577,7 @@
         "$type": "color",
         "$value": "#cfe0ff"
       },
-      "300": {
+      "blue300": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -539,7 +587,7 @@
         "$type": "color",
         "$value": "#a9c7ff"
       },
-      "400": {
+      "blue400": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -549,7 +597,7 @@
         "$type": "color",
         "$value": "#78a9ff"
       },
-      "500": {
+      "blue500": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -559,7 +607,7 @@
         "$type": "color",
         "$value": "#4d8dff"
       },
-      "600": {
+      "blue600": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -569,7 +617,7 @@
         "$type": "color",
         "$value": "#2f6fea"
       },
-      "700": {
+      "blue700": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -579,7 +627,7 @@
         "$type": "color",
         "$value": "#2459c5"
       },
-      "800": {
+      "blue800": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -589,7 +637,7 @@
         "$type": "color",
         "$value": "#21489d"
       },
-      "900": {
+      "blue900": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -599,7 +647,7 @@
         "$type": "color",
         "$value": "#1e3975"
       },
-      "950": {
+      "blue950": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -611,7 +659,7 @@
       }
     },
     "violet": {
-      "50": {
+      "violet50": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -621,7 +669,7 @@
         "$type": "color",
         "$value": "#f7f5ff"
       },
-      "100": {
+      "violet100": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -631,7 +679,7 @@
         "$type": "color",
         "$value": "#ede9ff"
       },
-      "200": {
+      "violet200": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -641,7 +689,7 @@
         "$type": "color",
         "$value": "#ddd6ff"
       },
-      "300": {
+      "violet300": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -651,7 +699,7 @@
         "$type": "color",
         "$value": "#c4b5fd"
       },
-      "400": {
+      "violet400": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -661,7 +709,7 @@
         "$type": "color",
         "$value": "#a78bfa"
       },
-      "500": {
+      "violet500": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -671,7 +719,7 @@
         "$type": "color",
         "$value": "#8b5cf6"
       },
-      "600": {
+      "violet600": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -681,7 +729,7 @@
         "$type": "color",
         "$value": "#7c3aed"
       },
-      "700": {
+      "violet700": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -691,7 +739,7 @@
         "$type": "color",
         "$value": "#6d28d9"
       },
-      "800": {
+      "violet800": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -701,7 +749,7 @@
         "$type": "color",
         "$value": "#5b21b6"
       },
-      "900": {
+      "violet900": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -711,7 +759,7 @@
         "$type": "color",
         "$value": "#4c1d95"
       },
-      "950": {
+      "violet950": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -723,7 +771,7 @@
       }
     },
     "pink": {
-      "50": {
+      "pink50": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -733,7 +781,7 @@
         "$type": "color",
         "$value": "#fff5f8"
       },
-      "100": {
+      "pink100": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -743,7 +791,7 @@
         "$type": "color",
         "$value": "#ffe4ec"
       },
-      "200": {
+      "pink200": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -753,7 +801,7 @@
         "$type": "color",
         "$value": "#fbcfe8"
       },
-      "300": {
+      "pink300": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -763,7 +811,7 @@
         "$type": "color",
         "$value": "#f9a8d4"
       },
-      "400": {
+      "pink400": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -773,7 +821,7 @@
         "$type": "color",
         "$value": "#f472b6"
       },
-      "500": {
+      "pink500": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -783,7 +831,7 @@
         "$type": "color",
         "$value": "#ec4899"
       },
-      "600": {
+      "pink600": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -793,7 +841,7 @@
         "$type": "color",
         "$value": "#db2777"
       },
-      "700": {
+      "pink700": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -803,7 +851,7 @@
         "$type": "color",
         "$value": "#be185d"
       },
-      "800": {
+      "pink800": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -813,7 +861,7 @@
         "$type": "color",
         "$value": "#9d174d"
       },
-      "900": {
+      "pink900": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -823,7 +871,7 @@
         "$type": "color",
         "$value": "#831843"
       },
-      "950": {
+      "pink950": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -835,7 +883,7 @@
       }
     },
     "zinc": {
-      "50": {
+      "zinc50": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -845,7 +893,7 @@
         "$type": "color",
         "$value": "#f7f7f8"
       },
-      "100": {
+      "zinc100": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -855,7 +903,7 @@
         "$type": "color",
         "$value": "#f4f4f5"
       },
-      "150": {
+      "zinc150": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -865,7 +913,7 @@
         "$type": "color",
         "$value": "#dadbe0"
       },
-      "200": {
+      "zinc200": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -875,7 +923,7 @@
         "$type": "color",
         "$value": "#c9cad0"
       },
-      "300": {
+      "zinc300": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -885,7 +933,7 @@
         "$type": "color",
         "$value": "#a9abb3"
       },
-      "400": {
+      "zinc400": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -895,7 +943,7 @@
         "$type": "color",
         "$value": "#8c8f98"
       },
-      "500": {
+      "zinc500": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -905,7 +953,7 @@
         "$type": "color",
         "$value": "#6f727a"
       },
-      "600": {
+      "zinc600": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -915,7 +963,7 @@
         "$type": "color",
         "$value": "#585b62"
       },
-      "700": {
+      "zinc700": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -925,7 +973,7 @@
         "$type": "color",
         "$value": "#404249"
       },
-      "800": {
+      "zinc800": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -935,7 +983,7 @@
         "$type": "color",
         "$value": "#2c2e34"
       },
-      "850": {
+      "zinc850": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -945,7 +993,7 @@
         "$type": "color",
         "$value": "#23252a"
       },
-      "900": {
+      "zinc900": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -955,7 +1003,7 @@
         "$type": "color",
         "$value": "#1a1b20"
       },
-      "950": {
+      "zinc950": {
         "$extensions": {
           "com.figma.scopes": [
             "ALL_SCOPES"
@@ -968,7 +1016,7 @@
     },
     "Advanced": {
       "pearl": {
-        "200": {
+        "pearl200": {
           "$extensions": {
             "com.figma.scopes": [
               "ALL_SCOPES"
@@ -978,7 +1026,7 @@
           "$type": "color",
           "$value": "#f5f5f5"
         },
-        "900": {
+        "pearl900": {
           "$extensions": {
             "com.figma.scopes": [
               "ALL_SCOPES"
@@ -990,7 +1038,7 @@
         }
       },
       "ruby": {
-        "100": {
+        "ruby100": {
           "$extensions": {
             "com.figma.scopes": [
               "ALL_SCOPES"
@@ -1000,7 +1048,7 @@
           "$type": "color",
           "$value": "#ffe4e6"
         },
-        "700": {
+        "ruby700": {
           "$extensions": {
             "com.figma.scopes": [
               "ALL_SCOPES"
@@ -1012,7 +1060,7 @@
         }
       },
       "sapphire": {
-        "100": {
+        "sapphire100": {
           "$extensions": {
             "com.figma.scopes": [
               "ALL_SCOPES"
@@ -1020,9 +1068,9 @@
             "com.figma.hiddenFromPublishing": true
           },
           "$type": "color",
-          "$value": "#ffffff"
+          "$value": "#dbeafe"
         },
-        "800": {
+        "sapphire800": {
           "$extensions": {
             "com.figma.scopes": [
               "ALL_SCOPES"
@@ -1034,7 +1082,7 @@
         }
       },
       "emerald": {
-        "100": {
+        "emerald100": {
           "$extensions": {
             "com.figma.scopes": [
               "ALL_SCOPES"
@@ -1044,7 +1092,7 @@
           "$type": "color",
           "$value": "#d1fae5"
         },
-        "800": {
+        "emerald800": {
           "$extensions": {
             "com.figma.scopes": [
               "ALL_SCOPES"
@@ -1056,7 +1104,7 @@
         }
       },
       "amethyst": {
-        "100": {
+        "amethyst100": {
           "$extensions": {
             "com.figma.scopes": [
               "ALL_SCOPES"
@@ -1066,7 +1114,7 @@
           "$type": "color",
           "$value": "#ede9fe"
         },
-        "500": {
+        "amethyst500": {
           "$extensions": {
             "com.figma.scopes": [
               "ALL_SCOPES"
@@ -1078,7 +1126,7 @@
         }
       },
       "topaz": {
-        "100": {
+        "topaz100": {
           "$extensions": {
             "com.figma.scopes": [
               "ALL_SCOPES"
@@ -1088,7 +1136,7 @@
           "$type": "color",
           "$value": "#ffedd5"
         },
-        "600": {
+        "topaz600": {
           "$extensions": {
             "com.figma.scopes": [
               "ALL_SCOPES"
@@ -1100,7 +1148,7 @@
         }
       },
       "opal": {
-        "300": {
+        "opal300": {
           "$extensions": {
             "com.figma.scopes": [
               "ALL_SCOPES"
@@ -1110,7 +1158,7 @@
           "$type": "color",
           "$value": "#a5b4fc"
         },
-        "950": {
+        "opal950": {
           "$extensions": {
             "com.figma.scopes": [
               "ALL_SCOPES"
@@ -1122,7 +1170,7 @@
         }
       },
       "onyx": {
-        "100": {
+        "onyx100": {
           "$extensions": {
             "com.figma.scopes": [
               "ALL_SCOPES"
@@ -1132,7 +1180,7 @@
           "$type": "color",
           "$value": "#e5e7eb"
         },
-        "700": {
+        "onyx700": {
           "$extensions": {
             "com.figma.scopes": [
               "ALL_SCOPES"
@@ -1144,7 +1192,7 @@
         }
       },
       "garnet": {
-        "100": {
+        "garnet100": {
           "$extensions": {
             "com.figma.scopes": [
               "ALL_SCOPES"
@@ -1154,7 +1202,7 @@
           "$type": "color",
           "$value": "#fee2e2"
         },
-        "800": {
+        "garnet800": {
           "$extensions": {
             "com.figma.scopes": [
               "ALL_SCOPES"
@@ -1166,7 +1214,7 @@
         }
       },
       "turquoise": {
-        "100": {
+        "turquoise100": {
           "$extensions": {
             "com.figma.scopes": [
               "ALL_SCOPES"
@@ -1176,7 +1224,7 @@
           "$type": "color",
           "$value": "#cffafe"
         },
-        "600": {
+        "turquoise600": {
           "$extensions": {
             "com.figma.scopes": [
               "ALL_SCOPES"
