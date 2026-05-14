@@ -125,6 +125,8 @@ const baseClassRoleBlocks = (role) => {
   ];
 };
 
+const COMPOSITION_LOCAL = 'LocalPolkadotTypography';
+
 const formatTypographyBaseClass = (roles) => {
   const fields = roles.map((r) => `    abstract val ${camel(r.name)}: ${pascal(r.name)}`);
   const blocks = roles.flatMap(baseClassRoleBlocks);
@@ -132,11 +134,16 @@ const formatTypographyBaseClass = (roles) => {
   return [
     `package ${PACKAGE}`,
     '',
+    'import androidx.compose.runtime.staticCompositionLocalOf',
     'import androidx.compose.ui.text.TextStyle',
     '',
     `abstract class ${BASE_CLASS} {`,
     ...fields,
     ...blocks,
+    '}',
+    '',
+    `val ${COMPOSITION_LOCAL} = staticCompositionLocalOf<${BASE_CLASS}> {`,
+    `    error("${COMPOSITION_LOCAL} not provided")`,
     '}',
     '',
   ].join('\n');

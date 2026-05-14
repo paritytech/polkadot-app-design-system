@@ -15,6 +15,7 @@ export const dimensionConfigs = [
     concreteFile: 'PolkadotDefaultSpacings.kt',
     outputDir: 'out/android/spacings/',
     kind: 'dp',
+    compositionLocal: 'LocalPolkadotSpacings',
   },
   {
     root: 'Radius',
@@ -28,7 +29,8 @@ export const dimensionConfigs = [
     outputDir: 'out/android/radii/',
     kind: 'shape',
     // Leaf names matching this key are emitted as CircleShape rather than RoundedCornerShape.
-    fullShapeKey: 'full',
+    fullShapeKey: 'radiusFull',
+    compositionLocal: 'LocalPolkadotRadii',
   },
   {
     root: 'Border',
@@ -41,6 +43,7 @@ export const dimensionConfigs = [
     concreteFile: 'PolkadotDefaultBorders.kt',
     outputDir: 'out/android/borders/',
     kind: 'dp',
+    compositionLocal: 'LocalPolkadotBorders',
   },
 ];
 
@@ -63,10 +66,11 @@ const formatDimensionBase = (tokens, cfg) => {
   const sorted = tokens.filter((t) => t.path[0] === cfg.root).sort(sortByValueAsc);
   const type = dimensionFieldType(cfg);
   const fields = sorted.map((t) => `    abstract val ${propertyName(t.path[1])}: ${type}`);
-  const imports =
+  const typeImports =
     cfg.kind === 'shape'
       ? ['import androidx.compose.ui.graphics.Shape']
       : ['import androidx.compose.ui.unit.Dp'];
+  const imports = [...typeImports, 'import androidx.compose.runtime.staticCompositionLocalOf'];
   return [
     `package ${cfg.package}`,
     '',
@@ -74,6 +78,10 @@ const formatDimensionBase = (tokens, cfg) => {
     '',
     `abstract class ${cfg.baseClass} {`,
     ...fields,
+    '}',
+    '',
+    `val ${cfg.compositionLocal} = staticCompositionLocalOf<${cfg.baseClass}> {`,
+    `    error("${cfg.compositionLocal} not provided")`,
     '}',
     '',
   ].join('\n');

@@ -52,6 +52,8 @@ const formatDataClass = (node, indent) => {
   ];
 };
 
+const COMPOSITION_LOCAL = 'LocalPolkadotColors';
+
 const formatBaseClass = (tree) => {
   const entries = sortedEntries(tree);
   const fields = entries.map(
@@ -66,11 +68,16 @@ const formatBaseClass = (tree) => {
   return [
     `package ${PACKAGE}`,
     '',
+    'import androidx.compose.runtime.staticCompositionLocalOf',
     'import androidx.compose.ui.graphics.Color',
     '',
     `abstract class ${BASE_CLASS} {`,
     ...fields,
     ...classes,
+    '}',
+    '',
+    `val ${COMPOSITION_LOCAL} = staticCompositionLocalOf<${BASE_CLASS}> {`,
+    `    error("${COMPOSITION_LOCAL} not provided")`,
     '}',
     '',
   ].join('\n');

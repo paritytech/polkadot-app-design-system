@@ -2,7 +2,7 @@
 
 Snapshot of work to date and remaining steps, so we can pick up cleanly next session.
 
-**Last updated**: 2026-05-13
+**Last updated**: 2026-05-14
 
 ---
 
@@ -18,36 +18,68 @@ Snapshot of work to date and remaining steps, so we can pick up cleanly next ses
 
 ### Generated outputs
 
-All Kotlin output below is generated from the `tokens_12_05.zip` Figma archive.
+Kotlin output below is generated from `tokensMay13v4.zip` (latest Figma archive).
 
 - [x] **Colors** — primitives (`PolkadotColorsPrimitives`, 115 entries) + abstract palette (`PolkadotColorsPalette` with nested data classes) + concrete (`PolkadotDefaultPalette`)
 - [x] **Font families** — `PolkadotFontFamilies` using Google Fonts provider (`inter`, `manrope`, `martianMono`)
-- [x] **Typography** — abstract base (`PolkadotTypography` with `heading/body/button/code` and nested role classes) + concrete impls (`PolkadotDefaultTypography`, `PolkadotValueTypography`)
-- [x] **Spacings** — `PolkadotSpacings` + `PolkadotDefaultSpacings` (Dp, semantic scale `zero/xs/sm/md/lg/xl/2xl/3xl/4xl`)
-- [x] **Radii** — `PolkadotRadii` + `PolkadotDefaultRadii` (returns `Shape`, `full` = `CircleShape`)
-- [x] **Borders** — `PolkadotBorders` + `PolkadotDefaultBorders` (Dp, scale `xs/sm/md/lg/xl`)
+- [x] **Typography** — abstract base (`PolkadotTypography`) with per-role data classes, nested by `role.size[.variant]`:
+  - **flat** (one variant per size, TextStyle directly): `display.large`, `headline.medium`, `emoji.small`
+  - **uniform** (all sizes share variant set, shared `Sizes` inner class): `body.medium.regular`, `body.medium.emphasized`, `paragraph.large.mono`, `label.small.captionEmphasized`
+  - **mixed** (sizes have different variant sets, per-size inner classes): `title.large.regular`, `title.medium.regular`, `title.medium.emphasized`
+  - Variant keys: `regular`, `emphasized`, `mono`, `monoEmphasized`, `caption`, `captionEmphasized` — emitted only when the source has the required field (`weightEmphasized`, `fontMono`, `trackingCaption`)
+  - Concrete impl: `PolkadotDefaultTypography`
+- [x] **Spacings** — `PolkadotSpacings` + `PolkadotDefaultSpacings` (Dp, semantic scale `spaceZero/spaceTiny/spaceExtraSmall/spaceSmall/spaceMedium/spaceMediumIncreased/spaceLarge/spaceExtraLarge/spaceExtraLargeIncreased`)
+- [x] **Radii** — `PolkadotRadii` + `PolkadotDefaultRadii` (returns `Shape`; semantic scale `radiusZero/radiusTiny/...` through `radiusFull`; `radiusFull` = `CircleShape`, controlled by `fullShapeKey` in `dimensions.js`)
+- [x] **Borders** — `PolkadotBorders` + `PolkadotDefaultBorders` (Dp, semantic scale `borderDefault/borderMedium/borderLarge`)
 
 ### Repo organization
 
-- [x] Source files reorganized into `source/{colors,numbers,typography}/`
+- [x] Source layout matches Figma export verbatim: `source/{Color Primitives,Number Primitives,Theme,Typography}/`
 - [x] Code split into `lib/` (platform-independent analysis) + `platforms/compose/` (Kotlin emitters)
-- [x] Output organized as `out/android/<category>/` mirroring `design/src/main/java/.../configs/`
+- [x] Output organized as `out/android/<category>/` mirroring the Android repo's `design-system/src/main/java/.../designsystem/`
 - [x] `README.md` documenting structure, build, integration, and "how to add iOS"
-- [x] `.gitignore` excluding `node_modules` and `.DS_Store`
-- [x] `design-tokens-issues.md` — full list of source-data issues for the designer conversation
+- [x] `.gitignore` excluding `node_modules`, `out/`, and `.DS_Store`
 
-### Naming refactor (this session)
+### Designer conversation
+
+- [x] Source-data issues walked through with design team and resolved in the v4 export; `design-tokens-issues.md` removed
+- [x] `tracking` units clarified — emitted as `.sp` per the source values
+
+### Naming refactor
 
 - [x] Dropped legacy `Nova` prefix → `Polkadot` everywhere in scripts and docs
 - [x] Replaced `Real` impl prefix with `Default` → all concretes now `PolkadotDefault<Category>` (uniform across colors/typography/dimensions)
-- [x] Concrete impls renamed to `PolkadotDefaultPalette`, `PolkadotDefaultTypography`, `PolkadotValueTypography`, `PolkadotDefaultSpacings`, `PolkadotDefaultRadii`, `PolkadotDefaultBorders`
+- [x] Concrete impls: `PolkadotDefaultPalette`, `PolkadotDefaultTypography`, `PolkadotDefaultSpacings`, `PolkadotDefaultRadii`, `PolkadotDefaultBorders`
+
+### Typography schema rewrite
+
+The Figma export's typography schema changed between archives. We now consume the **Typescale** shape (one entry per typescale, with inline `font`/`weight`/`size`/`lineHeight`/`tracking` properties plus optional variant fields `weightEmphasized`/`fontMono`/`trackingCaption`).
+
+- [x] `lib/typography-analysis.js` rewritten — parses Typescale entries, splits each name into `(role, size)`, emits one TextStyle variant per valid combination
+- [x] `platforms/compose/typography.js` rewritten — emits nested data classes per role using the same `roleShape` decision rule as the original (flat / uniform / mixed), now keyed on variant set instead of weight set
+- [x] `letterSpacing` derived from the source `tracking` field (treated as `.sp`)
+- [x] `regular` added to `FONT_WEIGHT_CONSTANT` as an alias for `FontWeight.Normal` (the new source uses `regular` where the old used `normal`)
+- [x] StyleDictionary configured to tolerate broken refs in typography (logs instead of throwing) — a few entries had stale refs in earlier exports; the analyzer skip-log captures any per-entry drops
+
+### CompositionLocals
+
+Each generated abstract base file now appends a `staticCompositionLocalOf` declaration so consumers can wire the design system into a Compose theme with minimal boilerplate.
+
+- [x] `LocalPolkadotColors` in `colors/PolkadotColorsPalette.kt`
+- [x] `LocalPolkadotTypography` in `typography/PolkadotTypography.kt`
+- [x] `LocalPolkadotSpacings` in `spacings/PolkadotSpacings.kt`
+- [x] `LocalPolkadotRadii` in `radii/PolkadotRadii.kt`
+- [x] `LocalPolkadotBorders` in `borders/PolkadotBorders.kt`
+- [x] Each errors loudly when accessed without a Provider (`error("LocalPolkadot<X> not provided")`)
+- [x] Naming follows existing consumer convention (`LocalNova<Category>` → `LocalPolkadot<Category>`, no `Palette` suffix on colors)
 
 ### Android distribution
 
-- [x] Empty distribution repo created at `github.com/novasamatech/polkadot-app-design-system-android` (Compose library wrapping generated Kotlin)
+- [x] Distribution repo at `github.com/novasamatech/polkadot-app-design-system-android` — Compose library wrapping generated Kotlin
 - [x] `design-system/build.gradle.kts` configured for JitPack publish via `maven-publish` plugin (groupId `com.github.novasamatech`, `release` publication with sources jar)
-- [x] First JitPack release published — consumable as `implementation("com.github.novasamatech:polkadot-app-design-system-android:<tag>")` after adding `maven("https://jitpack.io")` to consumer's `settings.gradle.kts`
+- [x] JitPack publishing live — consumable as `implementation("com.github.novasamatech:polkadot-app-design-system-android:<tag>")` after adding `maven("https://jitpack.io")` to consumer's `settings.gradle.kts`
 - [x] Verified end-to-end: artifact resolves in a consumer project, generated classes import cleanly
+- [x] Tags published: `0.1.0` (initial drop with the v2 export and rewritten typography), `0.1.1` (regenerated from v4: semantic dimension names + Emoji.Small fix). Pending next tag (likely `0.1.2`): `CircleShape` for `radiusFull` and the `LocalPolkadot*` CompositionLocal exports.
 
 ### Skipped (explicit decisions)
 
@@ -60,15 +92,15 @@ All Kotlin output below is generated from the `tokens_12_05.zip` Figma archive.
 
 ### Tokens repo (this directory)
 
-- [ ] **`git init`**, first commit, push to `github.com/novasamatech/polkadot-app-design-system`
-- [ ] **First version tag** (`v0.1.0`)
+Remote is live at `git@nova:novasamatech/polkadot-app-design-system.git`. Local `main` is **1 commit ahead** of `origin/main` (the typography rewrite + CompositionLocals work), plus uncommitted edits in `STATUS.md` and `platforms/compose/{colors,dimensions,typography}.js`.
+
+- [ ] Commit pending changes and push `main` to `origin`
+- [ ] First tag (`v0.1.0`) — distinct from the Android repo's `0.1.x` tags (those track JitPack artifact versions)
 - [ ] (Optional) **CI workflow** — GitHub Action that runs `npm install && node build.js` on every push to verify the build doesn't break
 
 ### Designer conversation
 
-- [ ] **Walk through `design-tokens-issues.md`** with the design team. Most items are one-line JSON edits. After fixes:
-  - Re-export from Figma → drop new JSONs into `source/` → `node build.js` → re-commit
-- [ ] **Confirm theme scope** — are Dark/Light themes coming? Is `Typography/Value.json` a real shippable theme?
+- [ ] **Confirm theme scope** — are Dark/Light themes coming? (The earlier `Typography/Value.json` second theme was dropped in v4 — confirm that's intentional.)
 
 ### Android integration (in `polkadot-app-android-v2`)
 
@@ -79,23 +111,40 @@ This is the bulk of remaining work — mostly mechanical call-site migration.
   - `Typography.kt` — same pattern; remove old `PolkadotTypography`/`PolkadotDefaultTypography` blocks, import generated `PolkadotTypography` and a concrete impl
   - `FontFamilies.kt` — fully replaced by generated `PolkadotFontFamilies`; the generator's version is byte-equivalent to today's manual one
   - `colors/palettes/{PolkadotColorsPalette,DarkColorsPalette}.kt` — fully replaced by generated versions
-- [ ] **Update `Theme.kt`** to:
-  - Construct `PolkadotDefaultPalette()`, `PolkadotDefaultTypography()`, `PolkadotDefaultSpacings()`, `PolkadotDefaultRadii()`, `PolkadotDefaultBorders()`
-  - Provide each via `CompositionLocal`s
-  - Expose `PolkadotTheme.radii` and `PolkadotTheme.borders` accessors (don't exist today)
-- [ ] **Migrate call sites** — purely mechanical, but large:
-  - `theme.spacings.spacing4` → `theme.spacings.sm`
-  - `theme.spacings.spacing8` → `theme.spacings.md`
-  - `theme.spacings.spacing12` → `theme.spacings.lg`
-  - `theme.spacings.spacing16` → `theme.spacings.xl`
-  - (continue mapping by value)
-  - `theme.typography.titleXL` → `theme.typography.heading.xl`
-  - `theme.typography.bodyM` → `theme.typography.body.regular.l`
-  - `theme.typography.bodySSemiBold` → `theme.typography.body.semibold.s`
-  - `theme.typography.caption1` → `theme.typography.body.regular.s` (or define a new role if needed)
-  - `theme.colors.backgroundPrimary` → `theme.colors.bg.surface.main`
-  - `theme.colors.textAndIconsPrimary` → `theme.colors.fg.primary`
-  - … etc, per the new semantic names
+- [ ] **Update `Theme.kt`** to use the generated `LocalPolkadot*` CompositionLocals:
+  ```kotlin
+  CompositionLocalProvider(
+      LocalPolkadotColors provides PolkadotDefaultPalette(),
+      LocalPolkadotTypography provides PolkadotDefaultTypography(),
+      LocalPolkadotSpacings provides PolkadotDefaultSpacings(),
+      LocalPolkadotRadii provides PolkadotDefaultRadii(),
+      LocalPolkadotBorders provides PolkadotDefaultBorders(),
+  ) { content() }
+  ```
+  - Expose `PolkadotTheme.radii` and `PolkadotTheme.borders` accessors (don't exist today). Pattern:
+    ```kotlin
+    object PolkadotTheme {
+        val radii: PolkadotRadii @Composable @ReadOnlyComposable get() = LocalPolkadotRadii.current
+        val borders: PolkadotBorders @Composable @ReadOnlyComposable get() = LocalPolkadotBorders.current
+    }
+    ```
+- [ ] **Migrate call sites** — mechanical but large:
+  - Spacings (by value):
+    - `spacing4` → `spaceExtraSmall`
+    - `spacing8` → `spaceSmall`
+    - `spacing12` → `spaceMedium`
+    - `spacing16` → `spaceMediumIncreased`
+    - `spacing24` → `spaceLarge`
+    - … etc
+  - Typography (new nested API):
+    - `theme.typography.titleXL` → `theme.typography.title.extraLarge.regular` (or `.display.extraLarge` if it's bigger display copy)
+    - `theme.typography.bodyM` → `theme.typography.body.medium.regular`
+    - `theme.typography.bodySSemiBold` → `theme.typography.body.small.emphasized`
+    - `theme.typography.caption1` → `theme.typography.label.small.caption` (or `.label.small.regular` depending on intent)
+  - Colors:
+    - `theme.colors.backgroundPrimary` → `theme.colors.bg.surface.main`
+    - `theme.colors.textAndIconsPrimary` → `theme.colors.fg.primary`
+    - … etc, per the new semantic names
 - [ ] **Compile + run** — verify nothing regresses visually. Type checker catches name mismatches; the visual checks are on you.
 
 ### iOS (later, when iOS team is ready)
@@ -127,7 +176,8 @@ Target flow: designer PR in tokens repo → on merge, regenerate Kotlin, bump ve
 
 - `build.js` — entry point, 5 lines
 - `platforms/compose/index.js` — registers SD formatters and runs the pipeline
-- `lib/typography-analysis.js` — the trickiest piece; pairs Font-Size with Line-Height per role/weight
+- `lib/typography-analysis.js` — Typescale parser; splits each entry into role/size, generates variants per `variantBuilders`. Exports `roleShape` (flat / uniform / mixed) consumed by the Kotlin formatter
+- `platforms/compose/typography.js` — Kotlin emitter for typography; the three role shapes are formatted in `baseClassRoleBlocks` and `concreteRoleOverride`
 - `README.md` — architecture overview
 - `design-tokens-issues.md` — designer conversation list
 
@@ -138,10 +188,10 @@ Target flow: designer PR in tokens repo → on merge, regenerate Kotlin, bump ve
 ```
 cd /Users/den/IdeaProjects/polkadot-app-design-system
 node build.js
-find out -name "*.kt" | wc -l    # should be 13
+find out -name "*.kt" | wc -l    # should be 12
 ```
 
-Expected: 13 Kotlin files emitted, no errors. Typography skip-log lists 7 expected dropouts (Heading base, Heading S, Body base, Body XS, Body M, Body MS, Emoji). All output deterministic.
+Expected: 12 Kotlin files emitted, no errors. Typography skip-log should be empty for the v4 export (earlier exports had `Emoji Small` skipped because of a broken ref to `{Typography.font-size.20}` — fixed in v4). All output deterministic.
 
 ### Android distribution (local Maven smoke test)
 
