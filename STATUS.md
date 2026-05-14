@@ -2,7 +2,7 @@
 
 Snapshot of work to date and remaining steps, so we can pick up cleanly next session.
 
-**Last updated**: 2026-05-14
+**Last updated**: 2026-05-14 (later)
 
 ---
 
@@ -79,7 +79,7 @@ Each generated abstract base file now appends a `staticCompositionLocalOf` decla
 - [x] `design-system/build.gradle.kts` configured for JitPack publish via `maven-publish` plugin (groupId `com.github.novasamatech`, `release` publication with sources jar)
 - [x] JitPack publishing live — consumable as `implementation("com.github.novasamatech:polkadot-app-design-system-android:<tag>")` after adding `maven("https://jitpack.io")` to consumer's `settings.gradle.kts`
 - [x] Verified end-to-end: artifact resolves in a consumer project, generated classes import cleanly
-- [x] Tags published: `0.1.0` (initial drop with the v2 export and rewritten typography), `0.1.1` (regenerated from v4: semantic dimension names + Emoji.Small fix). Pending next tag (likely `0.1.2`): `CircleShape` for `radiusFull` and the `LocalPolkadot*` CompositionLocal exports.
+- [x] Tags published: `0.1.0` (initial drop with the v2 export and rewritten typography), `0.1.1` (regenerated from v4: semantic dimension names + Emoji.Small fix), `0.1.2` (`CircleShape` for `radiusFull` + `LocalPolkadot*` CompositionLocal exports). Tags use no `v` prefix.
 
 ### Skipped (explicit decisions)
 

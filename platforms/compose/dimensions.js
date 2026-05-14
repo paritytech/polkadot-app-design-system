@@ -29,7 +29,7 @@ export const dimensionConfigs = [
     outputDir: 'out/android/radii/',
     kind: 'shape',
     // Leaf names matching this key are emitted as CircleShape rather than RoundedCornerShape.
-    fullShapeKey: 'radiusFull',
+    fullShapeKey: 'full',
     compositionLocal: 'LocalPolkadotRadii',
   },
   {
@@ -53,11 +53,24 @@ const sortByValueAsc = (a, b) => (a.$value ?? a.value) - (b.$value ?? b.value);
 
 const dimensionFieldType = (cfg) => (cfg.kind === 'shape' ? 'Shape' : 'Dp');
 
+// Drop the redundant group prefix from a leaf key (e.g. "spaceZero" → "zero" for root "Space").
+// Source JSON encodes the group name into each leaf; the generator strips it so emitted property
+// names don't repeat the category (consumer writes `spacings.zero`, not `spacings.spaceZero`).
+const stripGroupPrefix = (leaf, root) => {
+  const prefix = root.toLowerCase();
+  if (leaf.toLowerCase().startsWith(prefix) && leaf.length > prefix.length) {
+    const rest = leaf.slice(prefix.length);
+    return rest.charAt(0).toLowerCase() + rest.slice(1);
+  }
+  return leaf;
+};
+
+const leafName = (token, cfg) => stripGroupPrefix(token.path[1], cfg.root);
+
 const dimensionConcreteRhs = (token, cfg) => {
   const value = token.$value ?? token.value;
-  const leaf = token.path[1];
   if (cfg.kind === 'shape') {
-    return leaf === cfg.fullShapeKey ? 'CircleShape' : `RoundedCornerShape(${value}.dp)`;
+    return leafName(token, cfg) === cfg.fullShapeKey ? 'CircleShape' : `RoundedCornerShape(${value}.dp)`;
   }
   return `${value}.dp`;
 };
@@ -65,7 +78,7 @@ const dimensionConcreteRhs = (token, cfg) => {
 const formatDimensionBase = (tokens, cfg) => {
   const sorted = tokens.filter((t) => t.path[0] === cfg.root).sort(sortByValueAsc);
   const type = dimensionFieldType(cfg);
-  const fields = sorted.map((t) => `    abstract val ${propertyName(t.path[1])}: ${type}`);
+  const fields = sorted.map((t) => `    abstract val ${propertyName(leafName(t, cfg))}: ${type}`);
   const typeImports =
     cfg.kind === 'shape'
       ? ['import androidx.compose.ui.graphics.Shape']
@@ -91,7 +104,7 @@ const formatDimensionConcrete = (tokens, cfg) => {
   const sorted = tokens.filter((t) => t.path[0] === cfg.root).sort(sortByValueAsc);
   const type = dimensionFieldType(cfg);
   const overrides = sorted.map(
-    (t) => `    override val ${propertyName(t.path[1])}: ${type} = ${dimensionConcreteRhs(t, cfg)}`
+    (t) => `    override val ${propertyName(leafName(t, cfg))}: ${type} = ${dimensionConcreteRhs(t, cfg)}`
   );
   const imports =
     cfg.kind === 'shape'
