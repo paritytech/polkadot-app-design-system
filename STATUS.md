@@ -2,7 +2,7 @@
 
 Snapshot of work to date and remaining steps, so we can pick up cleanly next session.
 
-**Last updated**: 2026-05-14 (post big-bang migration + 0.1.6 font-weight fix; full consumer compile green at 0.1.5; literals inventory in place)
+**Last updated**: 2026-05-14 — pick up here with full context: lib at `0.1.7` (variable fonts bundled, no GMS, AGP 8.12.3 + Kotlin 2.2.21 + compileSdk 36), consumer pinned to `0.1.7` with full Kotlin compile green, literals inventory recorded below, dimensions prefix-stripped vs colors verbatim is intentional (see "Naming conventions").
 
 ---
 
@@ -20,17 +20,17 @@ Snapshot of work to date and remaining steps, so we can pick up cleanly next ses
 
 Kotlin output below is generated from `tokensMay13v4.zip` (latest Figma archive).
 
-- [x] **Colors** — primitives (`PolkadotColorsPrimitives`, 115 entries) + abstract palette (`PolkadotColorsPalette` with nested data classes) + concrete (`PolkadotDefaultPalette`)
-- [x] **Font families** — `PolkadotFontFamilies` using Google Fonts provider (`inter`, `manrope`, `martianMono`)
+- [x] **Colors** — primitives (`PolkadotColorsPrimitives`, 115 entries; names verbatim from Figma source — e.g. `AmberAmber100`, `NeutralNeutral50`, `AdvancedAmethystAmethyst100` — see "Naming conventions" below) + abstract palette (`PolkadotColorsPalette` with nested data classes for `bg/fg/stroke/avatar/focus/shadow`) + concrete (`PolkadotDefaultPalette`)
+- [x] **Font families** — `PolkadotFontFamilies` bundles variable fonts as Android resources (`res/font/{inter,manrope,martian_mono}_variable.ttf`). Each weight emits `Font(R.font.<family>_variable, FontWeight.X, variationSettings = FontVariation.Settings(FontVariation.weight(N)))`. No GoogleFonts dependency, no async download flash on cold start.
 - [x] **Typography** — abstract base (`PolkadotTypography`) with per-role data classes, nested by `role.size[.variant]`:
   - **flat** (one variant per size, TextStyle directly): `display.large`, `headline.medium`, `emoji.small`
   - **uniform** (all sizes share variant set, shared `Sizes` inner class): `body.medium.regular`, `body.medium.emphasized`, `paragraph.large.mono`, `label.small.captionEmphasized`
   - **mixed** (sizes have different variant sets, per-size inner classes): `title.large.regular`, `title.medium.regular`, `title.medium.emphasized`
   - Variant keys: `regular`, `emphasized`, `mono`, `monoEmphasized`, `caption`, `captionEmphasized` — emitted only when the source has the required field (`weightEmphasized`, `fontMono`, `trackingCaption`)
   - Concrete impl: `PolkadotDefaultTypography`
-- [x] **Spacings** — `PolkadotSpacings` + `PolkadotDefaultSpacings` (Dp, semantic scale `spaceZero/spaceTiny/spaceExtraSmall/spaceSmall/spaceMedium/spaceMediumIncreased/spaceLarge/spaceExtraLarge/spaceExtraLargeIncreased`)
-- [x] **Radii** — `PolkadotRadii` + `PolkadotDefaultRadii` (returns `Shape`; semantic scale `radiusZero/radiusTiny/...` through `radiusFull`; `radiusFull` = `CircleShape`, controlled by `fullShapeKey` in `dimensions.js`)
-- [x] **Borders** — `PolkadotBorders` + `PolkadotDefaultBorders` (Dp, semantic scale `borderDefault/borderMedium/borderLarge`)
+- [x] **Spacings** — `PolkadotSpacings` + `PolkadotDefaultSpacings` (Dp, semantic scale `zero/tiny/extraSmall/small/medium/mediumIncreased/large/extraLarge/extraLargeIncreased`; group-name prefix stripped from leaf keys — see "Naming conventions")
+- [x] **Radii** — `PolkadotRadii` + `PolkadotDefaultRadii` (returns `Shape`; semantic scale `zero/tiny/extraSmall/small/smallIncreased/medium/mediumIncreased/large/extraLarge/full`; `full` = `CircleShape`, controlled by `fullShapeKey` in `dimensions.js`)
+- [x] **Borders** — `PolkadotBorders` + `PolkadotDefaultBorders` (Dp, semantic scale `default/medium/large`)
 
 ### Repo organization
 
@@ -50,6 +50,15 @@ Kotlin output below is generated from `tokensMay13v4.zip` (latest Figma archive)
 - [x] Dropped legacy `Nova` prefix → `Polkadot` everywhere in scripts and docs
 - [x] Replaced `Real` impl prefix with `Default` → all concretes now `PolkadotDefault<Category>` (uniform across colors/typography/dimensions)
 - [x] Concrete impls: `PolkadotDefaultPalette`, `PolkadotDefaultTypography`, `PolkadotDefaultSpacings`, `PolkadotDefaultRadii`, `PolkadotDefaultBorders`
+
+### Naming conventions
+
+The Figma source JSON repeats each parent group's name as a prefix on every leaf (e.g. `Space.spaceZero`, `Border.borderDefault`, `neutral.neutral50`, `Advanced.Amethyst.amethyst100`). The generator handles this **inconsistently by category — intentionally**:
+
+- **Dimensions (spacings / radii / borders)**: ancestor-prefix is **stripped** in `platforms/compose/dimensions.js` (`stripGroupPrefix`). Output: `spacings.zero`, `radii.full`, `borders.default`. Reason: consumer call sites read better without repetition (`PolkadotTheme.borders.default` not `.borderDefault`).
+- **Colors**: leaf names emitted **verbatim** as `<group><leaf>` PascalCased — `AmberAmber100`, `ZincZinc100`, `AdvancedAmethystAmethyst100`. Reason: stay close to Figma's primitive naming so designer/code paths line up 1:1 during conversations. Consumer rarely references primitives directly — it goes through the semantic palette (`PolkadotTheme.colors.fg.primary`, etc.), so the verbosity stays inside the lib.
+
+If this inconsistency ever needs revisiting, the strip logic for colors lives ready-to-resurrect at `stripAncestorPrefixes` in the colors.js git history; the dimensions logic in `dimensions.js` is the reference implementation.
 
 ### Typography schema rewrite
 
@@ -79,7 +88,7 @@ Each generated abstract base file now appends a `staticCompositionLocalOf` decla
 - [x] `design-system/build.gradle.kts` configured for JitPack publish via `maven-publish` plugin (groupId `com.github.novasamatech`, `release` publication with sources jar)
 - [x] JitPack publishing live — consumable as `implementation("com.github.novasamatech:polkadot-app-design-system-android:<tag>")` after adding `maven("https://jitpack.io")` to consumer's `settings.gradle.kts`
 - [x] Verified end-to-end: artifact resolves in a consumer project, generated classes import cleanly
-- [x] Tags published: `0.1.0` (initial drop with the v2 export and rewritten typography), `0.1.1` (regenerated from v4: semantic dimension names + Emoji.Small fix), `0.1.2` (`CircleShape` for `radiusFull` + `LocalPolkadot*` CompositionLocal exports), `0.1.3` (drop redundant `space*`/`radius*`/`border*` leaf prefixes; `compileSdk` lowered 37→36 for AGP 8.12 compatibility), `0.1.4` (AGP 9.2.1 → 8.12.3 and Kotlin 2.3.21 → 2.2.21 to match consumer), `0.1.5` (kotlin plugin configuration fix), `0.1.6` (`PolkadotFontFamilies` emits per-weight `Font(weight = …)` entries derived from the Typescale — Inter Normal/Medium/SemiBold, Manrope SemiBold/Bold, Martian Mono Normal/Medium/SemiBold — so GMS downloads the real designed cuts instead of faux-bolding Regular). Compose BOM kept at `2026.05.00` — consumer to bump. Tags use no `v` prefix.
+- [x] Tags published: `0.1.0` (initial drop with the v2 export and rewritten typography), `0.1.1` (regenerated from v4: semantic dimension names + Emoji.Small fix), `0.1.2` (`CircleShape` for `radiusFull` + `LocalPolkadot*` CompositionLocal exports), `0.1.3` (drop redundant `space*`/`radius*`/`border*` leaf prefixes; `compileSdk` lowered 37→36 for AGP 8.12 compatibility), `0.1.4` (AGP 9.2.1 → 8.12.3 and Kotlin 2.3.21 → 2.2.21 to match consumer), `0.1.5` (kotlin plugin configuration fix), `0.1.6` (`PolkadotFontFamilies` emits per-weight `Font(weight = …)` entries derived from the Typescale — Inter Normal/Medium/SemiBold, Manrope SemiBold/Bold, Martian Mono Normal/Medium/SemiBold — so GMS downloads the real designed cuts instead of faux-bolding Regular), `0.1.7` (drop GoogleFonts entirely, bundle variable fonts as `res/font/{inter,manrope,martian_mono}_variable.ttf`; generator emits `Font(R.font.<family>_variable, FontWeight.X, variationSettings = FontVariation.Settings(FontVariation.weight(N)))` per weight). Compose BOM kept at `2026.05.00` — consumer to bump. Tags use no `v` prefix.
 
 ### Skipped (explicit decisions)
 
@@ -92,9 +101,8 @@ Each generated abstract base file now appends a `staticCompositionLocalOf` decla
 
 ### Tokens repo (this directory)
 
-Remote live at `git@nova:novasamatech/polkadot-app-design-system.git`, `main` in sync with origin. Most recent commits: typography rewrite + CompositionLocals, prefix stripping (`spaceZero` → `zero`, etc.), v4 figma sync.
+Remote live at `git@nova:novasamatech/polkadot-app-design-system.git`, `main` in sync with origin. Recent commit history covers the typography rewrite + CompositionLocals, prefix stripping for dimensions, v4 Figma sync, per-weight FontFamily fix, and the variable-font generator switch.
 
-- [ ] First tag (`v0.1.0`) — distinct from the Android repo's `0.1.x` tags (those track JitPack artifact versions)
 - [ ] (Optional) **CI workflow** — GitHub Action that runs `npm install && node build.js` on every push to verify the build doesn't break
 
 ### Designer conversation
@@ -103,7 +111,7 @@ Remote live at `git@nova:novasamatech/polkadot-app-design-system.git`, `main` in
 
 ### Android integration (in `polkadot-app-android-v2`)
 
-Big-bang migration done. Consumer was pinned to `0.1.5` when the full compile last went green; `0.1.6` is now published and bringing the per-weight FontFamily fix — consumer bump pending. **Full Kotlin compile is green** at `0.1.5` (`./gradlew compileDebugKotlin` succeeds). The earlier `StatementTransportEvent.kt` IR-evaluator crash went away after the lib's AGP/Kotlin downgrade in `0.1.4`/`0.1.5`.
+Big-bang migration done. Consumer pinned to `0.1.7` (variable-font bundle); full Kotlin compile was green at `0.1.5` and the changes since have been incremental (font fixes only). The earlier `StatementTransportEvent.kt` IR-evaluator crash went away after the lib's AGP/Kotlin downgrade in `0.1.4`/`0.1.5`.
 
 - [x] **Deleted dead handwritten files**: `Spacings.kt`, `Typography.kt`, `FontFamilies.kt`, `colors/palettes/{NovaColorsPalette,DarkColorsPalette}.kt`. Trimmed `colors/NovaColors.kt` to keep only `NovaStableColors`.
 - [x] **Rewrote `Theme.kt`** with `PolkadotTheme` composable + accessor object exposing `colors`/`typography`/`spacings`/`radii`/`borders` (new); provides all five `LocalPolkadot*` CompositionLocals; inlines best-effort `toMaterialColorScheme()` / `toMaterialTypography()` helpers for the wrapping `MaterialTheme`.
@@ -118,7 +126,7 @@ Big-bang migration done. Consumer was pinned to `0.1.5` when the full compile la
   - Three top-level `private val`s holding precomputed shapes/widths (`OverlapThumbnailShape`, `ThumbnailShape`, `ThumbnailOuterShape` + their border-width siblings) were removed; usages inlined to `PolkadotTheme.radii.*` / `PolkadotTheme.borders.*` at the composable call site (the property accessors are `@Composable @ReadOnlyComposable` and can't be evaluated at file load).
 - [ ] **Visual QA** — type checker passes; visual regressions are still on the designer/QA side, especially around the typography font-family shift.
 - [ ] **AvatarColorScheme migration** — `design/configs/colors/{AvatarColorScheme,NovaAvatarColors}.kt` left intact (separate hash-keyed assignment logic with 8 enum colors; new lib has `avatar.bg/fg` with 10 gemstone colors, would re-color existing users). Deferred.
-- [ ] **Font flash on cold start** — `Font(googleFont = …)` defaults to `FontLoadingStrategy.Async`, so on first launch text renders with a system fallback for ~a second and then "jumps" to the designed cut once GMS finishes downloading. Recommended fix: `FontFamily.Resolver.preload(...)` for each `PolkadotFontFamilies.{inter,manrope,martianMono}` in `Application.onCreate`, paired with the Android 12+ Splash Screen API's `setKeepOnScreenCondition` to hold the splash until preload completes. Cold-start only — subsequent launches hit the GMS cache. Alternatives: bundle the fonts in the AAR (no flash, +100–300 KB/family), or hybrid (bundled Regular + downloadable heavier weights).
+- [x] **Font flash on cold start** — resolved in `0.1.7` by bundling variable fonts in the AAR (`res/font/{inter,manrope,martian_mono}_variable.ttf`). No more async download, no faux-text flash. AAR grew by ~670 KB; minSdk requirement is now effectively 26 for axis variation (consumer is 29, no issue). Variable fonts also future-proof against designers adding new weights — generator just emits another `Font(...)` line, no new resource file needed.
 
 #### Hardcoded literals introduced in consumer
 
@@ -508,12 +516,27 @@ Target flow: designer PR in tokens repo → on merge, regenerate Kotlin, bump ve
 
 ## Key files for next session
 
+Tokens repo (`polkadot-app-design-system`):
+
 - `build.js` — entry point, 5 lines
-- `platforms/compose/index.js` — registers SD formatters and runs the pipeline
-- `lib/typography-analysis.js` — Typescale parser; splits each entry into role/size, generates variants per `variantBuilders`. Exports `roleShape` (flat / uniform / mixed) consumed by the Kotlin formatter
-- `platforms/compose/typography.js` — Kotlin emitter for typography; the three role shapes are formatted in `baseClassRoleBlocks` and `concreteRoleOverride`
+- `platforms/compose/index.js` — registers SD formatters and runs the pipeline; three runs (colors / typography / dimensions). The typography run combines the primitives source with the first theme source so `formatFontFamiliesObject` can see which `(font, weight)` pairs the Typescale actually uses.
+- `platforms/compose/typography.js` — Kotlin emitter for typography. `formatFontFamiliesObject` emits the bundled-variable-font `Font(...)` declarations. The three role shapes (flat / uniform / mixed) are formatted in `baseClassRoleBlocks` and `concreteRoleOverride`.
+- `platforms/compose/colors.js` — colors emitter. `primitiveName` PascalCases path segments verbatim (no ancestor strip).
+- `platforms/compose/dimensions.js` — spacings/radii/borders emitter. `stripGroupPrefix` removes the redundant `Space`/`Radius`/`Border` prefix from leaf keys before identifier generation.
+- `lib/typography-analysis.js` — Typescale parser; splits each entry into role/size, generates variants per `variantBuilders`. Exports `roleShape` (flat / uniform / mixed) consumed by the Kotlin formatter.
 - `README.md` — architecture overview
-- `design-tokens-issues.md` — designer conversation list
+
+Android lib repo (`polkadot-app-design-system-android`):
+
+- `design-system/build.gradle.kts` — AGP 8.12.3, Kotlin 2.2.21, compileSdk 36, minSdk 21, Compose BOM 2026.05.00. No GoogleFonts dependency anymore.
+- `design-system/src/main/res/font/` — three bundled variable TTFs: `inter_variable.ttf`, `manrope_variable.ttf`, `martian_mono_variable.ttf`.
+- `design-system/src/main/java/io/pcf/polkadotapp/designsystem/` — generated Kotlin (mirrors `out/android/`).
+
+Consumer (`polkadot-app-android-v2`):
+
+- `gradle/libs.versions.toml` — pin `design-system = "0.1.7"`.
+- `design/src/main/java/io/pcf/polkadotapp/design/theme/Theme.kt` — `PolkadotTheme` composable + accessor object; wires the five `LocalPolkadot*` CompositionLocals and inlines Material-3 conversion helpers.
+- `design/src/main/java/io/pcf/polkadotapp/design/configs/colors/{NovaColors,AvatarColorScheme,NovaAvatarColors}.kt` — surviving handwritten code: `NovaStableColors` (brand colors), avatar hash-keyed color logic.
 
 ## How to verify everything still works
 
