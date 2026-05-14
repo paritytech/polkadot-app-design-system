@@ -34,18 +34,67 @@ const renderTextStyle = (variant, indent) => [
   `${indent})`,
 ].join('\n');
 
-const formatFontFamiliesObject = (primitives) => {
-  // Source shape: path = ['Typography', 'fontStyle', 'sans|mono|accent'] with the font name as $value.
+// Walk all Typescale variants and collect every (font, weight) combination that the
+// typography actually uses. Without this, FontFamily declares only a single Regular cut
+// and Compose silently faux-bolds heavier weights instead of downloading the real ones.
+const collectFamilyWeights = (themeTokens) => {
+  const { roles } = parseTypescale(themeTokens);
+  // Map<fontName, Map<weightExpression, numericResolvedWeight>>
+  const families = new Map();
+  for (const role of roles) {
+    for (const size of role.sizes) {
+      for (const variant of size.variants) {
+        const fontName = String(variant.font.resolved);
+        const expr = inlineWeight(variant.weight);
+        const numeric = Number(variant.weight.resolved);
+        if (!families.has(fontName)) families.set(fontName, new Map());
+        // Earliest numeric wins; expressions are stable for the same weight.
+        if (!families.get(fontName).has(expr)) families.get(fontName).set(expr, numeric);
+      }
+    }
+  }
+  return families;
+};
+
+const formatFontFamiliesObject = (primitives, themeTokens) => {
+  // Source shape for primitives: path = ['Typography', 'fontStyle', 'sans|mono|accent'].
   const fontStyles = primitives.filter((t) => t.path[1] === 'fontStyle');
-  const uniqueNames = [...new Set(fontStyles.map((t) => String(t.$value ?? t.value)))].sort();
-  const lines = uniqueNames.map(
-    (name) =>
-      `    val ${fontFamilySlug(name)} = FontFamily(Font(googleFont = GoogleFont("${name}"), fontProvider = provider))`
-  );
+  const primitiveNames = [...new Set(fontStyles.map((t) => String(t.$value ?? t.value)))];
+
+  const familyWeights = collectFamilyWeights(themeTokens);
+  // Make sure every font declared in primitives is at least present (with no specific weight).
+  for (const name of primitiveNames) {
+    if (!familyWeights.has(name)) familyWeights.set(name, new Map());
+  }
+
+  const sortedNames = [...familyWeights.keys()].sort();
+  const familyDecls = sortedNames.flatMap((name) => {
+    const slug = fontFamilySlug(name);
+    const entries = [...familyWeights.get(name).entries()].sort((a, b) => a[1] - b[1]);
+    if (entries.length === 0) {
+      // No usage information — keep the family declared with a single Regular cut.
+      return [
+        `    val ${slug} = FontFamily(Font(googleFont = GoogleFont("${name}"), fontProvider = provider))`,
+      ];
+    }
+    if (entries.length === 1) {
+      const [expr] = entries[0];
+      return [
+        `    val ${slug} = FontFamily(Font(googleFont = GoogleFont("${name}"), fontProvider = provider, weight = ${expr}))`,
+      ];
+    }
+    const fontLines = entries.map(([expr], i) => {
+      const tail = i < entries.length - 1 ? ',' : '';
+      return `        Font(googleFont = GoogleFont("${name}"), fontProvider = provider, weight = ${expr})${tail}`;
+    });
+    return [`    val ${slug} = FontFamily(`, ...fontLines, `    )`];
+  });
+
   return [
     `package ${PACKAGE}`,
     '',
     'import androidx.compose.ui.text.font.FontFamily',
+    'import androidx.compose.ui.text.font.FontWeight',
     'import androidx.compose.ui.text.googlefonts.Font',
     'import androidx.compose.ui.text.googlefonts.GoogleFont',
     'import io.pcf.polkadotapp.designsystem.R',
@@ -57,7 +106,7 @@ const formatFontFamiliesObject = (primitives) => {
     '        certificates = R.array.com_google_android_gms_fonts_certs',
     '    )',
     '',
-    ...lines,
+    ...familyDecls,
     '}',
     '',
   ].join('\n');
@@ -219,7 +268,8 @@ export const register = () => {
     name: 'compose/typography-font-families',
     format: ({ dictionary }) => {
       const primitives = dictionary.allTokens.filter((t) => t.path[0] === PRIMITIVES_ROOT);
-      return formatFontFamiliesObject(primitives);
+      const themeTokens = dictionary.allTokens.filter((t) => t.path[0] === THEME_ROOT);
+      return formatFontFamiliesObject(primitives, themeTokens);
     },
   });
 

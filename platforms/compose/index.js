@@ -54,10 +54,17 @@ const runColors = async () => {
 };
 
 const runTypography = async () => {
+  // FontFamilies needs the Typescale entries to discover which (font, weight) pairs are
+  // actually used — otherwise it emits one Regular cut per family and Compose faux-bolds
+  // everything heavier. Pull in the first theme alongside primitives.
+  const fontFamiliesSources = [typography.primitivesSource, typography.themes[0].source];
   const primitives = new StyleDictionary(
     {
-      source: [typography.primitivesSource],
+      source: fontFamiliesSources,
       usesDtcg: true,
+      // Same tolerance as the typescale build below: typescale may reference primitive
+      // paths that don't exist (we'll just drop those variants).
+      log: { errors: { brokenReferences: 'console' } },
       platforms: {
         compose: {
           buildPath: typography.outputDir,

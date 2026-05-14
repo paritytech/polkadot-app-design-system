@@ -2,7 +2,7 @@
 
 Snapshot of work to date and remaining steps, so we can pick up cleanly next session.
 
-**Last updated**: 2026-05-14 (later)
+**Last updated**: 2026-05-14 (post big-bang migration + 0.1.5, full consumer compile green, literals inventory added)
 
 ---
 
@@ -79,7 +79,7 @@ Each generated abstract base file now appends a `staticCompositionLocalOf` decla
 - [x] `design-system/build.gradle.kts` configured for JitPack publish via `maven-publish` plugin (groupId `com.github.novasamatech`, `release` publication with sources jar)
 - [x] JitPack publishing live — consumable as `implementation("com.github.novasamatech:polkadot-app-design-system-android:<tag>")` after adding `maven("https://jitpack.io")` to consumer's `settings.gradle.kts`
 - [x] Verified end-to-end: artifact resolves in a consumer project, generated classes import cleanly
-- [x] Tags published: `0.1.0` (initial drop with the v2 export and rewritten typography), `0.1.1` (regenerated from v4: semantic dimension names + Emoji.Small fix), `0.1.2` (`CircleShape` for `radiusFull` + `LocalPolkadot*` CompositionLocal exports). Tags use no `v` prefix.
+- [x] Tags published: `0.1.0` (initial drop with the v2 export and rewritten typography), `0.1.1` (regenerated from v4: semantic dimension names + Emoji.Small fix), `0.1.2` (`CircleShape` for `radiusFull` + `LocalPolkadot*` CompositionLocal exports), `0.1.3` (drop redundant `space*`/`radius*`/`border*` leaf prefixes; `compileSdk` lowered 37→36 for AGP 8.12 compatibility), `0.1.4` (AGP 9.2.1 → 8.12.3 and Kotlin 2.3.21 → 2.2.21 to match consumer), `0.1.5` (kotlin plugin configuration fix). Compose BOM kept at `2026.05.00` — consumer to bump. Tags use no `v` prefix.
 
 ### Skipped (explicit decisions)
 
@@ -92,9 +92,8 @@ Each generated abstract base file now appends a `staticCompositionLocalOf` decla
 
 ### Tokens repo (this directory)
 
-Remote is live at `git@nova:novasamatech/polkadot-app-design-system.git`. Local `main` is **1 commit ahead** of `origin/main` (the typography rewrite + CompositionLocals work), plus uncommitted edits in `STATUS.md` and `platforms/compose/{colors,dimensions,typography}.js`.
+Remote live at `git@nova:novasamatech/polkadot-app-design-system.git`, `main` in sync with origin. Most recent commits: typography rewrite + CompositionLocals, prefix stripping (`spaceZero` → `zero`, etc.), v4 figma sync.
 
-- [ ] Commit pending changes and push `main` to `origin`
 - [ ] First tag (`v0.1.0`) — distinct from the Android repo's `0.1.x` tags (those track JitPack artifact versions)
 - [ ] (Optional) **CI workflow** — GitHub Action that runs `npm install && node build.js` on every push to verify the build doesn't break
 
@@ -104,48 +103,414 @@ Remote is live at `git@nova:novasamatech/polkadot-app-design-system.git`. Local 
 
 ### Android integration (in `polkadot-app-android-v2`)
 
-This is the bulk of remaining work — mostly mechanical call-site migration.
+Big-bang migration done. Consumer pinned to `0.1.5`. **Full Kotlin compile is green** (`./gradlew compileDebugKotlin` succeeds). The earlier `StatementTransportEvent.kt` IR-evaluator crash went away after the lib's AGP/Kotlin downgrade in `0.1.4`/`0.1.5`.
 
-- [ ] **Replace handwritten infra files** in `design/src/main/java/io/pcf/polkadotapp/design/configs/`:
-  - `Spacings.kt` — keep the `LocalPolkadotSpacings` `CompositionLocal`, remove the old abstract class & `PolkadotDefaultSpacings`, import generated equivalents from the `spacings` package
-  - `Typography.kt` — same pattern; remove old `PolkadotTypography`/`PolkadotDefaultTypography` blocks, import generated `PolkadotTypography` and a concrete impl
-  - `FontFamilies.kt` — fully replaced by generated `PolkadotFontFamilies`; the generator's version is byte-equivalent to today's manual one
-  - `colors/palettes/{PolkadotColorsPalette,DarkColorsPalette}.kt` — fully replaced by generated versions
-- [ ] **Update `Theme.kt`** to use the generated `LocalPolkadot*` CompositionLocals:
-  ```kotlin
-  CompositionLocalProvider(
-      LocalPolkadotColors provides PolkadotDefaultPalette(),
-      LocalPolkadotTypography provides PolkadotDefaultTypography(),
-      LocalPolkadotSpacings provides PolkadotDefaultSpacings(),
-      LocalPolkadotRadii provides PolkadotDefaultRadii(),
-      LocalPolkadotBorders provides PolkadotDefaultBorders(),
-  ) { content() }
-  ```
-  - Expose `PolkadotTheme.radii` and `PolkadotTheme.borders` accessors (don't exist today). Pattern:
-    ```kotlin
-    object PolkadotTheme {
-        val radii: PolkadotRadii @Composable @ReadOnlyComposable get() = LocalPolkadotRadii.current
-        val borders: PolkadotBorders @Composable @ReadOnlyComposable get() = LocalPolkadotBorders.current
-    }
-    ```
-- [ ] **Migrate call sites** — mechanical but large:
-  - Spacings (by value):
-    - `spacing4` → `spaceExtraSmall`
-    - `spacing8` → `spaceSmall`
-    - `spacing12` → `spaceMedium`
-    - `spacing16` → `spaceMediumIncreased`
-    - `spacing24` → `spaceLarge`
-    - … etc
-  - Typography (new nested API):
-    - `theme.typography.titleXL` → `theme.typography.title.extraLarge.regular` (or `.display.extraLarge` if it's bigger display copy)
-    - `theme.typography.bodyM` → `theme.typography.body.medium.regular`
-    - `theme.typography.bodySSemiBold` → `theme.typography.body.small.emphasized`
-    - `theme.typography.caption1` → `theme.typography.label.small.caption` (or `.label.small.regular` depending on intent)
-  - Colors:
-    - `theme.colors.backgroundPrimary` → `theme.colors.bg.surface.main`
-    - `theme.colors.textAndIconsPrimary` → `theme.colors.fg.primary`
-    - … etc, per the new semantic names
-- [ ] **Compile + run** — verify nothing regresses visually. Type checker catches name mismatches; the visual checks are on you.
+- [x] **Deleted dead handwritten files**: `Spacings.kt`, `Typography.kt`, `FontFamilies.kt`, `colors/palettes/{NovaColorsPalette,DarkColorsPalette}.kt`. Trimmed `colors/NovaColors.kt` to keep only `NovaStableColors`.
+- [x] **Rewrote `Theme.kt`** with `PolkadotTheme` composable + accessor object exposing `colors`/`typography`/`spacings`/`radii`/`borders` (new); provides all five `LocalPolkadot*` CompositionLocals; inlines best-effort `toMaterialColorScheme()` / `toMaterialTypography()` helpers for the wrapping `MaterialTheme`.
+- [x] **Migrated ~3000 call sites** in 4 mechanical perl passes:
+  - `NovaTheme` → `PolkadotTheme` (2247 refs, 275 files)
+  - **Spacings**: 581 sites mapped to semantic names; 57 off-scale sites hardcoded as `<N>.dp` literals (see below)
+  - **Typography**: 416 sites mapped to nested `role.size[.variant]` API. Font-family shift for headers (Inter → Manrope) is intentional per the new design system.
+  - **Colors**: 651 sites mapped to new nested groups (`fg.*`, `bg.surface.*`, `bg.action.*`, `stroke.*`); 95 sites for fill tokens hardcoded as `Color()` literals (see below)
+- [x] **Radii & borders migration** — picked up after the first build pass, since these are new tokens (no old equivalent in the handwritten configs):
+  - **Borders**: 21 sites (`BorderStroke(1.dp/2.dp, …)` and `.border(1.dp/2.dp, …)`) → `PolkadotTheme.borders.default`/`medium`
+  - **Radii**: 82 exact-match sites (`RoundedCornerShape(0/4/6/8/12/16/24/32.dp)`) → `PolkadotTheme.radii.{zero,tiny,extraSmall,small,medium,mediumIncreased,large,extraLarge}`; 18 off-scale sites (14/20/22/28/40/48 dp) kept as `RoundedCornerShape(N.dp)` literals
+  - Three top-level `private val`s holding precomputed shapes/widths (`OverlapThumbnailShape`, `ThumbnailShape`, `ThumbnailOuterShape` + their border-width siblings) were removed; usages inlined to `PolkadotTheme.radii.*` / `PolkadotTheme.borders.*` at the composable call site (the property accessors are `@Composable @ReadOnlyComposable` and can't be evaluated at file load).
+- [ ] **Visual QA** — type checker passes; visual regressions are still on the designer/QA side, especially around the typography font-family shift.
+- [ ] **AvatarColorScheme migration** — `design/configs/colors/{AvatarColorScheme,NovaAvatarColors}.kt` left intact (separate hash-keyed assignment logic with 8 enum colors; new lib has `avatar.bg/fg` with 10 gemstone colors, would re-color existing users). Deferred.
+
+#### Hardcoded literals introduced in consumer
+
+These design tokens had no clean equivalent in the new generated lib, so call sites were rewritten to inline literals rather than rounded/snapped to a semantic name. They are easy to grep for and revisit when the designer adds them to the scale.
+
+**Color literals** (white/black at varying alphas — old `fill*` / `fillDark*` had no semantic counterpart in the new palette which uses zinc-based opaque surface tokens):
+
+| Old token | Literal | Files |
+|-----------|---------|-------|
+| `fill2` | `Color(0x05FFFFFF)` | 1 |
+| `fill6` | `Color(0x0FFFFFFF)` | 14 |
+| `fill8` | `Color(0x14FFFFFF)` | 11 |
+| `fill12` | `Color(0x1FFFFFFF)` | 27 |
+| `fill18` | `Color(0x2EFFFFFF)` | 4 |
+| `fill24` | `Color(0x3DFFFFFF)` | 4 |
+| `fill30` | `Color(0x4DFFFFFF)` | 1 |
+| `fill48` | `Color(0x7AFFFFFF)` | 2 |
+| `fill70` | `Color(0xB3FFFFFF)` | 2 |
+| `fillDark30` | `Color(0x4D000000)` | 3 |
+| `fillDark45` | `Color(0x73000000)` | 13 |
+| `fillDark66` | `Color(0xA8000000)` | 6 |
+| `fillDark100` | `Color(0xFF000000)` | 24 |
+
+Not in the literal list:
+- `fill100` (opaque white) → migrated to `colors.fg.staticWhite` (semantic match).
+- `appliedHover` (white@6%) was missed in the substitution pass — only appears in the deleted `palettes/NovaColorsPalette.kt`/`DarkColorsPalette.kt`, no live call sites.
+- `textAndIconsDisabled` → migrated to `colors.fg.tertiary` as the closest dimmed-text role (white@27% → zinc-600). Slight visual drift.
+- `appliedOverlay` (black@70%) → migrated to `colors.bg.surface.overlay` (black@48%). Alpha shift.
+
+To find them: `grep -rn "Color(0x[0-9A-F]\{8\})" --include="*.kt" polkadot-app-android-v2`
+
+**Spacing literals** (off-scale `spacing<N>` values that don't match the new 9-step semantic scale — 0/2/4/8/12/16/24/32/40 dp):
+
+| Old token | Literal | Sites |
+|-----------|---------|-------|
+| `spacing6` | `6.dp` | 9 |
+| `spacing10` | `10.dp` | 8 |
+| `spacing14` | `14.dp` | 13 |
+| `spacing20` | `20.dp` | 8 |
+| `spacing28` | `28.dp` | 1 |
+| `spacing36` | `36.dp` | 3 |
+| `spacing44` | `44.dp` | 2 |
+| `spacing48` | `48.dp` | 7 |
+| `spacing56` | `56.dp` | 5 |
+| `spacing64` | `64.dp` | 1 |
+
+**Radius literals** (off-scale corner radii — new scale is 0/4/6/8/10/12/16/24/32 dp):
+
+| Literal | Sites |
+|---------|-------|
+| `RoundedCornerShape(14.dp)` | 3 |
+| `RoundedCornerShape(20.dp)` | 5 |
+| `RoundedCornerShape(22.dp)` | 2 |
+| `RoundedCornerShape(28.dp)` | 3 |
+| `RoundedCornerShape(40.dp)` | 3 |
+| `RoundedCornerShape(48.dp)` | 2 |
+
+#### File-level inventory
+
+Per-literal file lists below. Counts here may exceed the summary tables above because the audit catches *all* literal usages — including pre-existing incidental sizing (icon `defaultSize`s, fixed dimensions) that wasn't introduced by the migration but represents design-system gaps.
+
+### Color literals
+
+- `Color(0x05FFFFFF)` (fill2) — 1
+  - `design/components/progress/Shimmer.kt`
+
+- `Color(0x0FFFFFFF)` (fill6) — 14
+  - `design/components/button/ButtonColors.kt`
+  - `design/components/mnemonic/MnemonicHolder.kt`
+  - `design/components/text/TextField.kt`
+  - `feature/backup/impl/recover/compose/components/OptionButton.kt`
+  - `feature/become-citizen/impl/presentation/reserve/tattooDetails/compose/components/Evidence.kt`
+  - `feature/become-citizen/impl/presentation/reserve/tattooDetails/compose/components/Execution.kt`
+  - `feature/become-citizen/impl/presentation/reserve/tattooDetails/compose/components/Review.kt`
+  - `feature/chats/impl/presentation/feed/compose/components/messages/PaymentMessage.kt`
+  - `feature/fund/impl/presentation/fund/terms/compose/components/FundingWidget.kt`
+  - `feature/identity/impl/presentation/credentials/add/compose/components/AddProofStepContent.kt`
+  - `feature/mobrules/impl/presentation/voting/compose/components/VideoCardContent.kt`
+  - `feature/wallet/impl/presentation/assetDetails/compose/AssetDetailsScreen.kt`
+  - `feature/wallet/impl/presentation/assetDetails/compose/components/CoinageDetailScreens.kt`
+  - `feature/wallet/impl/presentation/enterAmount/compose/SendEnterAmountScreen.kt`
+
+- `Color(0x14FFFFFF)` (fill8) — 11
+  - `common/presentation/notifications/permissionAsker/compose/NotificationPermissionAsker.kt`
+  - `feature/chats/impl/presentation/feed/compose/components/ChatFooterLabel.kt`
+  - `feature/chats/impl/presentation/feed/compose/components/messages/FileMessage.kt`
+  - `feature/chats/impl/presentation/feed/compose/components/separators/NewMessageSeparator.kt`
+  - `feature/mobrules/impl/presentation/bot/compose/VotingButton.kt`
+  - `feature/mobrules/impl/presentation/bot/renderer/MobRuleBotFooterRenderer.kt`
+  - `feature/mobrules/impl/presentation/evidenceDetail/compose/MediaEvidenceDetailScreen.kt`
+  - `feature/mobrules/impl/presentation/evidenceDetail/compose/components/VideoWatchCountdown.kt`
+  - `feature/upgrade-username/api/presentation/bot/UpgradeUsernameWidget.kt`
+  - `feature/videogame/impl/presentation/bot/compose/WeeklyGameBotFooter.kt`
+  - `feature/videogame/impl/presentation/play/compose/components/PlayerCell.kt`
+
+- `Color(0x1FFFFFFF)` (fill12) — 28
+  - `design/components/avatar/NovaAddressAvatar.kt`
+  - `design/components/button/ButtonColors.kt`
+  - `design/components/compound/Switch.kt`
+  - `design/components/mnemonic/MnemonicHolder.kt`
+  - `design/components/progress/Shimmer.kt`
+  - `feature/become-citizen/impl/presentation/photo/capture/compose/components/OverlayToggleButton.kt`
+  - `feature/become-citizen/impl/presentation/reserve/list/compose/components/FamilyItemIcon.kt`
+  - `feature/chats/api/presentation/common/ChatFooterNavigationButton.kt`
+  - `feature/chats/api/presentation/faq/compose/Faq.kt`
+  - `feature/chats/impl/presentation/chatRequestsList/compose/ChatRequestsListScreen.kt`
+  - `feature/chats/impl/presentation/feed/compose/components/input/ChatInputRow.kt`
+  - `feature/chats/impl/presentation/feed/compose/components/messages/FileMessage.kt`
+  - `feature/chats/impl/presentation/list/compose/components/ChatListContent.kt`
+  - `feature/chats/impl/presentation/list/compose/components/ChatListLoading.kt`
+  - `feature/fund/impl/presentation/fund/terms/compose/components/FundingOperations.kt`
+  - `feature/fund/impl/presentation/fund/terms/compose/components/TokenChip.kt`
+  - `feature/identity/impl/presentation/credentials/add/compose/components/AddHandleStepContent.kt`
+  - `feature/identity/impl/presentation/credentials/add/compose/components/AddProofStepContent.kt`
+  - `feature/mobrules/impl/presentation/bot/renderer/MobRuleVotedCaseMessageRenderer.kt`
+  - `feature/mobrules/impl/presentation/evidenceDetail/compose/components/VideoWatchCountdown.kt`
+  - `feature/mobrules/impl/presentation/voting/compose/components/VoteButton.kt`
+  - `feature/settings/impl/presentation/backup/status/compose/components/BackupStatusStateContent.kt`
+  - `feature/tokens/api/presentation/simpletokenlist/compose/components/AssetItem.kt`
+  - `feature/usernames/api/presentation/compose/UsernameTextField.kt`
+  - `feature/wallet/impl/presentation/assetDetails/compose/components/CoinageDetailScreens.kt`
+  - `feature/wallet/impl/presentation/assetDetails/compose/components/CoinageStateCard.kt`
+  - `feature/wallet/impl/presentation/enterAmount/compose/components/EnterAmountRecipient.kt`
+  - `feature/wallet/impl/presentation/identityDetails/compose/IdentityDetailsScreen.kt`
+
+- `Color(0x2EFFFFFF)` (fill18) — 4
+  - `feature/become-citizen/impl/presentation/common/compose/EvidenceInstructionScreen.kt`
+  - `feature/calls/impl/presentation/call/compose/components/CallControlButton.kt`
+  - `feature/calls/impl/presentation/call/compose/components/CallStateBanner.kt`
+  - `feature/mobrules/impl/presentation/voting/compose/components/VideoCardContent.kt`
+
+- `Color(0x3DFFFFFF)` (fill24) — 4
+  - `design/components/dialog/AlertDialog.kt`
+  - `design/theme/Theme.kt`
+  - `feature/chats/impl/presentation/feed/compose/components/input/ChatInputRow.kt`
+  - `feature/mobrules/impl/presentation/voting/compose/components/VotingCardContent.kt`
+
+- `Color(0x4DFFFFFF)` (fill30) — 1
+  - `design/components/progress/Shimmer.kt`
+
+- `Color(0x7AFFFFFF)` (fill48) — 2
+  - `feature/chats/impl/presentation/feed/compose/components/dialog/components/MessageActionMenu.kt`
+  - `feature/wallet/impl/presentation/identityDetails/compose/IdentityDetailsScreen.kt`
+
+- `Color(0xB3FFFFFF)` (fill70) — 2
+  - `feature/chats/impl/presentation/feed/compose/components/dialog/components/MessageActionMenu.kt`
+  - `feature/videogame/impl/presentation/bot/compose/GameResultComposables.kt`
+
+- `Color(0x4D000000)` (fillDark30) — 3
+  - `design/components/button/ButtonColors.kt`
+  - `design/components/progress/Shimmer.kt`
+  - `feature/videogame/impl/presentation/play/compose/components/PlayerCell.kt`
+
+- `Color(0x73000000)` (fillDark45) — 13
+  - `common/presentation/compose/video/VideoPlayerControlsContainer.kt`
+  - `design/components/progress/Shimmer.kt`
+  - `feature/become-citizen/impl/presentation/bot/compose/EvidenceProvidedMessage.kt`
+  - `feature/chats/impl/presentation/feed/compose/components/dialog/components/ExpandedEmojiPicker.kt`
+  - `feature/chats/impl/presentation/feed/compose/components/dialog/components/MessageQuickReactions.kt`
+  - `feature/chats/impl/presentation/feed/compose/components/messages/MultimediaMessage.kt`
+  - `feature/chats/impl/presentation/feed/compose/components/messages/Utils.kt`
+  - `feature/chats/impl/presentation/feed/compose/components/messages/components/EditedLabel.kt`
+  - `feature/chats/impl/presentation/feed/compose/components/messages/components/Timestamp.kt`
+  - `feature/mobrules/impl/presentation/bot/compose/MobRuleCaseCardWidget.kt`
+  - `feature/mobrules/impl/presentation/evidenceDetail/compose/components/MediaEvidenceTopBar.kt`
+  - `feature/videogame/impl/presentation/play/compose/components/HostUnavailableOverlay.kt`
+  - `feature/wallet/impl/presentation/assetDetails/compose/AssetDetailsScreen.kt`
+
+- `Color(0xA8000000)` (fillDark66) — 6
+  - `feature/chats/impl/presentation/feed/compose/components/menu/MessageHistoryContent.kt`
+  - `feature/chats/impl/presentation/feed/compose/components/messages/ReplyPreviewBubble.kt`
+  - `feature/chats/impl/presentation/feed/compose/components/messages/components/EditedLabel.kt`
+  - `feature/chats/impl/presentation/feed/compose/components/messages/components/Timestamp.kt`
+  - `feature/videogame/impl/presentation/play/compose/components/MusicIndicator.kt`
+  - `feature/wallet/impl/presentation/assetDetails/compose/AssetDetailsScreen.kt`
+
+- `Color(0xFF000000)` (fillDark100 / icon-vector tint) — 24
+  - `design/components/icon/vectors/Alert.kt`
+  - `design/components/icon/vectors/ArrowDropdown.kt`
+  - `design/components/icon/vectors/ArrowRightShaft.kt`
+  - `design/components/icon/vectors/Badge.kt`
+  - `design/components/icon/vectors/Barcode.kt`
+  - `design/components/icon/vectors/CalendarToday.kt`
+  - `design/components/icon/vectors/Check.kt`
+  - `design/components/icon/vectors/ContentCopy.kt`
+  - `design/components/icon/vectors/Lock.kt`
+  - `design/components/icon/vectors/More.kt`
+  - `design/components/icon/vectors/Pdf.kt`
+  - `design/components/icon/vectors/PriorityHigh.kt`
+  - `design/components/icon/vectors/Undo.kt`
+  - `design/components/icon/vectors/Upload.kt`
+  - `design/components/icon/vectors/VisibilityOffOutlined.kt`
+  - `design/components/icon/vectors/Vote.kt`
+  - `design/components/progress/Shimmer.kt`
+  - `feature/chats/impl/presentation/feed/compose/components/ChatInputField.kt`
+  - `feature/chats/impl/presentation/feed/compose/components/messages/Utils.kt`
+  - `feature/chats/impl/presentation/list/compose/components/ChatListHeader.kt`
+  - `feature/chats/impl/presentation/list/compose/components/UnreadBadge.kt`
+  - `feature/scan/impl/presentation/scanQr/compose/ImageOverlay.kt`
+  - `feature/wallet/impl/presentation/assetDetails/compose/AssetDetailsScreen.kt`
+  - `feature/wallet/impl/presentation/scanAddressQr/compose/ImageOverlay.kt`
+
+### Spacing literals
+
+- `6.dp` — 13
+  - `feature/chats/impl/presentation/chatRequestsList/compose/components/ChatRequestListItem.kt`
+  - `feature/chats/impl/presentation/feed/compose/components/input/ChatInputRow.kt`
+  - `feature/chats/impl/presentation/feed/compose/components/messages/ReplyPreviewBubble.kt`
+  - `feature/chats/impl/presentation/feed/compose/components/messages/TextMessage.kt`
+  - `feature/chats/impl/presentation/list/compose/components/ChatListItem.kt`
+  - `feature/chats/impl/presentation/list/compose/components/ChatListLoading.kt`
+  - `feature/fund/impl/presentation/fund/terms/compose/components/FundingWidget.kt`
+  - `feature/videogame/impl/presentation/bot/compose/components/UpcomingGameWidget.kt`
+  - `feature/videogame/impl/presentation/play/compose/components/CommonComponents.kt`
+  - `feature/videogame/impl/presentation/play/compose/components/PlayerCell.kt`
+  - `feature/wallet/impl/presentation/assetDetails/compose/AssetDetailsScreen.kt`
+  - `feature/wallet/impl/presentation/assetDetails/compose/components/CoinageDetailScreens.kt`
+  - `feature/wallet/impl/presentation/common/CoinageDeepSearchWidget.kt`
+
+- `10.dp` — 14
+  - `common/presentation/notifications/permissionAsker/compose/NotificationPermissionAsker.kt`
+  - `common/presentation/notifications/permissionAsker/compose/components/BenefitItem.kt`
+  - `design/components/menu/MenuOption.kt`
+  - `design/components/progress/SegmentedArcIndicator.kt`
+  - `feature/chats/impl/presentation/feed/compose/components/ChatInputField.kt`
+  - `feature/chats/impl/presentation/feed/compose/components/input/ChatInputRow.kt`
+  - `feature/chats/impl/presentation/feed/compose/components/messages/TextMessage.kt`
+  - `feature/products/impl/presentation/spaBrowser/compose/components/BrowserMenuContent.kt`
+  - `feature/videogame/impl/presentation/bot/compose/components/AlertSettingsContent.kt`
+  - `feature/videogame/impl/presentation/play/compose/components/CommonComponents.kt`
+  - `feature/videogame/impl/presentation/play/compose/components/PlayerCell.kt`
+  - `feature/wallet/impl/presentation/assetDetails/compose/components/CoinageStateCard.kt`
+  - `feature/wallet/impl/presentation/enterAmount/compose/components/EnterAmountRecipient.kt`
+  - `feature/wallet/impl/presentation/sendPayment/compose/SendPaymentScreen.kt`
+
+- `14.dp` — 16
+  - `feature/become-citizen/impl/presentation/bot/compose/EvidenceProvidedMessage.kt`
+  - `feature/chats/impl/presentation/feed/compose/components/icons/MessageStatusPending.kt`
+  - `feature/chats/impl/presentation/feed/compose/components/icons/MessageStatusRead.kt`
+  - `feature/chats/impl/presentation/feed/compose/components/icons/MessageStatusSent.kt`
+  - `feature/chats/impl/presentation/feed/compose/components/input/ChatInputRow.kt`
+  - `feature/chats/impl/presentation/feed/compose/components/messages/FileMessage.kt`
+  - `feature/chats/impl/presentation/feed/compose/components/messages/MultimediaMessage.kt`
+  - `feature/chats/impl/presentation/feed/compose/components/messages/PaymentMessage.kt`
+  - `feature/chats/impl/presentation/feed/compose/components/messages/TextMessage.kt`
+  - `feature/chats/impl/presentation/feed/compose/components/messages/UnsupportedMessage.kt`
+  - `feature/chats/impl/presentation/feed/compose/components/messages/components/Timestamp.kt`
+  - `feature/mobrules/impl/presentation/bot/compose/MobRuleCaseCardWidget.kt`
+  - `feature/mobrules/impl/presentation/evidenceDetail/compose/components/VideoWatchCountdown.kt`
+  - `feature/upgrade-username/api/presentation/bot/UpgradeUsernameWidget.kt`
+  - `feature/videogame/impl/presentation/play/compose/components/MusicIndicator.kt`
+  - `feature/wallet/impl/presentation/assetDetails/compose/components/CoinageDetailScreens.kt`
+
+- `20.dp` — 26
+  - `design/components/icon/vectors/Edit.kt`
+  - `design/components/icon/vectors/PersonAdd.kt`
+  - `design/components/icon/vectors/ReplyArrow.kt`
+  - `design/components/qr/QrCode.kt`
+  - `feature/backup/impl/backupFound/compose/components/OverrideStep.kt`
+  - `feature/backup/impl/recover/compose/components/OptionButton.kt`
+  - `feature/become-citizen/impl/presentation/reserve/list/compose/components/CanApplyFooter.kt`
+  - `feature/become-citizen/impl/presentation/reserve/list/compose/components/NotEnoughDepositFooter.kt`
+  - `feature/chats/impl/presentation/feed/compose/components/dialog/components/MessageActionMenu.kt`
+  - `feature/chats/impl/presentation/feed/compose/components/input/ChatInputRow.kt`
+  - `feature/chats/impl/presentation/feed/compose/components/messages/ContactAddedMessage.kt`
+  - `feature/chats/impl/presentation/list/compose/components/ChatListLoading.kt`
+  - `feature/chats/impl/presentation/list/compose/components/NewRequestsItem.kt`
+  - `feature/chats/impl/presentation/search/compose/AddContactScreen.kt`
+  - `feature/fund/impl/presentation/fund/terms/compose/components/FundingOperationItem.kt`
+  - `feature/identity/impl/presentation/credentials/add/compose/components/AddProofStepContent.kt`
+  - `feature/mobrules/impl/presentation/bot/compose/VotingButton.kt`
+  - `feature/settings/impl/presentation/backup/conflict/compose/components/OverrideStep.kt`
+  - `feature/settings/impl/presentation/currency/compose/components/CurrencyItem.kt`
+  - `feature/transactions/api/api/presentation/outcome/compose/TransactionOutcomeScreen.kt`
+  - `feature/upgrade-username/api/presentation/bot/UpgradeUsernameWidget.kt`
+  - `feature/videogame/impl/presentation/play/compose/components/PlayerCell.kt`
+  - `feature/videogame/impl/presentation/play/compose/components/TooltipsCommonComponent.kt`
+  - `feature/wallet/impl/presentation/assetDetails/compose/AssetDetailsScreen.kt`
+  - `feature/wallet/impl/presentation/assetDetails/compose/components/CoinageStateCard.kt`
+  - `feature/wallet/impl/presentation/common/CoinageDeepSearchWidget.kt`
+
+- `28.dp` — 17
+  - `app/root/presentation/debug/compose/DebugMenuScreen.kt`
+  - `common/presentation/notifications/permissionAsker/compose/NotificationPermissionAsker.kt`
+  - `common/presentation/notifications/permissionAsker/compose/components/BenefitItem.kt`
+  - `design/components/dialog/AlertDialog.kt`
+  - `design/components/tooltip/icons/TriangleDownIcon.kt`
+  - `design/components/tooltip/icons/TriangleLeftIcon.kt`
+  - `design/components/tooltip/icons/TriangleRightIcon.kt`
+  - `design/components/tooltip/icons/TriangleUpIcon.kt`
+  - `feature/backup/impl/backupFound/compose/components/OverrideStep.kt`
+  - `feature/chats/impl/presentation/feed/compose/components/AttachFileButton.kt`
+  - `feature/chats/impl/presentation/feed/compose/components/icons/Payment.kt`
+  - `feature/fund/impl/presentation/fund/terms/compose/components/FundingOperations.kt`
+  - `feature/products/impl/presentation/productBotManagement/compose/ProductBotManagementScreen.kt`
+  - `feature/settings/impl/presentation/backup/conflict/compose/components/OverrideStep.kt`
+  - `feature/settings/impl/presentation/backup/status/compose/components/MnemonicConfirmationContent.kt`
+  - `feature/usernames/api/presentation/compose/UsernameTextField.kt`
+  - `feature/videogame/impl/presentation/play/compose/icons/Cap.kt`
+
+- `36.dp` — 4
+  - `design/components/error/ErrorUiWidget.kt`
+  - `feature/fund/impl/presentation/fund/terms/compose/components/FundHeader.kt`
+  - `feature/videogame/impl/presentation/play/compose/components/MusicIndicator.kt`
+  - `feature/wallet/impl/presentation/assetDetails/compose/AssetDetailsScreen.kt`
+
+- `44.dp` — 2
+  - `feature/chats/impl/presentation/feed/compose/components/messages/components/SwipeToReplyContainer.kt`
+  - `feature/identity/impl/presentation/credentials/review/compose/CredentialsUnderReviewScreen.kt`
+
+- `48.dp` — 27
+  - `common/presentation/compose/video/VideoPlayerControlsContainer.kt`
+  - `common/presentation/notifications/permissionAsker/compose/NotificationPermissionAsker.kt`
+  - `common/presentation/notifications/permissionAsker/compose/components/BenefitItem.kt`
+  - `design/components/avatar/NovaContactItem.kt`
+  - `design/components/avatar/NovaUserAvatar.kt`
+  - `design/components/bottomsheet/ModalBottomSheet.kt`
+  - `design/components/icon/vectors/TokenDOT.kt`
+  - `design/components/icon/vectors/TokenUSDC.kt`
+  - `design/components/icon/vectors/TokenUSDT.kt`
+  - `feature/backup/impl/mnemonic/common/compose/components/Base.kt`
+  - `feature/become-citizen/impl/presentation/common/compose/EvidenceInstructionScreen.kt`
+  - `feature/become-citizen/impl/presentation/video/instructions/compose/components/PreconditionsBottomSheetContent.kt`
+  - `feature/chats/api/presentation/common/ChatFooterNavigationButton.kt`
+  - `feature/chats/impl/presentation/feed/compose/components/ScrollToNewButton.kt`
+  - `feature/chats/impl/presentation/feed/compose/components/dialog/MessageActionDropdown.kt`
+  - `feature/chats/impl/presentation/feed/compose/components/messages/MultimediaMessage.kt`
+  - `feature/mobrules/impl/presentation/bot/compose/MobRuleCaseCardWidget.kt`
+  - `feature/mobrules/impl/presentation/evidenceDetail/compose/MediaEvidenceDetailScreen.kt`
+  - `feature/mobrules/impl/presentation/voting/compose/components/VotingControls.kt`
+  - `feature/settings/impl/presentation/backup/mnemonic/compose/MnemonicRevealScreen.kt`
+  - `feature/settings/impl/presentation/backup/status/compose/components/BackupInProgressContent.kt`
+  - `feature/settings/impl/presentation/backup/status/compose/components/BackupStatusStateContent.kt`
+  - `feature/settings/impl/presentation/backup/status/compose/components/CheckingForBackup.kt`
+  - `feature/tokens/api/presentation/simpletokenlist/compose/components/AssetItem.kt`
+  - `feature/videogame/impl/presentation/addToCalendar/compose/VideoGameAddToCalendarScreen.kt`
+  - `feature/videogame/impl/presentation/play/compose/components/CommonComponents.kt`
+  - `feature/videogame/impl/presentation/play/compose/components/FinishedState.kt`
+
+- `56.dp` — 12
+  - `design/components/mnemonic/Mnemonic.kt`
+  - `feature/become-citizen/impl/presentation/photo/capture/compose/components/TattooOverlay.kt`
+  - `feature/calls/impl/presentation/call/compose/CallScreen.kt`
+  - `feature/chats/impl/presentation/chatRequestsList/compose/components/ChatRequestListItem.kt`
+  - `feature/chats/impl/presentation/list/compose/components/ChatListItem.kt`
+  - `feature/identity/impl/presentation/credentials/add/compose/components/AddProofStepContent.kt`
+  - `feature/mobrules/impl/presentation/voting/compose/components/VotingCardReportOverlay.kt`
+  - `feature/mobrules/impl/presentation/voting/compose/components/VotingCardSensitiveContentOverlay.kt`
+  - `feature/settings/impl/presentation/backup/status/compose/components/BackupConflictContent.kt`
+  - `feature/settings/impl/presentation/backup/status/compose/components/BackupExistsContent.kt`
+  - `feature/settings/impl/presentation/backup/status/compose/components/GoogleDrivePermissionContent.kt`
+  - `feature/settings/impl/presentation/backup/status/compose/components/NoBackupContent.kt`
+
+- `64.dp` — 7
+  - `design/components/error/ErrorUiWidget.kt`
+  - `feature/become-citizen/impl/presentation/reserve/tattooDetails/compose/components/Review.kt`
+  - `feature/become-citizen/impl/presentation/reserve/tattooDetails/compose/icons/TattooMachine.kt`
+  - `feature/chats/impl/presentation/feed/compose/components/messages/FileMessage.kt`
+  - `feature/products/impl/presentation/signTransaction/compose/loaded/MainContent.kt`
+  - `feature/sso/impl/presentation/pairRequest/compose/PairRequestScreen.kt`
+  - `feature/wallet/impl/presentation/enterAmount/compose/components/EnterAmountRecipient.kt`
+
+### Radius literals
+
+- `RoundedCornerShape(14.dp)` — 2
+  - `feature/chats/impl/presentation/feed/compose/components/input/ChatInputRow.kt`
+  - `feature/mobrules/impl/presentation/bot/compose/MobRuleCaseCardWidget.kt`
+
+- `RoundedCornerShape(20.dp)` — 5
+  - `feature/become-citizen/impl/presentation/reserve/list/compose/components/CanApplyFooter.kt`
+  - `feature/become-citizen/impl/presentation/reserve/list/compose/components/NotEnoughDepositFooter.kt`
+  - `feature/chats/impl/presentation/feed/compose/components/input/ChatInputRow.kt`
+  - `feature/fund/impl/presentation/fund/terms/compose/components/FundingOperationItem.kt`
+  - `feature/wallet/impl/presentation/assetDetails/compose/AssetDetailsScreen.kt`
+
+- `RoundedCornerShape(22.dp)` — 2
+  - `feature/backup/impl/recover/compose/components/OptionButton.kt`
+  - `feature/identity/impl/presentation/credentials/add/compose/components/AddProofStepContent.kt`
+
+- `RoundedCornerShape(28.dp)` — 3
+  - `app/root/presentation/debug/compose/DebugMenuScreen.kt`
+  - `design/components/dialog/AlertDialog.kt`
+  - `feature/products/impl/presentation/productBotManagement/compose/ProductBotManagementScreen.kt`
+
+- `RoundedCornerShape(40.dp)` — 3
+  - `feature/become-citizen/impl/presentation/common/compose/EvidenceInstructionScreen.kt`
+  - `feature/mobrules/impl/presentation/voting/compose/components/VotingCardReportOverlay.kt`
+  - `feature/mobrules/impl/presentation/voting/compose/components/VotingCardSensitiveContentOverlay.kt`
+
+- `RoundedCornerShape(48.dp)` — 2
+  - `common/presentation/notifications/permissionAsker/compose/components/BenefitItem.kt`
+  - `feature/mobrules/impl/presentation/evidenceDetail/compose/MediaEvidenceDetailScreen.kt`
+
 
 ### iOS (later, when iOS team is ready)
 
