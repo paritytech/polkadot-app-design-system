@@ -34,78 +34,61 @@ const renderTextStyle = (variant, indent) => [
   `${indent})`,
 ].join('\n');
 
+// "Inter" -> "inter", "Martian Mono" -> "martian_mono". The lib bundles one variable
+// font per family at `res/font/<slug>_variable.ttf`; Compose selects the weight axis
+// via FontVariation.Settings at the Font(...) call site.
+const fontResourceSlug = (name) =>
+  String(name).toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+
 // Walk all Typescale variants and collect every (font, weight) combination that the
-// typography actually uses. Without this, FontFamily declares only a single Regular cut
-// and Compose silently faux-bolds heavier weights instead of downloading the real ones.
+// typography actually uses. The bundled variable font covers any weight; we emit one
+// Font entry per weight so Compose can pick the right `FontVariation.weight(n)` to
+// stamp onto the variable axis when resolving a TextStyle.
 const collectFamilyWeights = (themeTokens) => {
   const { roles } = parseTypescale(themeTokens);
-  // Map<fontName, Map<weightExpression, numericResolvedWeight>>
+  // Map<fontName, Map<numericWeight, weightExpression>>
   const families = new Map();
   for (const role of roles) {
     for (const size of role.sizes) {
       for (const variant of size.variants) {
         const fontName = String(variant.font.resolved);
-        const expr = inlineWeight(variant.weight);
         const numeric = Number(variant.weight.resolved);
+        const expr = inlineWeight(variant.weight);
         if (!families.has(fontName)) families.set(fontName, new Map());
-        // Earliest numeric wins; expressions are stable for the same weight.
-        if (!families.get(fontName).has(expr)) families.get(fontName).set(expr, numeric);
+        if (!families.get(fontName).has(numeric)) families.get(fontName).set(numeric, expr);
       }
     }
   }
   return families;
 };
 
-const formatFontFamiliesObject = (primitives, themeTokens) => {
-  // Source shape for primitives: path = ['Typography', 'fontStyle', 'sans|mono|accent'].
-  const fontStyles = primitives.filter((t) => t.path[1] === 'fontStyle');
-  const primitiveNames = [...new Set(fontStyles.map((t) => String(t.$value ?? t.value)))];
-
+const formatFontFamiliesObject = (_primitives, themeTokens) => {
   const familyWeights = collectFamilyWeights(themeTokens);
-  // Make sure every font declared in primitives is at least present (with no specific weight).
-  for (const name of primitiveNames) {
-    if (!familyWeights.has(name)) familyWeights.set(name, new Map());
-  }
-
   const sortedNames = [...familyWeights.keys()].sort();
   const familyDecls = sortedNames.flatMap((name) => {
     const slug = fontFamilySlug(name);
-    const entries = [...familyWeights.get(name).entries()].sort((a, b) => a[1] - b[1]);
-    if (entries.length === 0) {
-      // No usage information — keep the family declared with a single Regular cut.
-      return [
-        `    val ${slug} = FontFamily(Font(googleFont = GoogleFont("${name}"), fontProvider = provider))`,
-      ];
-    }
-    if (entries.length === 1) {
-      const [expr] = entries[0];
-      return [
-        `    val ${slug} = FontFamily(Font(googleFont = GoogleFont("${name}"), fontProvider = provider, weight = ${expr}))`,
-      ];
-    }
-    const fontLines = entries.map(([expr], i) => {
+    const resource = `R.font.${fontResourceSlug(name)}_variable`;
+    const entries = [...familyWeights.get(name).entries()].sort((a, b) => a[0] - b[0]);
+    const fontLines = entries.map(([numeric, expr], i) => {
       const tail = i < entries.length - 1 ? ',' : '';
-      return `        Font(googleFont = GoogleFont("${name}"), fontProvider = provider, weight = ${expr})${tail}`;
+      return `        Font(${resource}, ${expr}, variationSettings = FontVariation.Settings(FontVariation.weight(${numeric})))${tail}`;
     });
     return [`    val ${slug} = FontFamily(`, ...fontLines, `    )`];
   });
 
   return [
+    `@file:OptIn(ExperimentalTextApi::class)`,
+    '',
     `package ${PACKAGE}`,
     '',
+    'import androidx.compose.ui.text.ExperimentalTextApi',
+    'import androidx.compose.ui.text.font.Font',
     'import androidx.compose.ui.text.font.FontFamily',
+    'import androidx.compose.ui.text.font.FontVariation',
     'import androidx.compose.ui.text.font.FontWeight',
-    'import androidx.compose.ui.text.googlefonts.Font',
-    'import androidx.compose.ui.text.googlefonts.GoogleFont',
     'import io.pcf.polkadotapp.designsystem.R',
     '',
     `object ${FONT_FAMILIES_OBJECT} {`,
-    '    private val provider = GoogleFont.Provider(',
-    '        providerAuthority = "com.google.android.gms.fonts",',
-    '        providerPackage = "com.google.android.gms",',
-    '        certificates = R.array.com_google_android_gms_fonts_certs',
-    '    )',
-    '',
     ...familyDecls,
     '}',
     '',

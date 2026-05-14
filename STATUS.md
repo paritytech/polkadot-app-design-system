@@ -2,7 +2,7 @@
 
 Snapshot of work to date and remaining steps, so we can pick up cleanly next session.
 
-**Last updated**: 2026-05-14 (post big-bang migration + 0.1.5, full consumer compile green, literals inventory added)
+**Last updated**: 2026-05-14 (post big-bang migration + 0.1.6 font-weight fix; full consumer compile green at 0.1.5; literals inventory in place)
 
 ---
 
@@ -79,7 +79,7 @@ Each generated abstract base file now appends a `staticCompositionLocalOf` decla
 - [x] `design-system/build.gradle.kts` configured for JitPack publish via `maven-publish` plugin (groupId `com.github.novasamatech`, `release` publication with sources jar)
 - [x] JitPack publishing live — consumable as `implementation("com.github.novasamatech:polkadot-app-design-system-android:<tag>")` after adding `maven("https://jitpack.io")` to consumer's `settings.gradle.kts`
 - [x] Verified end-to-end: artifact resolves in a consumer project, generated classes import cleanly
-- [x] Tags published: `0.1.0` (initial drop with the v2 export and rewritten typography), `0.1.1` (regenerated from v4: semantic dimension names + Emoji.Small fix), `0.1.2` (`CircleShape` for `radiusFull` + `LocalPolkadot*` CompositionLocal exports), `0.1.3` (drop redundant `space*`/`radius*`/`border*` leaf prefixes; `compileSdk` lowered 37→36 for AGP 8.12 compatibility), `0.1.4` (AGP 9.2.1 → 8.12.3 and Kotlin 2.3.21 → 2.2.21 to match consumer), `0.1.5` (kotlin plugin configuration fix). Compose BOM kept at `2026.05.00` — consumer to bump. Tags use no `v` prefix.
+- [x] Tags published: `0.1.0` (initial drop with the v2 export and rewritten typography), `0.1.1` (regenerated from v4: semantic dimension names + Emoji.Small fix), `0.1.2` (`CircleShape` for `radiusFull` + `LocalPolkadot*` CompositionLocal exports), `0.1.3` (drop redundant `space*`/`radius*`/`border*` leaf prefixes; `compileSdk` lowered 37→36 for AGP 8.12 compatibility), `0.1.4` (AGP 9.2.1 → 8.12.3 and Kotlin 2.3.21 → 2.2.21 to match consumer), `0.1.5` (kotlin plugin configuration fix), `0.1.6` (`PolkadotFontFamilies` emits per-weight `Font(weight = …)` entries derived from the Typescale — Inter Normal/Medium/SemiBold, Manrope SemiBold/Bold, Martian Mono Normal/Medium/SemiBold — so GMS downloads the real designed cuts instead of faux-bolding Regular). Compose BOM kept at `2026.05.00` — consumer to bump. Tags use no `v` prefix.
 
 ### Skipped (explicit decisions)
 
@@ -103,7 +103,7 @@ Remote live at `git@nova:novasamatech/polkadot-app-design-system.git`, `main` in
 
 ### Android integration (in `polkadot-app-android-v2`)
 
-Big-bang migration done. Consumer pinned to `0.1.5`. **Full Kotlin compile is green** (`./gradlew compileDebugKotlin` succeeds). The earlier `StatementTransportEvent.kt` IR-evaluator crash went away after the lib's AGP/Kotlin downgrade in `0.1.4`/`0.1.5`.
+Big-bang migration done. Consumer was pinned to `0.1.5` when the full compile last went green; `0.1.6` is now published and bringing the per-weight FontFamily fix — consumer bump pending. **Full Kotlin compile is green** at `0.1.5` (`./gradlew compileDebugKotlin` succeeds). The earlier `StatementTransportEvent.kt` IR-evaluator crash went away after the lib's AGP/Kotlin downgrade in `0.1.4`/`0.1.5`.
 
 - [x] **Deleted dead handwritten files**: `Spacings.kt`, `Typography.kt`, `FontFamilies.kt`, `colors/palettes/{NovaColorsPalette,DarkColorsPalette}.kt`. Trimmed `colors/NovaColors.kt` to keep only `NovaStableColors`.
 - [x] **Rewrote `Theme.kt`** with `PolkadotTheme` composable + accessor object exposing `colors`/`typography`/`spacings`/`radii`/`borders` (new); provides all five `LocalPolkadot*` CompositionLocals; inlines best-effort `toMaterialColorScheme()` / `toMaterialTypography()` helpers for the wrapping `MaterialTheme`.
@@ -118,6 +118,7 @@ Big-bang migration done. Consumer pinned to `0.1.5`. **Full Kotlin compile is gr
   - Three top-level `private val`s holding precomputed shapes/widths (`OverlapThumbnailShape`, `ThumbnailShape`, `ThumbnailOuterShape` + their border-width siblings) were removed; usages inlined to `PolkadotTheme.radii.*` / `PolkadotTheme.borders.*` at the composable call site (the property accessors are `@Composable @ReadOnlyComposable` and can't be evaluated at file load).
 - [ ] **Visual QA** — type checker passes; visual regressions are still on the designer/QA side, especially around the typography font-family shift.
 - [ ] **AvatarColorScheme migration** — `design/configs/colors/{AvatarColorScheme,NovaAvatarColors}.kt` left intact (separate hash-keyed assignment logic with 8 enum colors; new lib has `avatar.bg/fg` with 10 gemstone colors, would re-color existing users). Deferred.
+- [ ] **Font flash on cold start** — `Font(googleFont = …)` defaults to `FontLoadingStrategy.Async`, so on first launch text renders with a system fallback for ~a second and then "jumps" to the designed cut once GMS finishes downloading. Recommended fix: `FontFamily.Resolver.preload(...)` for each `PolkadotFontFamilies.{inter,manrope,martianMono}` in `Application.onCreate`, paired with the Android 12+ Splash Screen API's `setKeepOnScreenCondition` to hold the splash until preload completes. Cold-start only — subsequent launches hit the GMS cache. Alternatives: bundle the fonts in the AAR (no flash, +100–300 KB/family), or hybrid (bundled Regular + downloadable heavier weights).
 
 #### Hardcoded literals introduced in consumer
 
@@ -294,23 +295,7 @@ Per-literal file lists below. Counts here may exceed the summary tables above be
   - `feature/videogame/impl/presentation/play/compose/components/MusicIndicator.kt`
   - `feature/wallet/impl/presentation/assetDetails/compose/AssetDetailsScreen.kt`
 
-- `Color(0xFF000000)` (fillDark100 / icon-vector tint) — 24
-  - `design/components/icon/vectors/Alert.kt`
-  - `design/components/icon/vectors/ArrowDropdown.kt`
-  - `design/components/icon/vectors/ArrowRightShaft.kt`
-  - `design/components/icon/vectors/Badge.kt`
-  - `design/components/icon/vectors/Barcode.kt`
-  - `design/components/icon/vectors/CalendarToday.kt`
-  - `design/components/icon/vectors/Check.kt`
-  - `design/components/icon/vectors/ContentCopy.kt`
-  - `design/components/icon/vectors/Lock.kt`
-  - `design/components/icon/vectors/More.kt`
-  - `design/components/icon/vectors/Pdf.kt`
-  - `design/components/icon/vectors/PriorityHigh.kt`
-  - `design/components/icon/vectors/Undo.kt`
-  - `design/components/icon/vectors/Upload.kt`
-  - `design/components/icon/vectors/VisibilityOffOutlined.kt`
-  - `design/components/icon/vectors/Vote.kt`
+- `Color(0xFF000000)` (fillDark100) — 8
   - `design/components/progress/Shimmer.kt`
   - `feature/chats/impl/presentation/feed/compose/components/ChatInputField.kt`
   - `feature/chats/impl/presentation/feed/compose/components/messages/Utils.kt`
@@ -353,11 +338,8 @@ Per-literal file lists below. Counts here may exceed the summary tables above be
   - `feature/wallet/impl/presentation/enterAmount/compose/components/EnterAmountRecipient.kt`
   - `feature/wallet/impl/presentation/sendPayment/compose/SendPaymentScreen.kt`
 
-- `14.dp` — 16
+- `14.dp` — 13
   - `feature/become-citizen/impl/presentation/bot/compose/EvidenceProvidedMessage.kt`
-  - `feature/chats/impl/presentation/feed/compose/components/icons/MessageStatusPending.kt`
-  - `feature/chats/impl/presentation/feed/compose/components/icons/MessageStatusRead.kt`
-  - `feature/chats/impl/presentation/feed/compose/components/icons/MessageStatusSent.kt`
   - `feature/chats/impl/presentation/feed/compose/components/input/ChatInputRow.kt`
   - `feature/chats/impl/presentation/feed/compose/components/messages/FileMessage.kt`
   - `feature/chats/impl/presentation/feed/compose/components/messages/MultimediaMessage.kt`
@@ -371,10 +353,7 @@ Per-literal file lists below. Counts here may exceed the summary tables above be
   - `feature/videogame/impl/presentation/play/compose/components/MusicIndicator.kt`
   - `feature/wallet/impl/presentation/assetDetails/compose/components/CoinageDetailScreens.kt`
 
-- `20.dp` — 26
-  - `design/components/icon/vectors/Edit.kt`
-  - `design/components/icon/vectors/PersonAdd.kt`
-  - `design/components/icon/vectors/ReplyArrow.kt`
+- `20.dp` — 23
   - `design/components/qr/QrCode.kt`
   - `feature/backup/impl/backupFound/compose/components/OverrideStep.kt`
   - `feature/backup/impl/recover/compose/components/OptionButton.kt`
@@ -399,24 +378,18 @@ Per-literal file lists below. Counts here may exceed the summary tables above be
   - `feature/wallet/impl/presentation/assetDetails/compose/components/CoinageStateCard.kt`
   - `feature/wallet/impl/presentation/common/CoinageDeepSearchWidget.kt`
 
-- `28.dp` — 17
+- `28.dp` — 11
   - `app/root/presentation/debug/compose/DebugMenuScreen.kt`
   - `common/presentation/notifications/permissionAsker/compose/NotificationPermissionAsker.kt`
   - `common/presentation/notifications/permissionAsker/compose/components/BenefitItem.kt`
   - `design/components/dialog/AlertDialog.kt`
-  - `design/components/tooltip/icons/TriangleDownIcon.kt`
-  - `design/components/tooltip/icons/TriangleLeftIcon.kt`
-  - `design/components/tooltip/icons/TriangleRightIcon.kt`
-  - `design/components/tooltip/icons/TriangleUpIcon.kt`
   - `feature/backup/impl/backupFound/compose/components/OverrideStep.kt`
   - `feature/chats/impl/presentation/feed/compose/components/AttachFileButton.kt`
-  - `feature/chats/impl/presentation/feed/compose/components/icons/Payment.kt`
   - `feature/fund/impl/presentation/fund/terms/compose/components/FundingOperations.kt`
   - `feature/products/impl/presentation/productBotManagement/compose/ProductBotManagementScreen.kt`
   - `feature/settings/impl/presentation/backup/conflict/compose/components/OverrideStep.kt`
   - `feature/settings/impl/presentation/backup/status/compose/components/MnemonicConfirmationContent.kt`
   - `feature/usernames/api/presentation/compose/UsernameTextField.kt`
-  - `feature/videogame/impl/presentation/play/compose/icons/Cap.kt`
 
 - `36.dp` — 4
   - `design/components/error/ErrorUiWidget.kt`
@@ -428,16 +401,13 @@ Per-literal file lists below. Counts here may exceed the summary tables above be
   - `feature/chats/impl/presentation/feed/compose/components/messages/components/SwipeToReplyContainer.kt`
   - `feature/identity/impl/presentation/credentials/review/compose/CredentialsUnderReviewScreen.kt`
 
-- `48.dp` — 27
+- `48.dp` — 24
   - `common/presentation/compose/video/VideoPlayerControlsContainer.kt`
   - `common/presentation/notifications/permissionAsker/compose/NotificationPermissionAsker.kt`
   - `common/presentation/notifications/permissionAsker/compose/components/BenefitItem.kt`
   - `design/components/avatar/NovaContactItem.kt`
   - `design/components/avatar/NovaUserAvatar.kt`
   - `design/components/bottomsheet/ModalBottomSheet.kt`
-  - `design/components/icon/vectors/TokenDOT.kt`
-  - `design/components/icon/vectors/TokenUSDC.kt`
-  - `design/components/icon/vectors/TokenUSDT.kt`
   - `feature/backup/impl/mnemonic/common/compose/components/Base.kt`
   - `feature/become-citizen/impl/presentation/common/compose/EvidenceInstructionScreen.kt`
   - `feature/become-citizen/impl/presentation/video/instructions/compose/components/PreconditionsBottomSheetContent.kt`
@@ -471,10 +441,9 @@ Per-literal file lists below. Counts here may exceed the summary tables above be
   - `feature/settings/impl/presentation/backup/status/compose/components/GoogleDrivePermissionContent.kt`
   - `feature/settings/impl/presentation/backup/status/compose/components/NoBackupContent.kt`
 
-- `64.dp` — 7
+- `64.dp` — 6
   - `design/components/error/ErrorUiWidget.kt`
   - `feature/become-citizen/impl/presentation/reserve/tattooDetails/compose/components/Review.kt`
-  - `feature/become-citizen/impl/presentation/reserve/tattooDetails/compose/icons/TattooMachine.kt`
   - `feature/chats/impl/presentation/feed/compose/components/messages/FileMessage.kt`
   - `feature/products/impl/presentation/signTransaction/compose/loaded/MainContent.kt`
   - `feature/sso/impl/presentation/pairRequest/compose/PairRequestScreen.kt`
@@ -551,7 +520,7 @@ Target flow: designer PR in tokens repo → on merge, regenerate Kotlin, bump ve
 ### Tokens generator
 
 ```
-cd /Users/den/IdeaProjects/polkadot-app-design-system
+cd <tokens-repo>
 node build.js
 find out -name "*.kt" | wc -l    # should be 12
 ```
@@ -561,7 +530,7 @@ Expected: 12 Kotlin files emitted, no errors. Typography skip-log should be empt
 ### Android distribution (local Maven smoke test)
 
 ```
-cd /Users/den/AndroidProjects/polkadot-app-design-system-android
+cd <android-lib-repo>
 ./gradlew :design-system:publishToMavenLocal
 ls ~/.m2/repository/com/github/novasamatech/polkadot-app-design-system-android/
 ```
