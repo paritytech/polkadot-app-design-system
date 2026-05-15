@@ -4,6 +4,7 @@ import StyleDictionary from 'style-dictionary';
 import * as colors from './colors.js';
 import * as typography from './typography.js';
 import * as dimensions from './dimensions.js';
+import * as themes from './themes.js';
 
 export const register = () => {
   colors.register();
@@ -139,4 +140,5 @@ export const run = async () => {
   await runColors();
   await runTypography();
   await runDimensions();
+  await themes.run();
 };
