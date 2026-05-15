@@ -2,7 +2,7 @@
 
 Snapshot of work to date and remaining steps, so we can pick up cleanly next session.
 
-**Last updated**: 2026-05-14 — pick up here with full context: lib at `0.1.7` (variable fonts bundled, no GMS, AGP 8.12.3 + Kotlin 2.2.21 + compileSdk 36), consumer pinned to `0.1.7` with full Kotlin compile green, literals inventory recorded below, dimensions prefix-stripped vs colors verbatim is intentional (see "Naming conventions").
+**Last updated**: 2026-05-15 — pick up here with full context: lib at `0.1.7` (variable fonts bundled, no GMS, AGP 8.12.3 + Kotlin 2.2.21 + compileSdk 36), consumer pinned to `0.1.7` with full Kotlin compile green, literals inventory recorded below, dimensions prefix-stripped vs colors verbatim is intentional (see "Naming conventions"). The consumer migration lives on `feature/design-system-tokens` (not merged to `master`); subsequent same-day commits after the 2026-05-14 STATUS write knocked out the deferred `AvatarColorScheme`, removed `NovaStableColors`, migrated `CircleShape`, updated the JS widget bridge to new token names, and stripped splash-screen + downloadable-font infrastructure from the consumer entirely — see Android integration section.
 
 ---
 
@@ -124,8 +124,18 @@ Big-bang migration done. Consumer pinned to `0.1.7` (variable-font bundle); full
   - **Borders**: 21 sites (`BorderStroke(1.dp/2.dp, …)` and `.border(1.dp/2.dp, …)`) → `PolkadotTheme.borders.default`/`medium`
   - **Radii**: 82 exact-match sites (`RoundedCornerShape(0/4/6/8/12/16/24/32.dp)`) → `PolkadotTheme.radii.{zero,tiny,extraSmall,small,medium,mediumIncreased,large,extraLarge}`; 18 off-scale sites (14/20/22/28/40/48 dp) kept as `RoundedCornerShape(N.dp)` literals
   - Three top-level `private val`s holding precomputed shapes/widths (`OverlapThumbnailShape`, `ThumbnailShape`, `ThumbnailOuterShape` + their border-width siblings) were removed; usages inlined to `PolkadotTheme.radii.*` / `PolkadotTheme.borders.*` at the composable call site (the property accessors are `@Composable @ReadOnlyComposable` and can't be evaluated at file load).
-- [ ] **Visual QA** — type checker passes; visual regressions are still on the designer/QA side, especially around the typography font-family shift.
-- [ ] **AvatarColorScheme migration** — `design/configs/colors/{AvatarColorScheme,NovaAvatarColors}.kt` left intact (separate hash-keyed assignment logic with 8 enum colors; new lib has `avatar.bg/fg` with 10 gemstone colors, would re-color existing users). Deferred.
+- [x] **AvatarColorScheme migration** — `NovaAvatarPalette` and `NovaAvatarColors.kt` deleted. `AvatarColorScheme` enum re-cut from the old 8 colors (BlueViolet/Magenta/Cyan/Violet/Pink/Green/Yellow/Red) to the new 10 gemstones (Amethyst/Emerald/Garnet/Onyx/Opal/Pearl/Ruby/Sapphire/Topaz/Turquoise). `background`/`foreground` are now `@Composable @ReadOnlyComposable` properties that read from `PolkadotTheme.colors.avatar.bg/fg`. The hash-keyed dispatch (`from(key)`) is preserved but inlined into one function. Existing users **will be recolored** — bucket count and hue palette both changed; this was accepted as the right call rather than carrying the old palette forward.
+- [x] **`NovaStableColors` removal** — the file held over from the first pass (`Gray*`, `BrandPink/Blue/Cyan`, `BrandLime*`, `WeeklyGamePillBackground`, `Yellow`, `Black70`) was deleted. Call sites replaced with `PolkadotColorsPrimitives.*` (e.g. `BrandPink → PinkPink600`, `BrandBlue → BlueBlue600`, `BrandCyan → AdvancedTurquoiseTurquoise600`, `Gray200/300 → NeutralNeutral900/950`, `BrandGreen → GreenGreen400`, `Yellow → AmberAmber500`, `Gray → ZincZinc100`, `Black70 → AlphaBlackBlackAlpha48`). **Caveat**: primitives are *not* semantic palette entries, so if the palette shifts they won't follow. Marked "for now" in the commit message — revisit if a semantic role gets added to the design system (e.g. brand-accent, off-surface).
+- [x] **`CircleShape` migration** — ~40 call sites of `androidx.compose.foundation.shape.CircleShape` (mostly on avatars, round buttons, indicators, message-action chrome) swapped for `PolkadotTheme.radii.full`. The latter is `CircleShape` under the hood (`fullShapeKey` in `dimensions.js`), so behavior is identical; gain is one less import and a single source of truth.
+- [x] **JS widget bridge token names** — `JsColor` and `JsTypographyStyle` SerialNames updated to the new dot-path tokens. `JsColor`: `textPrimary→fg.primary`, `textSecondary→fg.secondary`, `textTertiary→fg.tertiary`, `error→fg.error`, `success→fg.success`, `warning→fg.warning`. `JsTypographyStyle`: `headline→title.medium.regular`, `caption→body.small.regular`. Plus `JsWidget`/`ScaleWidgetMapper`/`ScaleWidgetModels`/`JsModifierExt`/`JsWidgetRenderer` adjusted for compat with the new contract. JS side must ship matching token strings.
+- [x] **Splash screen + downloadable fonts removed from consumer** — completes the cold-start font story end-to-end. Detour: a `FontPreloader` was added that called `createFontFamilyResolver(context).preload(...)` for `inter`/`manrope`/`martianMono` with a 2 s timeout, then commented out because the splash gating added ~1 s. With variable fonts bundled in the AAR there's nothing async left to wait on, so the splash itself was dropped too. Deletions: `Theme.PolkadotApp.SplashScreen` style, `FontPreloader.kt`, `RootViewModel`'s `preloadFonts()` plumbing, `core-splashscreen` dep, `androidx-compose-ui-text-google-fonts` dep, the legacy `common/res/font/inter.xml` GMS-downloadable font config, the static `inter_regular/medium/semi_bold.ttf` fallback fonts, and `font_certs.xml`. Consumer now ships **zero** font assets — all three families come from the design system AAR.
+- [x] **Ripple color tied to token** — `Theme.kt` had a hardcoded `Color(0x3DFFFFFF)` (the old `fill24`) for `LocalIndication provides ripple(color = …)`. Now `colors.fg.primary`. Drops one entry from the `Color(0x3DFFFFFF)` literal table below (4 → 3 sites, `design/theme/Theme.kt` removed from the file list).
+- [x] **`InstructionGenerator` font fix** — the tattoo-evidence PDF generator was still loading the deleted `RCommon.font.inter_{regular,medium,semi_bold}` static cuts. Switched to a single `RDesign.font.inter_variable` typeface across all four `TextPaint`s, with `fontVariationSettings = "'wght' N"` per weight role (400 / 500 / 600). Matches the pattern the generated `PolkadotFontFamilies` uses on the Compose side.
+- [x] **`KnownTokensFormatter` brand-color swap** — preview/mock token formatters that pinned `BrandPink/BrandBlue/BrandCyan` updated to the same primitive colors as the stable-color removal (`PinkPink600` / `BlueBlue600` / `AdvancedTurquoiseTurquoise600`). Tail end of the same cleanup.
+- [x] **Legacy XML colors/themes cleanup** — `common/res/values/{attrs,colors,themes}.xml` pared down by ~60% (legacy Nova attrs, color refs, and theme entries that the Compose migration left orphaned). `bottom_nav_icon_tint.xml`, `fragment_main.xml`, `bg_tattoo_placeholder.xml` adjusted to match.
+- [x] **Old voting screen deleted** — `feature/mobrules/impl/.../voting/{VoteFragment,VoteViewModel,VoteContract}` plus the entire `voting/compose/{components,icons}/` subtree (~2250 LOC: `VoteScreen`, `VotingCardContent`, `VideoCardContent`, `PhotoCardContent`, `ReportUsernameCardContent`, `CredentialsCardContent`, `VotingCardReportOverlay`, `VotingCardSensitiveContentOverlay`, `VoteButton`, `VotingControls`, `VotingStamp`, `EvidenceVideoController`, `VideoProofContentView`, etc.). Voting model classes (`VotingCaseUiModel`, `VotingOption`) moved `voting/model/` → `bot/model/`. Branch-incidental cleanup, not tokens-related — flagged because reviewers of the design-system PR will see it.
+- [ ] **Visual QA** — type checker passes; visual regressions are still on the designer/QA side, especially around the typography font-family shift (Inter → Manrope on headers), the `AvatarColorScheme` recoloring, and the `NovaStableColors → primitives` swap.
+- [ ] **Merge `feature/design-system-tokens` to `master`** — branch is up to date with origin; all migration work above is on this branch. Master is untouched.
 - [x] **Font flash on cold start** — resolved in `0.1.7` by bundling variable fonts in the AAR (`res/font/{inter,manrope,martian_mono}_variable.ttf`). No more async download, no faux-text flash. AAR grew by ~670 KB; minSdk requirement is now effectively 26 for axis variation (consumer is 29, no issue). Variable fonts also future-proof against designers adding new weights — generator just emits another `Font(...)` line, no new resource file needed.
 
 #### Hardcoded literals introduced in consumer
@@ -137,11 +147,11 @@ These design tokens had no clean equivalent in the new generated lib, so call si
 | Old token | Literal | Files |
 |-----------|---------|-------|
 | `fill2` | `Color(0x05FFFFFF)` | 1 |
-| `fill6` | `Color(0x0FFFFFFF)` | 14 |
+| `fill6` | `Color(0x0FFFFFFF)` | 13 |
 | `fill8` | `Color(0x14FFFFFF)` | 11 |
-| `fill12` | `Color(0x1FFFFFFF)` | 27 |
-| `fill18` | `Color(0x2EFFFFFF)` | 4 |
-| `fill24` | `Color(0x3DFFFFFF)` | 4 |
+| `fill12` | `Color(0x1FFFFFFF)` | 26 |
+| `fill18` | `Color(0x2EFFFFFF)` | 3 |
+| `fill24` | `Color(0x3DFFFFFF)` | 2 |
 | `fill30` | `Color(0x4DFFFFFF)` | 1 |
 | `fill48` | `Color(0x7AFFFFFF)` | 2 |
 | `fill70` | `Color(0xB3FFFFFF)` | 2 |
@@ -181,7 +191,7 @@ To find them: `grep -rn "Color(0x[0-9A-F]\{8\})" --include="*.kt" polkadot-app-a
 | `RoundedCornerShape(20.dp)` | 5 |
 | `RoundedCornerShape(22.dp)` | 2 |
 | `RoundedCornerShape(28.dp)` | 3 |
-| `RoundedCornerShape(40.dp)` | 3 |
+| `RoundedCornerShape(40.dp)` | 1 |
 | `RoundedCornerShape(48.dp)` | 2 |
 
 #### File-level inventory
@@ -193,7 +203,7 @@ Per-literal file lists below. Counts here may exceed the summary tables above be
 - `Color(0x05FFFFFF)` (fill2) — 1
   - `design/components/progress/Shimmer.kt`
 
-- `Color(0x0FFFFFFF)` (fill6) — 14
+- `Color(0x0FFFFFFF)` (fill6) — 13
   - `design/components/button/ButtonColors.kt`
   - `design/components/mnemonic/MnemonicHolder.kt`
   - `design/components/text/TextField.kt`
@@ -204,7 +214,6 @@ Per-literal file lists below. Counts here may exceed the summary tables above be
   - `feature/chats/impl/presentation/feed/compose/components/messages/PaymentMessage.kt`
   - `feature/fund/impl/presentation/fund/terms/compose/components/FundingWidget.kt`
   - `feature/identity/impl/presentation/credentials/add/compose/components/AddProofStepContent.kt`
-  - `feature/mobrules/impl/presentation/voting/compose/components/VideoCardContent.kt`
   - `feature/wallet/impl/presentation/assetDetails/compose/AssetDetailsScreen.kt`
   - `feature/wallet/impl/presentation/assetDetails/compose/components/CoinageDetailScreens.kt`
   - `feature/wallet/impl/presentation/enterAmount/compose/SendEnterAmountScreen.kt`
@@ -222,7 +231,7 @@ Per-literal file lists below. Counts here may exceed the summary tables above be
   - `feature/videogame/impl/presentation/bot/compose/WeeklyGameBotFooter.kt`
   - `feature/videogame/impl/presentation/play/compose/components/PlayerCell.kt`
 
-- `Color(0x1FFFFFFF)` (fill12) — 28
+- `Color(0x1FFFFFFF)` (fill12) — 27
   - `design/components/avatar/NovaAddressAvatar.kt`
   - `design/components/button/ButtonColors.kt`
   - `design/components/compound/Switch.kt`
@@ -243,7 +252,6 @@ Per-literal file lists below. Counts here may exceed the summary tables above be
   - `feature/identity/impl/presentation/credentials/add/compose/components/AddProofStepContent.kt`
   - `feature/mobrules/impl/presentation/bot/renderer/MobRuleVotedCaseMessageRenderer.kt`
   - `feature/mobrules/impl/presentation/evidenceDetail/compose/components/VideoWatchCountdown.kt`
-  - `feature/mobrules/impl/presentation/voting/compose/components/VoteButton.kt`
   - `feature/settings/impl/presentation/backup/status/compose/components/BackupStatusStateContent.kt`
   - `feature/tokens/api/presentation/simpletokenlist/compose/components/AssetItem.kt`
   - `feature/usernames/api/presentation/compose/UsernameTextField.kt`
@@ -252,17 +260,14 @@ Per-literal file lists below. Counts here may exceed the summary tables above be
   - `feature/wallet/impl/presentation/enterAmount/compose/components/EnterAmountRecipient.kt`
   - `feature/wallet/impl/presentation/identityDetails/compose/IdentityDetailsScreen.kt`
 
-- `Color(0x2EFFFFFF)` (fill18) — 4
+- `Color(0x2EFFFFFF)` (fill18) — 3
   - `feature/become-citizen/impl/presentation/common/compose/EvidenceInstructionScreen.kt`
   - `feature/calls/impl/presentation/call/compose/components/CallControlButton.kt`
   - `feature/calls/impl/presentation/call/compose/components/CallStateBanner.kt`
-  - `feature/mobrules/impl/presentation/voting/compose/components/VideoCardContent.kt`
 
-- `Color(0x3DFFFFFF)` (fill24) — 4
+- `Color(0x3DFFFFFF)` (fill24) — 2
   - `design/components/dialog/AlertDialog.kt`
-  - `design/theme/Theme.kt`
   - `feature/chats/impl/presentation/feed/compose/components/input/ChatInputRow.kt`
-  - `feature/mobrules/impl/presentation/voting/compose/components/VotingCardContent.kt`
 
 - `Color(0x4DFFFFFF)` (fill30) — 1
   - `design/components/progress/Shimmer.kt`
@@ -409,7 +414,7 @@ Per-literal file lists below. Counts here may exceed the summary tables above be
   - `feature/chats/impl/presentation/feed/compose/components/messages/components/SwipeToReplyContainer.kt`
   - `feature/identity/impl/presentation/credentials/review/compose/CredentialsUnderReviewScreen.kt`
 
-- `48.dp` — 24
+- `48.dp` — 23
   - `common/presentation/compose/video/VideoPlayerControlsContainer.kt`
   - `common/presentation/notifications/permissionAsker/compose/NotificationPermissionAsker.kt`
   - `common/presentation/notifications/permissionAsker/compose/components/BenefitItem.kt`
@@ -425,7 +430,6 @@ Per-literal file lists below. Counts here may exceed the summary tables above be
   - `feature/chats/impl/presentation/feed/compose/components/messages/MultimediaMessage.kt`
   - `feature/mobrules/impl/presentation/bot/compose/MobRuleCaseCardWidget.kt`
   - `feature/mobrules/impl/presentation/evidenceDetail/compose/MediaEvidenceDetailScreen.kt`
-  - `feature/mobrules/impl/presentation/voting/compose/components/VotingControls.kt`
   - `feature/settings/impl/presentation/backup/mnemonic/compose/MnemonicRevealScreen.kt`
   - `feature/settings/impl/presentation/backup/status/compose/components/BackupInProgressContent.kt`
   - `feature/settings/impl/presentation/backup/status/compose/components/BackupStatusStateContent.kt`
@@ -435,15 +439,13 @@ Per-literal file lists below. Counts here may exceed the summary tables above be
   - `feature/videogame/impl/presentation/play/compose/components/CommonComponents.kt`
   - `feature/videogame/impl/presentation/play/compose/components/FinishedState.kt`
 
-- `56.dp` — 12
+- `56.dp` — 10
   - `design/components/mnemonic/Mnemonic.kt`
   - `feature/become-citizen/impl/presentation/photo/capture/compose/components/TattooOverlay.kt`
   - `feature/calls/impl/presentation/call/compose/CallScreen.kt`
   - `feature/chats/impl/presentation/chatRequestsList/compose/components/ChatRequestListItem.kt`
   - `feature/chats/impl/presentation/list/compose/components/ChatListItem.kt`
   - `feature/identity/impl/presentation/credentials/add/compose/components/AddProofStepContent.kt`
-  - `feature/mobrules/impl/presentation/voting/compose/components/VotingCardReportOverlay.kt`
-  - `feature/mobrules/impl/presentation/voting/compose/components/VotingCardSensitiveContentOverlay.kt`
   - `feature/settings/impl/presentation/backup/status/compose/components/BackupConflictContent.kt`
   - `feature/settings/impl/presentation/backup/status/compose/components/BackupExistsContent.kt`
   - `feature/settings/impl/presentation/backup/status/compose/components/GoogleDrivePermissionContent.kt`
@@ -479,24 +481,34 @@ Per-literal file lists below. Counts here may exceed the summary tables above be
   - `design/components/dialog/AlertDialog.kt`
   - `feature/products/impl/presentation/productBotManagement/compose/ProductBotManagementScreen.kt`
 
-- `RoundedCornerShape(40.dp)` — 3
+- `RoundedCornerShape(40.dp)` — 1
   - `feature/become-citizen/impl/presentation/common/compose/EvidenceInstructionScreen.kt`
-  - `feature/mobrules/impl/presentation/voting/compose/components/VotingCardReportOverlay.kt`
-  - `feature/mobrules/impl/presentation/voting/compose/components/VotingCardSensitiveContentOverlay.kt`
 
 - `RoundedCornerShape(48.dp)` — 2
   - `common/presentation/notifications/permissionAsker/compose/components/BenefitItem.kt`
   - `feature/mobrules/impl/presentation/evidenceDetail/compose/MediaEvidenceDetailScreen.kt`
 
 
-### iOS (later, when iOS team is ready)
+### iOS
 
-- [ ] **Create `platforms/swift/`** with files mirroring `platforms/compose/`:
-  - `swift.js` — Swift identifier rules, hex→`Color(red:green:blue:opacity:)` converter
-  - `colors.js`, `typography.js`, `dimensions.js` — Swift emitters
-  - `index.js` — `register()` + `run()`
-- [ ] **Wire into `build.js`** — two extra lines (`import` + `swift.register()`/`swift.run()`)
-- [ ] **`out/ios/`** mirrors the Swift project's source layout
+iOS team sent a template at `/Users/den/Downloads/Telegram Desktop/Generated/` describing the shape they want (colors + typography + their registry/selection plumbing). First pass landed 2026-05-15.
+
+- [x] **`platforms/swift/`** mirroring `platforms/compose/`:
+  - `swift.js` — `flatCamel` joins dotted token paths into single Swift camelCase identifiers (`fg.primary` → `fgPrimary`, `bg.surface.container-inverted` → `bgSurfaceContainerInverted`, `avatar.bg.amethyst` → `avatarBgAmethyst`); `hexToSwiftColor` emits `UIColor(rgbHex: 0xRRGGBB)` for 6-digit and `UIColor(rgbaHex: 0xRRRR_RRRR)` for 8-digit (the `_` between hex byte 2 and 3 matches the template); `fontFamilySlug` is camel of the font name (`"Inter"` → `inter`, `"Martian Mono"` → `martianMono`); `fontWeightExpr` extracts the leaf from `{Typography.fontWeight.semiBold}` refs and emits `.semiBold`.
+  - `colors.js` — emits `ThemeColorsProtocol.swift` (protocol + `ThemeColor` enum + default `color(_:)` extension), `Themes/PolkadotDefaultTheme.swift` (concrete `CommonTheme` subclass with inner `Colors` class), `ThemeSelection.swift`, `ThemesRegistry.swift`. Walks semantic palette via flatten-and-sort; output is alphabetical by Swift identifier (matches Compose's `sortedEntries` convention; differs from the template's hand-curated `// MARK:`-grouped ordering — agreed cosmetic difference).
+  - `typography.js` — emits `TypographyTypescale.swift` (`Typescale` enum with one case per source entry, `spec` switch returning `TypographyStyleSpec(family:[monoFamily:]size:weight:[emphasizedWeight:]lineHeight:tracking:)`, plus `TypographyStyle.<typescale>` static factories grouped by role with blank lines), `TypographySelection.swift`, `TypographyFamiliesRegistry.swift`. Role/size ordering: Display → Headline → Title → Paragraph → Body → Label → Emoji; sizes descending (ExtraLarge → Large → Medium → Small → Tiny). Multi-line spec format when `monoFamily` or `emphasizedWeight` is present, single-line otherwise — byte-identical to the template's wrapping. **Per user decision**, `family:` uses the literal font names (`.inter`, `.manrope`, `.martianMono`) rather than the template's abstract `.sans`/`.accent`/`.mono`.
+  - `index.js` — `register()` + `run()`; two pipeline runs (colors, typography). Per-theme concrete files run in their own Style Dictionary build to resolve refs against primitives; registry + protocol files come along with the first theme's run.
+- [x] **`build.js`** updated to `import * as swift` and call `swift.register()` / `await swift.run()`.
+- [x] **`out/ios/`** flat at repo root with the seven Swift files (`ThemeColorsProtocol.swift`, `ThemeSelection.swift`, `ThemesRegistry.swift`, `Themes/PolkadotDefaultTheme.swift`, `TypographyTypescale.swift`, `TypographySelection.swift`, `TypographyFamiliesRegistry.swift`). Matches the template's directory layout.
+- [x] **Diff vs. template** — 4 files byte-identical (`ThemeSelection`, `TypographySelection`, `ThemesRegistry`, `TypographyFamiliesRegistry`). `TypographyTypescale.swift` byte-identical apart from the agreed `.sans/.accent/.mono` → `.inter/.manrope/.martianMono` family swap. `ThemeColorsProtocol.swift` + `Themes/PolkadotDefaultTheme.swift` semantically identical (same identifiers, same hex literals, same `rgbHex:` vs `rgbaHex:` choice, same underscore split for 8-digit values) — only cosmetic difference is alphabetical ordering vs the template's MARK-grouped ordering.
+
+The `lib/` directory remains platform-independent (`token-tree.js`, `utils.js`); `lib/typography-analysis.js` is unused by Swift (the iOS Typescale schema emits one spec per source entry rather than expanding into role/size/variant TextStyles like Compose does), but stays in place for Compose. The Swift typography emitter inlines its own ~10-line `byEntry` builder.
+
+#### Open with the iOS team
+
+- [ ] **Cosmetic ordering** — confirm alphabetical-by-identifier is acceptable, or send back a preferred grouping rule (current code in `platforms/swift/colors.js` sorts via `sortLeaves`; we can add a top-level group preference table if they want MARK headers).
+- [ ] **`PolkadotDefaultTypography.swift`** — the family class referenced by `TypographyFamiliesRegistry.factories[.polkadotDefault]: PolkadotDefaultTypography.init`. We assume iOS team writes this by hand (it maps `.inter` / `.manrope` / `.martianMono` to actual `UIFont` resolutions with per-weight cuts — knowledge the generator doesn't have access to from the source). Confirm; if they want us to generate it too, we'll need a sample of `TypographyFamily`'s shape.
+- [ ] **Dimensions / radii / borders** — not present in the template. Deferred until the iOS team picks a shape. We have all three in source; emitting Swift versions is a follow-up `platforms/swift/dimensions.js`.
 
 The `lib/` directory contains all platform-independent work (token tree, reference resolution, typography role analysis); Swift formatters reuse it without modification.
 
@@ -518,12 +530,16 @@ Target flow: designer PR in tokens repo → on merge, regenerate Kotlin, bump ve
 
 Tokens repo (`polkadot-app-design-system`):
 
-- `build.js` — entry point, 5 lines
+- `build.js` — entry point. Registers both `compose` and `swift` platforms; runs Compose pipeline then Swift pipeline.
 - `platforms/compose/index.js` — registers SD formatters and runs the pipeline; three runs (colors / typography / dimensions). The typography run combines the primitives source with the first theme source so `formatFontFamiliesObject` can see which `(font, weight)` pairs the Typescale actually uses.
 - `platforms/compose/typography.js` — Kotlin emitter for typography. `formatFontFamiliesObject` emits the bundled-variable-font `Font(...)` declarations. The three role shapes (flat / uniform / mixed) are formatted in `baseClassRoleBlocks` and `concreteRoleOverride`.
 - `platforms/compose/colors.js` — colors emitter. `primitiveName` PascalCases path segments verbatim (no ancestor strip).
 - `platforms/compose/dimensions.js` — spacings/radii/borders emitter. `stripGroupPrefix` removes the redundant `Space`/`Radius`/`Border` prefix from leaf keys before identifier generation.
-- `lib/typography-analysis.js` — Typescale parser; splits each entry into role/size, generates variants per `variantBuilders`. Exports `roleShape` (flat / uniform / mixed) consumed by the Kotlin formatter.
+- `platforms/swift/swift.js` — `flatCamel(path)`, `hexToSwiftColor(hex)`, `fontFamilySlug(name)`, `fontWeightExpr(entry)`.
+- `platforms/swift/colors.js` — emits `ThemeColorsProtocol.swift`, `Themes/<class>.swift`, `ThemeSelection.swift`, `ThemesRegistry.swift`. Output sorted alphabetically by Swift identifier. `themes` list at the bottom holds per-theme metadata (`className`, `selectionKey`, `systemStyle`, `statusBarStyle`).
+- `platforms/swift/typography.js` — emits `TypographyTypescale.swift`, `TypographySelection.swift`, `TypographyFamiliesRegistry.swift`. Inlines its own `buildEntries` byEntry parser; uses literal font slugs (`.inter`/`.manrope`/`.martianMono`); multi-line spec format only when `monoFamily` or `emphasizedWeight` is present.
+- `platforms/swift/index.js` — `register()` + `run()`; two pipeline runs (colors, typography).
+- `lib/typography-analysis.js` — Typescale parser; splits each entry into role/size, generates variants per `variantBuilders`. Exports `roleShape` (flat / uniform / mixed) consumed by the Kotlin formatter. (Swift typography emitter doesn't use this — it inlines its own byEntry loop because the iOS Typescale schema is one-spec-per-source-entry.)
 - `README.md` — architecture overview
 
 Android lib repo (`polkadot-app-design-system-android`):
@@ -536,7 +552,7 @@ Consumer (`polkadot-app-android-v2`):
 
 - `gradle/libs.versions.toml` — pin `design-system = "0.1.7"`.
 - `design/src/main/java/io/pcf/polkadotapp/design/theme/Theme.kt` — `PolkadotTheme` composable + accessor object; wires the five `LocalPolkadot*` CompositionLocals and inlines Material-3 conversion helpers.
-- `design/src/main/java/io/pcf/polkadotapp/design/configs/colors/{NovaColors,AvatarColorScheme,NovaAvatarColors}.kt` — surviving handwritten code: `NovaStableColors` (brand colors), avatar hash-keyed color logic.
+- `design/src/main/java/io/pcf/polkadotapp/design/configs/colors/AvatarColorScheme.kt` — only surviving handwritten color file: the 10-gemstone `AvatarColorScheme` enum with hash-keyed dispatch, now reading `PolkadotTheme.colors.avatar.bg/fg`. `NovaColors.kt` (`NovaStableColors`) and `NovaAvatarColors.kt` (`NovaAvatarPalette`) were deleted; their call sites moved to `PolkadotColorsPrimitives.*`.
 
 ## How to verify everything still works
 

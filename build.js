@@ -6,6 +6,10 @@
 //   2. Import and register it below, then call its run().
 
 import * as compose from './platforms/compose/index.js';
+import * as swift from './platforms/swift/index.js';
 
 compose.register();
+swift.register();
+
 await compose.run();
+await swift.run();
