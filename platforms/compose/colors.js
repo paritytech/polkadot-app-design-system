@@ -164,6 +164,7 @@ export const themes = [
   {
     source: 'source/Theme/Polkadot App Default.json',
     className: 'PolkadotDefaultPalette',
+    selectionKey: 'polkadotDefault',
     file: 'PolkadotDefaultPalette.kt',
   },
 ];

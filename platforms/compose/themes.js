@@ -32,6 +32,10 @@ const STALE_PATH = 'out/android/themes/PolkadotThemes.kt';
 const caseNameFromColors = (className) =>
   pascal(className.replace(/^Polkadot/, '').replace(/Palette$/, ''));
 
+// The persistence key (`selectionKey`) comes from the themes config in
+// colors.js. It must be specified explicitly so the id stays stable even if
+// the Kotlin case name or the concrete class names get renamed — consumers
+// store this value in prefs and look up themes by it via `fromId(id)`.
 const buildCases = () => {
   const colorList = colors.themes;
   const typoList = typography.themes;
@@ -41,8 +45,14 @@ const buildCases = () => {
   for (let i = 0; i < count; i++) {
     const colorTheme = colorList[i] ?? colorList[0];
     const typoTheme = typoList[i] ?? typoList[0];
+    if (!colorTheme.selectionKey) {
+      throw new Error(
+        `Theme at index ${i} (${colorTheme.className}) is missing required \`selectionKey\` in colors.themes config`
+      );
+    }
     cases.push({
       name: caseNameFromColors(colorTheme.className),
+      id: colorTheme.selectionKey,
       colorsClass: colorTheme.className,
       typographyClass: typoTheme.className,
     });
@@ -60,7 +70,7 @@ const formatFile = (cases) => {
 
   const caseLines = cases.map((c, i) => {
     const tail = i < cases.length - 1 ? ',' : ';';
-    return `    ${c.name}${tail}`;
+    return `    ${c.name}(id = "${c.id}")${tail}`;
   });
   const colorsArms = cases.map((c) => `        ${c.name} -> ${c.colorsClass}()`);
   const typographyArms = cases.map((c) => `        ${c.name} -> ${c.typographyClass}()`);
@@ -73,7 +83,7 @@ const formatFile = (cases) => {
     'import io.pcf.polkadotapp.designsystem.typography.PolkadotTypography',
     ...typographyImports,
     '',
-    `enum class ${ENUM_NAME} {`,
+    `enum class ${ENUM_NAME}(val id: String) {`,
     ...caseLines,
     '',
     '    fun colors(): PolkadotColorsPalette = when (this) {',
@@ -86,6 +96,8 @@ const formatFile = (cases) => {
     '',
     '    companion object {',
     `        val DEFAULT = ${cases[0].name}`,
+    '',
+    `        fun fromId(id: String?): ${ENUM_NAME} = entries.find { it.id == id } ?: DEFAULT`,
     '    }',
     '}',
     '',
