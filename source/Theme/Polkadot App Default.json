@@ -679,7 +679,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.Advanced.opal.opal300}"
+        "$value": "{Color.Advanced.opal.opal950}"
       },
       "turquoise": {
         "$extensions": {
@@ -863,6 +863,28 @@
         "$type": "color",
         "$value": "{Color.Advanced.garnet.garnet100}"
       }
+    }
+  },
+  "gradient": {
+    "navigation-overlay-start": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "$type": "color",
+      "$value": "{Color.Alpha.black.blackAlpha80}"
+    },
+    "navigation-overlay-end": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "$type": "color",
+      "$value": "{Color.Alpha.black.blackAlpha0}"
     }
   }
 }

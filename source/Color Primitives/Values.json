@@ -173,6 +173,26 @@
           },
           "$type": "color",
           "$value": "#0000003d"
+        },
+        "blackAlpha0": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "ALL_SCOPES"
+            ],
+            "com.figma.hiddenFromPublishing": false
+          },
+          "$type": "color",
+          "$value": "#00000000"
+        },
+        "blackAlpha80": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "ALL_SCOPES"
+            ],
+            "com.figma.hiddenFromPublishing": true
+          },
+          "$type": "color",
+          "$value": "#000000cc"
         }
       },
       "white": {
@@ -195,6 +215,26 @@
           },
           "$type": "color",
           "$value": "#ffffff29"
+        },
+        "whiteAlpha0": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "ALL_SCOPES"
+            ],
+            "com.figma.hiddenFromPublishing": false
+          },
+          "$type": "color",
+          "$value": "#ffffff00"
+        },
+        "whiteAlpha80": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "ALL_SCOPES"
+            ],
+            "com.figma.hiddenFromPublishing": false
+          },
+          "$type": "color",
+          "$value": "#ffffffcc"
         }
       },
       "red": {
