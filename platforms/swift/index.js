@@ -98,8 +98,7 @@ const runTypography = async () => {
           destination: 'TypographyFontWeight.swift',
           format: 'swift/typography-font-weight-enum',
         },
-        { destination: 'UIFont+Tokens.swift', format: 'swift/uifont-tokens' },
-        { destination: 'Font+Tokens.swift', format: 'swift/swiftui-font-tokens' }
+        { destination: 'UIFont+Tokens.swift', format: 'swift/uifont-tokens' }
       );
     }
     const sd = new StyleDictionary(

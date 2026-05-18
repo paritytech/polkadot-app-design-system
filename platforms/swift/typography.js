@@ -195,22 +195,6 @@ const formatUIFontExtension = (groups) => {
   ].join('\n');
 };
 
-const formatSwiftUIFontExtension = (groups) => {
-  const lines = intersperseRoleMark(
-    groups,
-    (e) => `    static var ${camel(e.name)}: Font { .app(.${camel(e.name)}) }`
-  );
-  return [
-    'import SwiftUI',
-    '',
-    '@MainActor',
-    'public extension Font {',
-    ...lines,
-    '}',
-    '',
-  ].join('\n');
-};
-
 const formatSelection = (families) => {
   const cases = families.map((f) => `    case ${f.selectionKey}`);
   return [
@@ -337,11 +321,6 @@ export const register = () => {
   StyleDictionary.registerFormat({
     name: 'swift/uifont-tokens',
     format: ({ dictionary }) => formatUIFontExtension(groupByRole(validEntries(dictionary))),
-  });
-
-  StyleDictionary.registerFormat({
-    name: 'swift/swiftui-font-tokens',
-    format: ({ dictionary }) => formatSwiftUIFontExtension(groupByRole(validEntries(dictionary))),
   });
 
   StyleDictionary.registerFormat({
