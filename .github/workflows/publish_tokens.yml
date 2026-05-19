@@ -104,7 +104,6 @@ jobs:
             Regenerated from upstream [polkadot-app-design-system](https://github.com/${{ github.repository }}) at [`${{ github.sha }}`](https://github.com/${{ github.repository }}/commit/${{ github.sha }}).
 
             Files under `Sources/DesignSystem/Generated/` are produced by `node build.js` in the upstream repo. Do not hand-edit — push to upstream `main` to regenerate.
-          reviewers: svojsu
 
   publish-android:
     name: Open PR in polkadot-app-design-system-android
@@ -144,4 +143,3 @@ jobs:
             Regenerated from upstream [polkadot-app-design-system](https://github.com/${{ github.repository }}) at [`${{ github.sha }}`](https://github.com/${{ github.repository }}/commit/${{ github.sha }}).
 
             Files under `design-system/src/main/java/io/pcf/polkadotapp/designsystem/` are produced by `node build.js` in the upstream repo. Do not hand-edit — push to upstream `main` to regenerate.
-          reviewers: foxwoosh
