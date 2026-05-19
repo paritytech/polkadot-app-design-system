@@ -27,10 +27,25 @@ export const dimensionConfigs = [
     baseFile: 'PolkadotRadii.kt',
     concreteFile: 'PolkadotDefaultRadii.kt',
     outputDir: 'out/android/radii/',
+    kind: 'dp',
+    // `full` has no meaningful Dp value (it's CircleShape on the shapes side); skip it here.
+    skipLeaves: ['full'],
+    compositionLocal: 'LocalPolkadotRadii',
+  },
+  {
+    root: 'Radius',
+    baseClass: 'PolkadotShapes',
+    concreteClass: 'PolkadotDefaultShapes',
+    package: 'io.pcf.polkadotapp.designsystem.shapes',
+    baseFormat: 'compose/shapes-base',
+    concreteFormat: 'compose/shapes-concrete',
+    baseFile: 'PolkadotShapes.kt',
+    concreteFile: 'PolkadotDefaultShapes.kt',
+    outputDir: 'out/android/shapes/',
     kind: 'shape',
     // Leaf names matching this key are emitted as CircleShape rather than RoundedCornerShape.
     fullShapeKey: 'full',
-    compositionLocal: 'LocalPolkadotRadii',
+    compositionLocal: 'LocalPolkadotShapes',
   },
   {
     root: 'Border',
@@ -75,8 +90,15 @@ const dimensionConcreteRhs = (token, cfg) => {
   return `${value}.dp`;
 };
 
+const tokensForCfg = (tokens, cfg) => {
+  const skip = new Set(cfg.skipLeaves ?? []);
+  return tokens
+    .filter((t) => t.path[0] === cfg.root && !skip.has(leafName(t, cfg)))
+    .sort(sortByValueAsc);
+};
+
 const formatDimensionBase = (tokens, cfg) => {
-  const sorted = tokens.filter((t) => t.path[0] === cfg.root).sort(sortByValueAsc);
+  const sorted = tokensForCfg(tokens, cfg);
   const type = dimensionFieldType(cfg);
   const fields = sorted.map((t) => `    abstract val ${propertyName(leafName(t, cfg))}: ${type}`);
   const typeImports =
@@ -101,7 +123,7 @@ const formatDimensionBase = (tokens, cfg) => {
 };
 
 const formatDimensionConcrete = (tokens, cfg) => {
-  const sorted = tokens.filter((t) => t.path[0] === cfg.root).sort(sortByValueAsc);
+  const sorted = tokensForCfg(tokens, cfg);
   const type = dimensionFieldType(cfg);
   const overrides = sorted.map(
     (t) => `    override val ${propertyName(leafName(t, cfg))}: ${type} = ${dimensionConcreteRhs(t, cfg)}`

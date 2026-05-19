@@ -1,6 +1,6 @@
 # Polkadot Design Tokens
 
-Style Dictionary v5 build that generates platform-specific code from a single source of design tokens (colors, typography, spacings, radii, borders). Currently emits **Kotlin / Jetpack Compose**; structured to add **Swift / SwiftUI** alongside.
+Style Dictionary v5 build that generates platform-specific code from a single source of design tokens (colors, typography, spacings, radii, shapes, borders). Currently emits **Kotlin / Jetpack Compose**; structured to add **Swift / SwiftUI** alongside.
 
 ## Quick start
 
@@ -50,6 +50,7 @@ Generated output appears under `out/<platform>/`.
         ├── typography/
         ├── spacings/
         ├── radii/
+        ├── shapes/
         └── borders/
 ```
 
