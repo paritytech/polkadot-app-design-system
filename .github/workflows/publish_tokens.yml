@@ -1,15 +1,5 @@
 name: Publish generated tokens
 
-# Runs `node build.js` and opens a PR in each consumer repo
-# (polkadot-app-design-system-ios, polkadot-app-design-system-android) with
-# the freshly regenerated platform output. Triggers on source/generator
-# changes that land on main; can also be dispatched manually.
-#
-# Required repo secret: TOKENS_PUBLISH_PAT — a PAT (classic or fine-grained)
-# with `repo` scope on both consumer repos so the workflow can push branches
-# and open PRs there. The default GITHUB_TOKEN is repo-scoped and won't work
-# for cross-repo writes.
-
 on:
   push:
     branches: [main]
@@ -22,8 +12,6 @@ on:
       - 'package-lock.json'
   workflow_dispatch:
 
-# Cancel in-flight runs on the same branch when a new push lands — only the
-# latest source should drive an open PR.
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -82,9 +70,6 @@ jobs:
           name: ios-generated
           path: ios-out
 
-      # rsync without --delete: overlay generated output onto Generated/, leaving
-      # hand-written files alongside (e.g. PolkadotLightTheme.swift stub for which
-      # no Figma source exists). Reviewers handle orphan cleanup on rename events.
       - name: Sync generated files
         run: |
           mkdir -p target/Sources/DesignSystem/Generated
