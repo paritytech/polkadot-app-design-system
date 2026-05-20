@@ -34,13 +34,11 @@ const runColors = async () => {
   await registry.hasInitialized;
   await registry.buildAllPlatforms();
 
-  // For themes WITH source, emit the concrete Colors file (and on the first
-  // such theme, the protocol + UIColor/Color extension files since those need
-  // semantic tokens to walk). Source-less stub themes skip emission — their
-  // file is hand-maintained in the iOS app's Generated/ until source ships.
-  const realThemes = colors.themes.filter((t) => t.source);
-  for (let i = 0; i < realThemes.length; i++) {
-    const theme = realThemes[i];
+  // Emit the concrete Colors file per theme. The first theme also emits the
+  // protocol + UIColor/Color extension files since those need semantic tokens
+  // to walk.
+  for (let i = 0; i < colors.themes.length; i++) {
+    const theme = colors.themes[i];
     const files = [
       {
         destination: theme.file,

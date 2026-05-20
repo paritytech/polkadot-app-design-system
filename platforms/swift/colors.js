@@ -221,17 +221,13 @@ export const register = () => {
 
   StyleDictionary.registerFormat({
     name: 'swift/themes-registry',
-    format: () => formatRegistry(themes.filter((t) => t.source || t.stub)),
+    format: () => formatRegistry(themes),
   });
 };
 
 export const primitivesSource = 'source/Color Primitives/Values.json';
 export const outputDir = 'out/ios/colors/';
 
-// `source` is optional: themes without source data still appear in
-// ThemeSelection / ThemesRegistry but their concrete Colors file is not
-// emitted (the iOS app maintains a hand-written stub until source ships).
-// Mark such entries with `stub: true` so the registry still includes them.
 export const themes = [
   {
     source: 'source/Theme/Polkadot App Default.json',
@@ -239,14 +235,5 @@ export const themes = [
     selectionKey: 'polkadotDefault',
     file: 'themes/PolkadotDefaultTheme.swift',
     statusBarStyle: 'lightContent',
-  },
-  {
-    // Source-less stub. Light theme JSON not in tokens repo yet — hand-written
-    // PolkadotLightTheme.swift lives in the iOS app's Generated/ until it does.
-    stub: true,
-    className: 'PolkadotLightTheme',
-    selectionKey: 'polkadotLight',
-    file: 'themes/PolkadotLightTheme.swift',
-    statusBarStyle: 'darkContent',
   },
 ];
