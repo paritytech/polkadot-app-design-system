@@ -180,6 +180,19 @@
       },
       "$type": "color",
       "$value": "{Color.neutral.black}"
+    },
+    "disabled": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "FRAME_FILL",
+          "SHAPE_FILL",
+          "TEXT_FILL",
+          "STROKE_COLOR"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "$type": "color",
+      "$value": "{Color.zinc.zinc600}"
     }
   },
   "bg": {
@@ -375,7 +388,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.zinc.zinc800}"
+        "$value": "{Color.zinc.zinc700}"
       },
       "primary-inverted": {
         "$extensions": {
@@ -420,7 +433,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.zinc.zinc700}"
+        "$value": "{Color.zinc.zinc800}"
       },
       "primary-inverted-hover": {
         "$extensions": {
@@ -454,7 +467,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.zinc.zinc700}"
+        "$value": "{Color.zinc.zinc800}"
       },
       "tertiary-hover": {
         "$extensions": {
@@ -464,7 +477,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.zinc.zinc600}"
+        "$value": "{Color.zinc.zinc700}"
       },
       "tertiary-inverted": {
         "$extensions": {
@@ -495,6 +508,17 @@
         },
         "$type": "color",
         "$value": "{Color.zinc.zinc600}"
+      },
+      "disabled": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ],
+          "com.figma.hiddenFromPublishing": false
+        },
+        "$type": "color",
+        "$value": "{Color.zinc.zinc800}"
       }
     },
     "illustration": {
@@ -519,6 +543,28 @@
         },
         "$type": "color",
         "$value": "{Color.zinc.zinc900}"
+      },
+      "dark-muted": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ],
+          "com.figma.hiddenFromPublishing": false
+        },
+        "$type": "color",
+        "$value": "{Color.zinc.zinc600}"
+      },
+      "light-muted": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ],
+          "com.figma.hiddenFromPublishing": false
+        },
+        "$type": "color",
+        "$value": "{Color.zinc.zinc600}"
       }
     }
   },

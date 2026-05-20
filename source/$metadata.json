@@ -8,9 +8,9 @@
     "Theme/Dark",
     "Theme/Light",
     "Theme/Polkadot App Default",
-    "Color Primitives/Values",
+    "New Color Primitives/Values",
     "Typography/OldPrimitives",
     "Typography/Polkadot App Default",
-    "Number Primitives/Values"
+    "New Number Primitives/Values"
   ]
 }
