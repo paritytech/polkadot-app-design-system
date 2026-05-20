@@ -73,7 +73,7 @@ jobs:
       - name: Sync generated files
         run: |
           mkdir -p target/Sources/DesignSystem/Generated
-          rsync -a ios-out/ target/Sources/DesignSystem/Generated/
+          rsync -a --delete ios-out/ target/Sources/DesignSystem/Generated/
 
       - name: Create pull request
         uses: peter-evans/create-pull-request@v6
@@ -112,7 +112,7 @@ jobs:
         run: |
           DEST=target/design-system/src/main/java/io/pcf/polkadotapp/designsystem
           mkdir -p "$DEST"
-          rsync -a android-out/ "$DEST"/
+          rsync -a --delete android-out/ "$DEST"/
 
       - name: Create pull request
         uses: peter-evans/create-pull-request@v6
