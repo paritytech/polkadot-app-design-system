@@ -432,7 +432,7 @@
       "$type": "number",
       "$value": 0
     },
-    "spaceTiny": {
+    "spaceExtraTiny": {
       "$extensions": {
         "com.figma.scopes": [
           "GAP",
@@ -444,7 +444,7 @@
       "$type": "number",
       "$value": 2
     },
-    "spaceExtraSmall": {
+    "spaceTiny": {
       "$extensions": {
         "com.figma.scopes": [
           "GAP",
@@ -468,7 +468,7 @@
       "$type": "number",
       "$value": 8
     },
-    "spaceMedium": {
+    "spaceExtraMedium": {
       "$extensions": {
         "com.figma.scopes": [
           "GAP",
@@ -527,6 +527,42 @@
       },
       "$type": "number",
       "$value": 40
+    },
+    "spaceSmallIncreased": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "GAP",
+          "PARAGRAPH_SPACING",
+          "PARAGRAPH_INDENT"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "$type": "number",
+      "$value": 10
+    },
+    "spaceExtraSmall": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "GAP",
+          "PARAGRAPH_SPACING",
+          "PARAGRAPH_INDENT"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "$type": "number",
+      "$value": 6
+    },
+    "spaceMedium": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "GAP",
+          "PARAGRAPH_SPACING",
+          "PARAGRAPH_INDENT"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "$type": "number",
+      "$value": 14
     }
   },
   "Radius": {
@@ -580,7 +616,7 @@
       "$type": "number",
       "$value": 10
     },
-    "radiusMedium": {
+    "radiusExtraMedium": {
       "$extensions": {
         "com.figma.scopes": [
           "CORNER_RADIUS"
@@ -629,6 +665,26 @@
       },
       "$type": "number",
       "$value": 9999
+    },
+    "radiusMedium": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "CORNER_RADIUS"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "$type": "number",
+      "$value": 14
+    },
+    "radiusExtraTiny": {
+      "$extensions": {
+        "com.figma.scopes": [
+          "CORNER_RADIUS"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "$type": "number",
+      "$value": 2
     }
   },
   "Border": {
