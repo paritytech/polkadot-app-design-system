@@ -354,6 +354,28 @@
         },
         "$type": "color",
         "$value": "{Color.amber.amber400}"
+      },
+      "success": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ],
+          "com.figma.hiddenFromPublishing": false
+        },
+        "$type": "color",
+        "$value": "{Color.green.green600}"
+      },
+      "success-hover": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ],
+          "com.figma.hiddenFromPublishing": false
+        },
+        "$type": "color",
+        "$value": "{Color.green.green700}"
       }
     },
     "accent": {
