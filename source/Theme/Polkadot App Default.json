@@ -196,120 +196,6 @@
     }
   },
   "bg": {
-    "surface": {
-      "main": {
-        "$extensions": {
-          "com.figma.scopes": [
-            "FRAME_FILL",
-            "SHAPE_FILL"
-          ],
-          "com.figma.hiddenFromPublishing": false
-        },
-        "$type": "color",
-        "$value": "{Color.zinc.zinc950}"
-      },
-      "container": {
-        "$extensions": {
-          "com.figma.scopes": [
-            "FRAME_FILL",
-            "SHAPE_FILL"
-          ],
-          "com.figma.hiddenFromPublishing": false
-        },
-        "$type": "color",
-        "$value": "{Color.zinc.zinc900}"
-      },
-      "container-inverted": {
-        "$extensions": {
-          "com.figma.scopes": [
-            "FRAME_FILL",
-            "SHAPE_FILL"
-          ],
-          "com.figma.hiddenFromPublishing": false
-        },
-        "$type": "color",
-        "$value": "{Color.neutral.white}"
-      },
-      "nested-inverted": {
-        "$extensions": {
-          "com.figma.scopes": [
-            "FRAME_FILL",
-            "SHAPE_FILL"
-          ],
-          "com.figma.hiddenFromPublishing": false
-        },
-        "$type": "color",
-        "$value": "{Color.zinc.zinc100}"
-      },
-      "overlay": {
-        "$extensions": {
-          "com.figma.scopes": [
-            "FRAME_FILL",
-            "SHAPE_FILL"
-          ],
-          "com.figma.hiddenFromPublishing": false
-        },
-        "$type": "color",
-        "$value": "{Color.Alpha.black.blackAlpha48}"
-      },
-      "nested": {
-        "$extensions": {
-          "com.figma.scopes": [
-            "FRAME_FILL",
-            "SHAPE_FILL"
-          ],
-          "com.figma.hiddenFromPublishing": false
-        },
-        "$type": "color",
-        "$value": "{Color.zinc.zinc850}"
-      }
-    },
-    "selection": {
-      "container-hover": {
-        "$extensions": {
-          "com.figma.scopes": [
-            "FRAME_FILL",
-            "SHAPE_FILL"
-          ],
-          "com.figma.hiddenFromPublishing": false
-        },
-        "$type": "color",
-        "$value": "{Color.zinc.zinc850}"
-      },
-      "container-active": {
-        "$extensions": {
-          "com.figma.scopes": [
-            "FRAME_FILL",
-            "SHAPE_FILL"
-          ],
-          "com.figma.hiddenFromPublishing": false
-        },
-        "$type": "color",
-        "$value": "{Color.zinc.zinc800}"
-      },
-      "container-hover-inverted": {
-        "$extensions": {
-          "com.figma.scopes": [
-            "FRAME_FILL",
-            "SHAPE_FILL"
-          ],
-          "com.figma.hiddenFromPublishing": false
-        },
-        "$type": "color",
-        "$value": "{Color.zinc.zinc50}"
-      },
-      "container-active-inverted": {
-        "$extensions": {
-          "com.figma.scopes": [
-            "FRAME_FILL",
-            "SHAPE_FILL"
-          ],
-          "com.figma.hiddenFromPublishing": false
-        },
-        "$type": "color",
-        "$value": "{Color.zinc.zinc100}"
-      }
-    },
     "status": {
       "error": {
         "$extensions": {
@@ -541,6 +427,76 @@
         },
         "$type": "color",
         "$value": "{Color.zinc.zinc800}"
+      }
+    },
+    "surface": {
+      "container-inverted": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ],
+          "com.figma.hiddenFromPublishing": false
+        },
+        "$type": "color",
+        "$value": "{Color.neutral.white}"
+      },
+      "nested-inverted": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ],
+          "com.figma.hiddenFromPublishing": false
+        },
+        "$type": "color",
+        "$value": "{Color.zinc.zinc100}"
+      },
+      "overlay": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ],
+          "com.figma.hiddenFromPublishing": false
+        },
+        "$type": "color",
+        "$value": "{Color.Alpha.black.blackAlpha48}"
+      },
+      "nested": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ],
+          "com.figma.hiddenFromPublishing": false
+        },
+        "$type": "color",
+        "$value": "{Color.zinc.zinc850}"
+      }
+    },
+    "selection": {
+      "container-hover-inverted": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ],
+          "com.figma.hiddenFromPublishing": false
+        },
+        "$type": "color",
+        "$value": "{Color.zinc.zinc50}"
+      },
+      "container-active-inverted": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL",
+            "SHAPE_FILL"
+          ],
+          "com.figma.hiddenFromPublishing": false
+        },
+        "$type": "color",
+        "$value": "{Color.zinc.zinc100}"
       }
     },
     "illustration": {
