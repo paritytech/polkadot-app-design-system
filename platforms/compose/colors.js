@@ -133,7 +133,7 @@ export const register = () => {
         '',
         'import androidx.compose.ui.graphics.Color',
         '',
-        `object ${PRIMITIVES_OBJECT} {`,
+        `internal object ${PRIMITIVES_OBJECT} {`,
         ...lines,
         '}',
         '',

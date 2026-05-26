@@ -97,10 +97,31 @@ const tokensForCfg = (tokens, cfg) => {
     .sort(sortByValueAsc);
 };
 
+// Derive a short theme label (e.g. `PolkadotDefaultBorders` -> `Default`) for
+// the field-level Kdoc. Today dimensions aren't theme-scoped — there's exactly
+// one concrete impl per category — so we surface that single set of values in
+// the abstract base's Kdoc as an IDE hint.
+const themeLabelFromConcrete = (cfg) => {
+  const suffix = cfg.baseClass.replace(/^Polkadot/, '');
+  return cfg.concreteClass.replace(/^Polkadot/, '').replace(new RegExp(`${suffix}$`), '');
+};
+
+const docValue = (token, cfg) => {
+  const value = token.$value ?? token.value;
+  if (cfg.kind === 'shape' && leafName(token, cfg) === cfg.fullShapeKey) return 'CircleShape';
+  return `${value}dp`;
+};
+
 const formatDimensionBase = (tokens, cfg) => {
   const sorted = tokensForCfg(tokens, cfg);
   const type = dimensionFieldType(cfg);
-  const fields = sorted.map((t) => `    abstract val ${propertyName(leafName(t, cfg))}: ${type}`);
+  const themeLabel = themeLabelFromConcrete(cfg);
+  const fields = sorted.flatMap((t) => [
+    '    /**',
+    `     * ${themeLabel}: ${docValue(t, cfg)}`,
+    '     */',
+    `    abstract val ${propertyName(leafName(t, cfg))}: ${type}`,
+  ]);
   const typeImports =
     cfg.kind === 'shape'
       ? ['import androidx.compose.ui.graphics.Shape']
