@@ -1,4 +1,6 @@
+import { readdirSync } from 'node:fs';
 import StyleDictionary from 'style-dictionary';
+import { pascal, camel } from '../../lib/utils.js';
 import { flatCamel, hexToSwiftColor } from './swift.js';
 
 const ROOT = 'Color';
@@ -228,17 +230,45 @@ export const register = () => {
 export const primitivesSource = 'source/Color Primitives/Values.json';
 export const outputDir = 'out/ios/colors/';
 
-export const themes = [
-  {
-    // iOS still consumes a single theme. The old `Polkadot App Default.json`
-    // was removed when the export split into named themes, so source the
-    // default ("Berlin Night") here. The Swift class / selectionKey are left
-    // unchanged to keep the iOS template contract stable until the iOS team
-    // opts into the multi-theme naming the Android side now uses.
-    source: 'source/Theme/Berlin Night.json',
-    className: 'PolkadotDefaultTheme',
-    selectionKey: 'polkadotDefault',
-    file: 'themes/PolkadotDefaultTheme.swift',
-    statusBarStyle: 'lightContent',
-  },
-];
+const THEME_DIR = 'source/Theme';
+
+// First theme becomes ThemesRegistry.default — must sort first. The rest
+// follow alphabetically for stable ordering. Mirrors the Compose side so
+// both platforms agree on which theme is the fallback.
+const DEFAULT_THEME = 'Berlin Night';
+
+const themeName = (file) => file.replace(/\.json$/, '');
+
+// Status bar style isn't carried in source. Heuristic: "Day" themes are
+// light backgrounds (need dark status bar text), everything else is dark.
+// Override per theme here if a new file breaks the heuristic.
+const statusBarStyleFor = (name) =>
+  /day/i.test(name) ? 'darkContent' : 'lightContent';
+
+const buildThemes = () => {
+  const names = readdirSync(THEME_DIR)
+    .filter((f) => f.endsWith('.json'))
+    .map(themeName)
+    .sort((a, b) => {
+      if (a === DEFAULT_THEME) return -1;
+      if (b === DEFAULT_THEME) return 1;
+      return a.localeCompare(b);
+    });
+  if (!names.includes(DEFAULT_THEME)) {
+    throw new Error(
+      `Default theme "${DEFAULT_THEME}" not found in ${THEME_DIR}/ — found: ${names.join(', ')}`
+    );
+  }
+  return names.map((name) => {
+    const className = `${pascal(name)}Theme`;
+    return {
+      source: `${THEME_DIR}/${name}.json`,
+      className,
+      selectionKey: camel(name),
+      file: `themes/${className}.swift`,
+      statusBarStyle: statusBarStyleFor(name),
+    };
+  });
+};
+
+export const themes = buildThemes();
