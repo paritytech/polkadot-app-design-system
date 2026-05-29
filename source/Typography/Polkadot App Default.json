@@ -1901,6 +1901,58 @@
         "$type": "number",
         "$value": 1.2
       }
+    },
+    "Code ExtraLarge": {
+      "font": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FONT_FAMILY"
+          ],
+          "com.figma.hiddenFromPublishing": false
+        },
+        "$type": "text",
+        "$value": "{Typography.fontStyle.mono}"
+      },
+      "weight": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FONT_WEIGHT"
+          ],
+          "com.figma.hiddenFromPublishing": false
+        },
+        "$type": "number",
+        "$value": "{Typography.fontWeight.regular}"
+      },
+      "size": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FONT_SIZE"
+          ],
+          "com.figma.hiddenFromPublishing": false
+        },
+        "$type": "number",
+        "$value": "{Typography.fontSize.fontSize20}"
+      },
+      "lineHeight": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "LINE_HEIGHT"
+          ],
+          "com.figma.hiddenFromPublishing": false
+        },
+        "$type": "number",
+        "$value": "{Typography.lineHeight.lineHeight24}"
+      },
+      "tracking": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "ALL_SCOPES"
+          ],
+          "com.figma.hiddenFromPublishing": false
+        },
+        "$type": "number",
+        "$value": 0
+      }
     }
   }
 }
