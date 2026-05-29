@@ -230,7 +230,12 @@ export const outputDir = 'out/ios/colors/';
 
 export const themes = [
   {
-    source: 'source/Theme/Polkadot App Default.json',
+    // iOS still consumes a single theme. The old `Polkadot App Default.json`
+    // was removed when the export split into named themes, so source the
+    // default ("Berlin Night") here. The Swift class / selectionKey are left
+    // unchanged to keep the iOS template contract stable until the iOS team
+    // opts into the multi-theme naming the Android side now uses.
+    source: 'source/Theme/Berlin Night.json',
     className: 'PolkadotDefaultTheme',
     selectionKey: 'polkadotDefault',
     file: 'themes/PolkadotDefaultTheme.swift',
