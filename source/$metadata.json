@@ -3,7 +3,10 @@
     "Theme/Berlin Night",
     "Theme/Berlin Day",
     "Theme/Tokyo",
+    "Theme/Malta",
+    "Theme/Lisbon",
     "Typography/Polkadot App Default",
-    "New Number Primitives/Values"
+    "Color Primitives/Values",
+    "Number Primitives/Values"
   ]
 }

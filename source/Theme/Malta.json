@@ -24,7 +24,7 @@
         "com.figma.hiddenFromPublishing": false
       },
       "$type": "color",
-      "$value": "{Color.Advanced.ruby.ruby800}"
+      "$value": "{Color.Advanced.emerald.emerald800}"
     },
     "link": {
       "$extensions": {
@@ -37,7 +37,7 @@
         "com.figma.hiddenFromPublishing": false
       },
       "$type": "color",
-      "$value": "{Color.Advanced.ruby.ruby700}"
+      "$value": "{Color.Advanced.emerald.emerald700}"
     },
     "tertiary": {
       "$extensions": {
@@ -50,7 +50,7 @@
         "com.figma.hiddenFromPublishing": false
       },
       "$type": "color",
-      "$value": "{Color.Advanced.ruby.ruby600}"
+      "$value": "{Color.Advanced.emerald.emerald600}"
     },
     "secondary": {
       "$extensions": {
@@ -63,7 +63,7 @@
         "com.figma.hiddenFromPublishing": false
       },
       "$type": "color",
-      "$value": "{Color.Advanced.ruby.ruby800}"
+      "$value": "{Color.Advanced.emerald.emerald800}"
     },
     "warning": {
       "$extensions": {
@@ -102,7 +102,7 @@
         "com.figma.hiddenFromPublishing": false
       },
       "$type": "color",
-      "$value": "{Color.Advanced.ruby.ruby900}"
+      "$value": "{Color.Advanced.emerald.emerald900}"
     },
     "primary-inverted": {
       "$extensions": {
@@ -128,7 +128,7 @@
         "com.figma.hiddenFromPublishing": false
       },
       "$type": "color",
-      "$value": "{Color.Advanced.ruby.ruby50}"
+      "$value": "{Color.Advanced.emerald.emerald50}"
     },
     "tertiary-inverted": {
       "$extensions": {
@@ -141,7 +141,7 @@
         "com.figma.hiddenFromPublishing": false
       },
       "$type": "color",
-      "$value": "{Color.Advanced.ruby.ruby100}"
+      "$value": "{Color.Advanced.emerald.emerald100}"
     },
     "static-white": {
       "$extensions": {
@@ -192,7 +192,7 @@
         "com.figma.hiddenFromPublishing": false
       },
       "$type": "color",
-      "$value": "{Color.Advanced.ruby.ruby500}"
+      "$value": "{Color.Advanced.emerald.emerald500}"
     }
   },
   "bg": {
@@ -206,7 +206,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.Advanced.ruby.ruby100}"
+        "$value": "{Color.Advanced.emerald.emerald100}"
       },
       "container": {
         "$extensions": {
@@ -228,7 +228,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.Advanced.ruby.ruby700}"
+        "$value": "{Color.Advanced.emerald.emerald700}"
       },
       "nested-inverted": {
         "$extensions": {
@@ -239,7 +239,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.Advanced.ruby.ruby500}"
+        "$value": "{Color.Advanced.emerald.emerald500}"
       },
       "overlay": {
         "$extensions": {
@@ -261,7 +261,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.Advanced.ruby.ruby100}"
+        "$value": "{Color.Advanced.emerald.emerald100}"
       }
     },
     "selection": {
@@ -274,7 +274,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.Advanced.ruby.ruby50}"
+        "$value": "{Color.Advanced.emerald.emerald50}"
       },
       "container-active": {
         "$extensions": {
@@ -285,7 +285,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.Advanced.ruby.ruby100}"
+        "$value": "{Color.Advanced.emerald.emerald100}"
       },
       "container-hover-inverted": {
         "$extensions": {
@@ -296,7 +296,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.Advanced.ruby.ruby900}"
+        "$value": "{Color.Advanced.emerald.emerald900}"
       },
       "container-active-inverted": {
         "$extensions": {
@@ -399,7 +399,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.Advanced.ruby.ruby700}"
+        "$value": "{Color.Advanced.emerald.emerald700}"
       },
       "secondary": {
         "$extensions": {
@@ -410,7 +410,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.Advanced.ruby.ruby300}"
+        "$value": "{Color.Advanced.emerald.emerald300}"
       },
       "primary-inverted": {
         "$extensions": {
@@ -433,7 +433,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.Advanced.ruby.ruby900}"
+        "$value": "{Color.Advanced.emerald.emerald900}"
       },
       "primary-hover": {
         "$extensions": {
@@ -489,7 +489,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.Advanced.ruby.ruby100}"
+        "$value": "{Color.Advanced.emerald.emerald100}"
       },
       "tertiary-hover": {
         "$extensions": {
@@ -509,7 +509,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.Advanced.ruby.ruby800}"
+        "$value": "{Color.Advanced.emerald.emerald800}"
       },
       "tertiary-inverted-hover": {
         "$extensions": {
@@ -540,7 +540,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.Advanced.ruby.ruby200}"
+        "$value": "{Color.Advanced.emerald.emerald200}"
       },
       "error": {
         "$extensions": {
@@ -564,7 +564,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.Advanced.ruby.ruby600}"
+        "$value": "{Color.Advanced.emerald.emerald600}"
       },
       "light": {
         "$extensions": {
@@ -575,7 +575,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.Advanced.ruby.ruby50}"
+        "$value": "{Color.Advanced.emerald.emerald50}"
       },
       "dark-muted": {
         "$extensions": {
@@ -586,7 +586,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.Advanced.ruby.ruby300}"
+        "$value": "{Color.Advanced.emerald.emerald300}"
       },
       "light-muted": {
         "$extensions": {
@@ -597,7 +597,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.Advanced.ruby.ruby100}"
+        "$value": "{Color.Advanced.emerald.emerald100}"
       }
     }
   },
@@ -611,7 +611,7 @@
         "com.figma.hiddenFromPublishing": false
       },
       "$type": "color",
-      "$value": "{Color.Advanced.ruby.ruby200}"
+      "$value": "{Color.Advanced.emerald.emerald200}"
     },
     "error": {
       "$extensions": {
@@ -655,7 +655,7 @@
         "com.figma.hiddenFromPublishing": false
       },
       "$type": "color",
-      "$value": "{Color.Advanced.ruby.ruby400}"
+      "$value": "{Color.Advanced.emerald.emerald400}"
     },
     "primary-inverted": {
       "$extensions": {
@@ -677,7 +677,7 @@
         "com.figma.hiddenFromPublishing": false
       },
       "$type": "color",
-      "$value": "{Color.Advanced.ruby.ruby300}"
+      "$value": "{Color.Advanced.emerald.emerald300}"
     },
     "cutout": {
       "$extensions": {
