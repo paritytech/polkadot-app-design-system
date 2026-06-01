@@ -60,11 +60,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - repo: novasamatech/polkadot-app-design-system-ios
+          - repo: paritytech/polkadot-app-design-system-ios
             token_repo: polkadot-app-design-system-ios
             artifact: ios-generated
             dest: Sources/DesignSystem/Generated
-          - repo: novasamatech/polkadot-app-design-system-android
+          - repo: paritytech/polkadot-app-design-system-android
             token_repo: polkadot-app-design-system-android
             artifact: android-generated
             dest: design-system/src/main/java/io/pcf/polkadotapp/designsystem
@@ -76,9 +76,9 @@ jobs:
         id: app-token
         uses: actions/create-github-app-token@v3
         with:
-          app-id: ${{ secrets.GH_APP_ID }}
+          client-id: ${{ secrets.GH_APP_CLIENT_ID }}
           private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
-          owner: novasamatech
+          owner: paritytech
           repositories: ${{ matrix.token_repo }}
 
       - name: Checkout target repo
