@@ -193,32 +193,6 @@
       },
       "$type": "color",
       "$value": "{Color.zinc.zinc600}"
-    },
-    "accent": {
-      "$extensions": {
-        "com.figma.scopes": [
-          "FRAME_FILL",
-          "SHAPE_FILL",
-          "TEXT_FILL",
-          "STROKE_COLOR"
-        ],
-        "com.figma.hiddenFromPublishing": false
-      },
-      "$type": "color",
-      "$value": "{Color.zinc.zinc100}"
-    },
-    "accent-inverted": {
-      "$extensions": {
-        "com.figma.scopes": [
-          "FRAME_FILL",
-          "SHAPE_FILL",
-          "TEXT_FILL",
-          "STROKE_COLOR"
-        ],
-        "com.figma.hiddenFromPublishing": false
-      },
-      "$type": "color",
-      "$value": "{Color.zinc.zinc950}"
     }
   },
   "bg": {
@@ -279,50 +253,6 @@
         "$value": "{Color.Alpha.black.blackAlpha48}"
       },
       "nested": {
-        "$extensions": {
-          "com.figma.scopes": [
-            "FRAME_FILL",
-            "SHAPE_FILL"
-          ],
-          "com.figma.hiddenFromPublishing": false
-        },
-        "$type": "color",
-        "$value": "{Color.zinc.zinc850}"
-      },
-      "accent": {
-        "$extensions": {
-          "com.figma.scopes": [
-            "FRAME_FILL",
-            "SHAPE_FILL"
-          ],
-          "com.figma.hiddenFromPublishing": false
-        },
-        "$type": "color",
-        "$value": "{Color.neutral.white}"
-      },
-      "accent-inverted": {
-        "$extensions": {
-          "com.figma.scopes": [
-            "FRAME_FILL",
-            "SHAPE_FILL"
-          ],
-          "com.figma.hiddenFromPublishing": false
-        },
-        "$type": "color",
-        "$value": "{Color.neutral.neutral900}"
-      },
-      "accent-soft": {
-        "$extensions": {
-          "com.figma.scopes": [
-            "FRAME_FILL",
-            "SHAPE_FILL"
-          ],
-          "com.figma.hiddenFromPublishing": false
-        },
-        "$type": "color",
-        "$value": "{Color.zinc.zinc50}"
-      },
-      "accent-soft-inverted": {
         "$extensions": {
           "com.figma.scopes": [
             "FRAME_FILL",
@@ -622,29 +552,6 @@
         },
         "$type": "color",
         "$value": "{Color.red.red950}"
-      },
-      "accent": {
-        "$extensions": {
-          "com.figma.scopes": [
-            "FRAME_FILL",
-            "SHAPE_FILL"
-          ],
-          "com.figma.hiddenFromPublishing": false
-        },
-        "$type": "color",
-        "$value": "{Color.zinc.zinc150}"
-      },
-      "accent-inverted": {
-        "$extensions": {
-          "com.figma.scopes": [
-            "FRAME_FILL",
-            "SHAPE_FILL"
-          ],
-          "com.figma.hiddenFromPublishing": false
-        },
-        "$type": "color",
-        "$value": "{Color.zinc.zinc950}",
-        "$description": "Icon container on inverted"
       }
     },
     "illustration": {
@@ -781,28 +688,6 @@
       },
       "$type": "color",
       "$value": "{Color.neutral.black}"
-    },
-    "accent": {
-      "$extensions": {
-        "com.figma.scopes": [
-          "ALL_FILLS",
-          "STROKE_COLOR"
-        ],
-        "com.figma.hiddenFromPublishing": false
-      },
-      "$type": "color",
-      "$value": "{Color.zinc.zinc400}"
-    },
-    "accent-soft": {
-      "$extensions": {
-        "com.figma.scopes": [
-          "ALL_FILLS",
-          "STROKE_COLOR"
-        ],
-        "com.figma.hiddenFromPublishing": false
-      },
-      "$type": "color",
-      "$value": "{Color.zinc.zinc300}"
     }
   },
   "focus": {
@@ -853,7 +738,7 @@
       "$value": "{Color.Alpha.black.blackAlpha48}"
     }
   },
-  "illustrative": {
+  "avatar": {
     "bg": {
       "amethyst": {
         "$extensions": {
@@ -954,26 +839,6 @@
         },
         "$type": "color",
         "$value": "{Color.Advanced.garnet.garnet800}"
-      },
-      "black": {
-        "$extensions": {
-          "com.figma.scopes": [
-            "ALL_SCOPES"
-          ],
-          "com.figma.hiddenFromPublishing": false
-        },
-        "$type": "color",
-        "$value": "{Color.neutral.black}"
-      },
-      "white": {
-        "$extensions": {
-          "com.figma.scopes": [
-            "ALL_SCOPES"
-          ],
-          "com.figma.hiddenFromPublishing": false
-        },
-        "$type": "color",
-        "$value": "{Color.neutral.white}"
       }
     },
     "fg": {
