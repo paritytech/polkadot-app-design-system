@@ -1,0 +1,93 @@
+name: Create tokens sync PR
+description: >-
+  Commit already-synced files in a checked-out target repo, push a branch,
+  and open (or update) a pull request via the GitHub API.
+
+inputs:
+  token:
+    description: Token with contents:write and pull-requests:write on the target repo.
+    required: true
+  repo:
+    description: Target repository in owner/name form.
+    required: true
+  working-directory:
+    description: Path where the target repo is checked out and files are already synced.
+    required: true
+  branch:
+    description: Head branch to create/update.
+    required: true
+  base:
+    description: Base branch for the pull request.
+    required: false
+    default: main
+  commit-message:
+    description: Commit message.
+    required: true
+  title:
+    description: Pull request title.
+    required: true
+  body:
+    description: Pull request body.
+    required: true
+  app-slug:
+    description: GitHub App slug, used for the bot commit identity.
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Commit and push
+      id: commit
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      env:
+        APP_SLUG: ${{ inputs.app-slug }}
+        BRANCH: ${{ inputs.branch }}
+        COMMIT_MESSAGE: ${{ inputs.commit-message }}
+      run: |
+        set -euo pipefail
+
+        if [ -z "$(git status --porcelain)" ]; then
+          echo "No changes — nothing to publish."
+          echo "changed=false" >> "$GITHUB_OUTPUT"
+          exit 0
+        fi
+
+        git config user.name "${APP_SLUG}[bot]"
+        git config user.email "${APP_SLUG}[bot]@users.noreply.github.com"
+        git switch -C "$BRANCH"
+        git add -A
+        git commit -m "$COMMIT_MESSAGE"
+        git push --force origin "$BRANCH"
+        echo "changed=true" >> "$GITHUB_OUTPUT"
+
+    - name: Open pull request
+      if: steps.commit.outputs.changed == 'true'
+      uses: actions/github-script@v9
+      env:
+        REPO: ${{ inputs.repo }}
+        BRANCH: ${{ inputs.branch }}
+        BASE: ${{ inputs.base }}
+        TITLE: ${{ inputs.title }}
+        BODY: ${{ inputs.body }}
+      with:
+        github-token: ${{ inputs.token }}
+        script: |
+          const [owner, repo] = process.env.REPO.split('/');
+          const head = process.env.BRANCH;
+          const base = process.env.BASE;
+
+          const { data: existing } = await github.rest.pulls.list({
+            owner, repo, base, head: `${owner}:${head}`, state: 'open',
+          });
+          if (existing.length > 0) {
+            core.info(`PR already open for ${head}: #${existing[0].number} (updated via push).`);
+            return;
+          }
+
+          const { data: pr } = await github.rest.pulls.create({
+            owner, repo, head, base,
+            title: process.env.TITLE,
+            body: process.env.BODY,
+          });
+          core.info(`Created PR #${pr.number}: ${pr.html_url}`);
