@@ -193,32 +193,6 @@
       },
       "$type": "color",
       "$value": "{Color.zinc.zinc400}"
-    },
-    "accent": {
-      "$extensions": {
-        "com.figma.scopes": [
-          "FRAME_FILL",
-          "SHAPE_FILL",
-          "TEXT_FILL",
-          "STROKE_COLOR"
-        ],
-        "com.figma.hiddenFromPublishing": false
-      },
-      "$type": "color",
-      "$value": "{Color.zinc.zinc950}"
-    },
-    "accent-inverted": {
-      "$extensions": {
-        "com.figma.scopes": [
-          "FRAME_FILL",
-          "SHAPE_FILL",
-          "TEXT_FILL",
-          "STROKE_COLOR"
-        ],
-        "com.figma.hiddenFromPublishing": false
-      },
-      "$type": "color",
-      "$value": "{Color.zinc.zinc100}"
     }
   },
   "bg": {
@@ -279,50 +253,6 @@
         "$value": "{Color.Alpha.black.blackAlpha48}"
       },
       "nested": {
-        "$extensions": {
-          "com.figma.scopes": [
-            "FRAME_FILL",
-            "SHAPE_FILL"
-          ],
-          "com.figma.hiddenFromPublishing": false
-        },
-        "$type": "color",
-        "$value": "{Color.zinc.zinc50}"
-      },
-      "accent": {
-        "$extensions": {
-          "com.figma.scopes": [
-            "FRAME_FILL",
-            "SHAPE_FILL"
-          ],
-          "com.figma.hiddenFromPublishing": false
-        },
-        "$type": "color",
-        "$value": "{Color.neutral.neutral900}"
-      },
-      "accent-inverted": {
-        "$extensions": {
-          "com.figma.scopes": [
-            "FRAME_FILL",
-            "SHAPE_FILL"
-          ],
-          "com.figma.hiddenFromPublishing": false
-        },
-        "$type": "color",
-        "$value": "{Color.neutral.white}"
-      },
-      "accent-soft": {
-        "$extensions": {
-          "com.figma.scopes": [
-            "FRAME_FILL",
-            "SHAPE_FILL"
-          ],
-          "com.figma.hiddenFromPublishing": false
-        },
-        "$type": "color",
-        "$value": "{Color.zinc.zinc850}"
-      },
-      "accent-soft-inverted": {
         "$extensions": {
           "com.figma.scopes": [
             "FRAME_FILL",
@@ -480,7 +410,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.zinc.zinc150}"
+        "$value": "{Color.zinc.zinc200}"
       },
       "primary-inverted": {
         "$extensions": {
@@ -525,7 +455,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.zinc.zinc300}"
+        "$value": "{Color.zinc.zinc150}"
       },
       "primary-inverted-hover": {
         "$extensions": {
@@ -569,7 +499,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.zinc.zinc200}"
+        "$value": "{Color.zinc.zinc300}"
       },
       "tertiary-inverted": {
         "$extensions": {
@@ -610,7 +540,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.zinc.zinc100}"
+        "$value": "{Color.zinc.zinc200}"
       },
       "error": {
         "$extensions": {
@@ -622,29 +552,6 @@
         },
         "$type": "color",
         "$value": "{Color.red.red200}"
-      },
-      "accent": {
-        "$extensions": {
-          "com.figma.scopes": [
-            "FRAME_FILL",
-            "SHAPE_FILL"
-          ],
-          "com.figma.hiddenFromPublishing": false
-        },
-        "$type": "color",
-        "$value": "{Color.zinc.zinc950}"
-      },
-      "accent-inverted": {
-        "$extensions": {
-          "com.figma.scopes": [
-            "FRAME_FILL",
-            "SHAPE_FILL"
-          ],
-          "com.figma.hiddenFromPublishing": false
-        },
-        "$type": "color",
-        "$value": "{Color.neutral.white}",
-        "$description": "Icon container on inverted"
       }
     },
     "illustration": {
@@ -704,7 +611,7 @@
         "com.figma.hiddenFromPublishing": false
       },
       "$type": "color",
-      "$value": "{Color.zinc.zinc100}"
+      "$value": "{Color.zinc.zinc150}"
     },
     "error": {
       "$extensions": {
@@ -781,28 +688,6 @@
       },
       "$type": "color",
       "$value": "{Color.neutral.white}"
-    },
-    "accent": {
-      "$extensions": {
-        "com.figma.scopes": [
-          "ALL_FILLS",
-          "STROKE_COLOR"
-        ],
-        "com.figma.hiddenFromPublishing": false
-      },
-      "$type": "color",
-      "$value": "{Color.zinc.zinc300}"
-    },
-    "accent-soft": {
-      "$extensions": {
-        "com.figma.scopes": [
-          "ALL_FILLS",
-          "STROKE_COLOR"
-        ],
-        "com.figma.hiddenFromPublishing": false
-      },
-      "$type": "color",
-      "$value": "{Color.zinc.zinc400}"
     }
   },
   "focus": {
@@ -853,7 +738,7 @@
       "$value": "{Color.Alpha.black.blackAlpha48}"
     }
   },
-  "illustrative": {
+  "avatar": {
     "bg": {
       "amethyst": {
         "$extensions": {
@@ -954,26 +839,6 @@
         },
         "$type": "color",
         "$value": "{Color.Advanced.garnet.garnet800}"
-      },
-      "black": {
-        "$extensions": {
-          "com.figma.scopes": [
-            "ALL_SCOPES"
-          ],
-          "com.figma.hiddenFromPublishing": false
-        },
-        "$type": "color",
-        "$value": "{Color.neutral.black}"
-      },
-      "white": {
-        "$extensions": {
-          "com.figma.scopes": [
-            "ALL_SCOPES"
-          ],
-          "com.figma.hiddenFromPublishing": false
-        },
-        "$type": "color",
-        "$value": "{Color.neutral.white}"
       }
     },
     "fg": {

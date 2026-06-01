@@ -1098,6 +1098,36 @@
           "$type": "color",
           "$value": "#9f1239"
         },
+        "ruby50": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "ALL_SCOPES"
+            ],
+            "com.figma.hiddenFromPublishing": true
+          },
+          "$type": "color",
+          "$value": "#fff7f8"
+        },
+        "ruby200": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "ALL_SCOPES"
+            ],
+            "com.figma.hiddenFromPublishing": true
+          },
+          "$type": "color",
+          "$value": "#fecdd3"
+        },
+        "ruby300": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "ALL_SCOPES"
+            ],
+            "com.figma.hiddenFromPublishing": true
+          },
+          "$type": "color",
+          "$value": "#fda4af"
+        },
         "ruby400": {
           "$extensions": {
             "com.figma.scopes": [
@@ -1106,7 +1136,57 @@
             "com.figma.hiddenFromPublishing": true
           },
           "$type": "color",
-          "$value": "#cf8390"
+          "$value": "#fb7185"
+        },
+        "ruby500": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "ALL_SCOPES"
+            ],
+            "com.figma.hiddenFromPublishing": true
+          },
+          "$type": "color",
+          "$value": "#d9576d"
+        },
+        "ruby600": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "ALL_SCOPES"
+            ],
+            "com.figma.hiddenFromPublishing": true
+          },
+          "$type": "color",
+          "$value": "#d14967"
+        },
+        "ruby800": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "ALL_SCOPES"
+            ],
+            "com.figma.hiddenFromPublishing": true
+          },
+          "$type": "color",
+          "$value": "#881337"
+        },
+        "ruby900": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "ALL_SCOPES"
+            ],
+            "com.figma.hiddenFromPublishing": true
+          },
+          "$type": "color",
+          "$value": "#4c0519"
+        },
+        "ruby950": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "ALL_SCOPES"
+            ],
+            "com.figma.hiddenFromPublishing": true
+          },
+          "$type": "color",
+          "$value": "#2a020c"
         }
       },
       "sapphire": {
@@ -1151,16 +1231,6 @@
           },
           "$type": "color",
           "$value": "#064e3b"
-        },
-        "emerald400": {
-          "$extensions": {
-            "com.figma.scopes": [
-              "ALL_SCOPES"
-            ],
-            "com.figma.hiddenFromPublishing": true
-          },
-          "$type": "color",
-          "$value": "#6ba492"
         }
       },
       "amethyst": {
@@ -1205,16 +1275,6 @@
           },
           "$type": "color",
           "$value": "#c2410c"
-        },
-        "topaz400": {
-          "$extensions": {
-            "com.figma.scopes": [
-              "ALL_SCOPES"
-            ],
-            "com.figma.hiddenFromPublishing": true
-          },
-          "$type": "color",
-          "$value": "#d9935a"
         }
       },
       "opal": {
