@@ -22,12 +22,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: '20'
+          node-version: '24'
           cache: 'npm'
 
       - name: Install dependencies
@@ -37,7 +37,7 @@ jobs:
         run: node build.js
 
       - name: Upload iOS output
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ios-generated
           path: out/ios/
@@ -45,86 +45,71 @@ jobs:
           if-no-files-found: error
 
       - name: Upload Android output
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: android-generated
           path: out/android/
           retention-days: 1
           if-no-files-found: error
 
-  publish-ios:
-    name: Open PR in polkadot-app-design-system-ios
+  publish:
+    name: Open PR in ${{ matrix.repo }}
     needs: build
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - repo: novasamatech/polkadot-app-design-system-ios
+            token_repo: polkadot-app-design-system-ios
+            artifact: ios-generated
+            dest: Sources/DesignSystem/Generated
+          - repo: novasamatech/polkadot-app-design-system-android
+            token_repo: polkadot-app-design-system-android
+            artifact: android-generated
+            dest: design-system/src/main/java/io/pcf/polkadotapp/designsystem
     steps:
-      - name: Checkout target repo
-        uses: actions/checkout@v4
+      - name: Checkout this repo (for the composite action)
+        uses: actions/checkout@v6
+
+      - name: Generate app token
+        id: app-token
+        uses: actions/create-github-app-token@v3
         with:
-          repository: novasamatech/polkadot-app-design-system-ios
-          token: ${{ secrets.TOKENS_PUBLISH_PAT }}
+          app-id: ${{ secrets.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+          owner: novasamatech
+          repositories: ${{ matrix.token_repo }}
+
+      - name: Checkout target repo
+        uses: actions/checkout@v6
+        with:
+          repository: ${{ matrix.repo }}
+          token: ${{ steps.app-token.outputs.token }}
           path: target
 
-      - name: Download iOS artifact
-        uses: actions/download-artifact@v4
+      - name: Download generated artifact
+        uses: actions/download-artifact@v8
         with:
-          name: ios-generated
-          path: ios-out
+          name: ${{ matrix.artifact }}
+          path: gen-out
 
       - name: Sync generated files
         run: |
-          mkdir -p target/Sources/DesignSystem/Generated
-          rsync -a --delete ios-out/ target/Sources/DesignSystem/Generated/
+          mkdir -p "target/${{ matrix.dest }}"
+          rsync -a --delete gen-out/ "target/${{ matrix.dest }}/"
 
       - name: Create pull request
-        uses: peter-evans/create-pull-request@v6
+        uses: ./.github/actions/create-tokens-pr
         with:
-          path: target
-          token: ${{ secrets.TOKENS_PUBLISH_PAT }}
+          token: ${{ steps.app-token.outputs.token }}
+          repo: ${{ matrix.repo }}
+          working-directory: target
           branch: tokens/sync-${{ github.sha }}
-          delete-branch: true
-          commit-message: |
-            Sync generated tokens from polkadot-app-design-system@${{ github.sha }}
-          title: 'Sync generated tokens'
+          app-slug: ${{ steps.app-token.outputs.app-slug }}
+          commit-message: Sync generated tokens from polkadot-app-design-system@${{ github.sha }}
+          title: Sync generated tokens
           body: |
             Regenerated from upstream [polkadot-app-design-system](https://github.com/${{ github.repository }}) at [`${{ github.sha }}`](https://github.com/${{ github.repository }}/commit/${{ github.sha }}).
 
-            Files under `Sources/DesignSystem/Generated/` are produced by `node build.js` in the upstream repo. Do not hand-edit — push to upstream `main` to regenerate.
-
-  publish-android:
-    name: Open PR in polkadot-app-design-system-android
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout target repo
-        uses: actions/checkout@v4
-        with:
-          repository: novasamatech/polkadot-app-design-system-android
-          token: ${{ secrets.TOKENS_PUBLISH_PAT }}
-          path: target
-
-      - name: Download Android artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: android-generated
-          path: android-out
-
-      - name: Sync generated files
-        run: |
-          DEST=target/design-system/src/main/java/io/pcf/polkadotapp/designsystem
-          mkdir -p "$DEST"
-          rsync -a --delete android-out/ "$DEST"/
-
-      - name: Create pull request
-        uses: peter-evans/create-pull-request@v6
-        with:
-          path: target
-          token: ${{ secrets.TOKENS_PUBLISH_PAT }}
-          branch: tokens/sync-${{ github.sha }}
-          delete-branch: true
-          commit-message: |
-            Sync generated tokens from polkadot-app-design-system@${{ github.sha }}
-          title: 'Sync generated tokens'
-          body: |
-            Regenerated from upstream [polkadot-app-design-system](https://github.com/${{ github.repository }}) at [`${{ github.sha }}`](https://github.com/${{ github.repository }}/commit/${{ github.sha }}).
-
-            Files under `design-system/src/main/java/io/pcf/polkadotapp/designsystem/` are produced by `node build.js` in the upstream repo. Do not hand-edit — push to upstream `main` to regenerate.
+            Files under `${{ matrix.dest }}/` are produced by `node build.js` in the upstream repo. Do not hand-edit — push to upstream `main` to regenerate.
