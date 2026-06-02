@@ -175,10 +175,6 @@ const intersperseRoleMark = (groups, render) =>
     return [...header, ...g.entries.map(render)];
   });
 
-// Font tokens are @MainActor because they resolve through TypographyManager,
-// which lives on the main actor. Theme color tokens stay non-isolated since
-// they go through UIColor(dynamicProvider:) — that resolver is pure and reads
-// the live trait collection without touching the manager.
 const formatUIFontExtension = (groups) => {
   const lines = intersperseRoleMark(
     groups,
@@ -187,7 +183,6 @@ const formatUIFontExtension = (groups) => {
   return [
     'import UIKit',
     '',
-    '@MainActor',
     'public extension UIFont {',
     ...lines,
     '}',
