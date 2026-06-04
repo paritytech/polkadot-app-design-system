@@ -192,7 +192,7 @@
         "com.figma.hiddenFromPublishing": false
       },
       "$type": "color",
-      "$value": "{Color.Advanced.ruby.ruby500}"
+      "$value": "{Color.Advanced.ruby.ruby400}"
     }
   },
   "bg": {
@@ -941,16 +941,6 @@
         },
         "$type": "color",
         "$value": "{Color.Advanced.garnet.garnet100}"
-      },
-      "amethyst 2": {
-        "$extensions": {
-          "com.figma.scopes": [
-            "ALL_SCOPES"
-          ],
-          "com.figma.hiddenFromPublishing": false
-        },
-        "$type": "color",
-        "$value": "{Color.Advanced.amethyst.amethyst100}"
       }
     }
   },
