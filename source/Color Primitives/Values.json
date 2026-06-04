@@ -1364,7 +1364,7 @@
             "com.figma.hiddenFromPublishing": true
           },
           "$type": "color",
-          "$value": "#c2410c"
+          "$value": "#c24c1b"
         },
         "topaz50": {
           "$extensions": {
@@ -1404,7 +1404,7 @@
             "com.figma.hiddenFromPublishing": true
           },
           "$type": "color",
-          "$value": "#fb923c"
+          "$value": "#ed9853"
         },
         "topaz500": {
           "$extensions": {
@@ -1414,7 +1414,7 @@
             "com.figma.hiddenFromPublishing": true
           },
           "$type": "color",
-          "$value": "#f97316"
+          "$value": "#d96c21"
         },
         "topaz700": {
           "$extensions": {
