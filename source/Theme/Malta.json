@@ -217,7 +217,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.neutral.white}"
+        "$value": "{Color.Advanced.emerald.emerald20}"
       },
       "container-inverted": {
         "$extensions": {

@@ -217,7 +217,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.neutral.white}"
+        "$value": "{Color.Advanced.topaz.topaz20}"
       },
       "container-inverted": {
         "$extensions": {
