@@ -1187,6 +1187,16 @@
           },
           "$type": "color",
           "$value": "#2a020c"
+        },
+        "ruby20": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "ALL_SCOPES"
+            ],
+            "com.figma.hiddenFromPublishing": true
+          },
+          "$type": "color",
+          "$value": "#fff5f6"
         }
       },
       "sapphire": {
@@ -1321,6 +1331,16 @@
           },
           "$type": "color",
           "$value": "#011b15"
+        },
+        "emerald20": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "ALL_SCOPES"
+            ],
+            "com.figma.hiddenFromPublishing": true
+          },
+          "$type": "color",
+          "$value": "#f5fffa"
         }
       },
       "amethyst": {
@@ -1455,6 +1475,16 @@
           },
           "$type": "color",
           "$value": "#240a02"
+        },
+        "topaz20": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "ALL_SCOPES"
+            ],
+            "com.figma.hiddenFromPublishing": true
+          },
+          "$type": "color",
+          "$value": "#fffbf5"
         }
       },
       "opal": {

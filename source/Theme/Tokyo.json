@@ -192,7 +192,7 @@
         "com.figma.hiddenFromPublishing": false
       },
       "$type": "color",
-      "$value": "{Color.Advanced.ruby.ruby400}"
+      "$value": "{Color.Advanced.ruby.ruby300}"
     }
   },
   "bg": {
@@ -217,7 +217,7 @@
           "com.figma.hiddenFromPublishing": false
         },
         "$type": "color",
-        "$value": "{Color.neutral.white}"
+        "$value": "{Color.Advanced.ruby.ruby20}"
       },
       "container-inverted": {
         "$extensions": {
