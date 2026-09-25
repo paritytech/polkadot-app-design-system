@@ -14,6 +14,11 @@ const FONT_ROLE_BY_NAME = {
   'Source Sans 3': 'smallCaps',
 };
 
+// Roles whose text is set in forced small caps (Figma `textCase: small_caps_forced`): the
+// generated family turns on the font's small-caps features so uppercase and lowercase
+// letters both render as small capitals.
+const SMALL_CAPS_ROLES = ['smallCaps'];
+
 const fontRoleSlug = (fontName) => {
   const role = FONT_ROLE_BY_NAME[fontName];
   if (!role) {
@@ -258,6 +263,10 @@ const formatFontWeightEnum = (cases) => {
 // iOS-platform glue, which the generator embeds directly since this whole
 // platform is iOS-specific.
 const formatFamilyClass = (familyCases, weightCases, family) => {
+  const smallCapsCases = familyCases
+    .filter((t) => SMALL_CAPS_ROLES.includes(t.path[2]))
+    .map((t) => `.${t.path[2]}`)
+    .join(', ');
   const postscriptCases = familyCases.map(
     (t) => `        case .${t.path[2]}: "${postscriptSlug(t.$value ?? t.value)}-\\(suffix(weight))"`
   );
@@ -265,6 +274,7 @@ const formatFamilyClass = (familyCases, weightCases, family) => {
     (t) => `        case .${t.path[2]}: "${pascalCase(t.path[2])}"`
   );
   return [
+    'import CoreText',
     'import UIKit',
     '',
     `public final class ${family.className}: TypographyFamily, @unchecked Sendable {`,
@@ -274,14 +284,16 @@ const formatFamilyClass = (familyCases, weightCases, family) => {
     '',
     '    public func font(family: TypographyFontFamily, weight: TypographyFontWeight, size: CGFloat) -> UIFont {',
     '        let name = postscriptName(family: family, weight: weight)',
-    '        if let font = UIFont(name: name, size: size) {',
-    '            return font',
+    '        guard let font = UIFont(name: name, size: size) else {',
+    '            return UIFont.systemFont(ofSize: size, weight: weight.uiFontWeight)',
     '        }',
-    '        return UIFont.systemFont(ofSize: size, weight: weight.uiFontWeight)',
+    '        return Self.smallCapsFamilies.contains(family) ? font.withForcedSmallCaps() : font',
     '    }',
     '}',
     '',
     `private extension ${family.className} {`,
+    `    static let smallCapsFamilies: Set<TypographyFontFamily> = [${smallCapsCases}]`,
+    '',
     '    func postscriptName(family: TypographyFontFamily, weight: TypographyFontWeight) -> String {',
     '        switch family {',
     ...postscriptCases,
@@ -292,6 +304,17 @@ const formatFamilyClass = (familyCases, weightCases, family) => {
     '        switch weight {',
     ...suffixCases,
     '        }',
+    '    }',
+    '}',
+    '',
+    'private extension UIFont {',
+    '    func withForcedSmallCaps() -> UIFont {',
+    '        let features: [[UIFontDescriptor.FeatureKey: Int]] = [',
+    '            [.type: kUpperCaseType, .selector: kUpperCaseSmallCapsSelector],',
+    '            [.type: kLowerCaseType, .selector: kLowerCaseSmallCapsSelector]',
+    '        ]',
+    '        let descriptor = fontDescriptor.addingAttributes([.featureSettings: features])',
+    '        return UIFont(descriptor: descriptor, size: pointSize)',
     '    }',
     '}',
     '',
