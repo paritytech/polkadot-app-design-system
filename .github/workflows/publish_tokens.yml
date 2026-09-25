@@ -67,7 +67,7 @@ jobs:
           - repo: paritytech/polkadot-app-design-system-android
             token_repo: polkadot-app-design-system-android
             artifact: android-generated
-            dest: design-system/src/main/java/io/pcf/polkadotapp/designsystem
+            dest: design-system/src/main/java/io/paritytech/polkadotapp/designsystem
     steps:
       - name: Checkout this repo (for the composite action)
         uses: actions/checkout@v6

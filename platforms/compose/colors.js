@@ -7,7 +7,7 @@ import { propertyName, hexToComposeColor } from './kotlin.js';
 const ROOT = 'Color';
 const PRIMITIVES_OBJECT = 'PolkadotColorsPrimitives';
 export const BASE_CLASS = 'PolkadotColorsPalette';
-const PACKAGE = 'io.pcf.polkadotapp.designsystem.colors';
+const PACKAGE = 'io.paritytech.polkadotapp.designsystem.colors';
 
 const primitiveName = (path) => {
   const segs = path[0] === ROOT ? path.slice(1) : path;

@@ -7,7 +7,7 @@ const PRIMITIVES_ROOT = 'Typography';
 const THEME_ROOT = 'Typescale';
 const FONT_FAMILIES_OBJECT = 'PolkadotFontFamilies';
 export const BASE_CLASS = 'PolkadotTypography';
-const PACKAGE = 'io.pcf.polkadotapp.designsystem.typography';
+const PACKAGE = 'io.paritytech.polkadotapp.designsystem.typography';
 
 const fontFamilySlug = (fontName) => camel(fontName);
 
@@ -24,12 +24,23 @@ const inlineWeight = (entry) => {
   return `FontWeight(${entry.resolved})`;
 };
 
+// Roles whose text is set in forced small caps (Figma `textCase: small_caps_forced`): the
+// style turns on the font's small-caps features so uppercase and lowercase letters both
+// render as small capitals. Compose carries font features on the TextStyle rather than on
+// the FontFamily, so the flag lives here, not on PolkadotFontFamilies as it does on iOS.
+const SMALL_CAPS_ROLES = ['smallCaps'];
+const SMALL_CAPS_FEATURES = 'c2sc, smcp';
+
+const isSmallCapsFont = (entry) =>
+  isReference(entry.ref) && SMALL_CAPS_ROLES.includes(String(entry.ref.slice(1, -1).split('.').pop()));
+
 const renderTextStyle = (variant, indent) => [
   `TextStyle(`,
   `${indent}    fontFamily = ${inlineFamily(variant.font)},`,
   `${indent}    fontWeight = ${inlineWeight(variant.weight)},`,
   `${indent}    fontSize = ${inlineSp(variant.size)},`,
   `${indent}    lineHeight = ${inlineSp(variant.lineHeight)},`,
+  ...(isSmallCapsFont(variant.font) ? [`${indent}    fontFeatureSettings = "${SMALL_CAPS_FEATURES}",`] : []),
   `${indent}    letterSpacing = ${inlineSp(variant.tracking)}`,
   `${indent})`,
 ].join('\n');
@@ -86,7 +97,7 @@ const formatFontFamiliesObject = (_primitives, themeTokens) => {
     'import androidx.compose.ui.text.font.FontFamily',
     'import androidx.compose.ui.text.font.FontVariation',
     'import androidx.compose.ui.text.font.FontWeight',
-    'import io.pcf.polkadotapp.designsystem.R',
+    'import io.paritytech.polkadotapp.designsystem.R',
     '',
     `object ${FONT_FAMILIES_OBJECT} {`,
     ...familyDecls,

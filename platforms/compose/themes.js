@@ -22,7 +22,7 @@ import { pascal } from '../../lib/utils.js';
 import * as colors from './colors.js';
 import * as typography from './typography.js';
 
-const PACKAGE = 'io.pcf.polkadotapp.designsystem.themes';
+const PACKAGE = 'io.paritytech.polkadotapp.designsystem.themes';
 const OUTPUT_PATH = 'out/android/themes/PolkadotAppTheme.kt';
 const ENUM_NAME = 'PolkadotAppTheme';
 // Earlier iteration produced a separate factory object; clean it up so stale
@@ -63,10 +63,10 @@ const buildCases = () => {
 const formatFile = (cases) => {
   const colorsImports = [...new Set(cases.map((c) => c.colorsClass))]
     .sort()
-    .map((cls) => `import io.pcf.polkadotapp.designsystem.colors.${cls}`);
+    .map((cls) => `import io.paritytech.polkadotapp.designsystem.colors.${cls}`);
   const typographyImports = [...new Set(cases.map((c) => c.typographyClass))]
     .sort()
-    .map((cls) => `import io.pcf.polkadotapp.designsystem.typography.${cls}`);
+    .map((cls) => `import io.paritytech.polkadotapp.designsystem.typography.${cls}`);
 
   const caseLines = cases.map((c, i) => {
     const tail = i < cases.length - 1 ? ',' : ';';
@@ -78,9 +78,9 @@ const formatFile = (cases) => {
   return [
     `package ${PACKAGE}`,
     '',
-    'import io.pcf.polkadotapp.designsystem.colors.PolkadotColorsPalette',
+    'import io.paritytech.polkadotapp.designsystem.colors.PolkadotColorsPalette',
     ...colorsImports,
-    'import io.pcf.polkadotapp.designsystem.typography.PolkadotTypography',
+    'import io.paritytech.polkadotapp.designsystem.typography.PolkadotTypography',
     ...typographyImports,
     '',
     `enum class ${ENUM_NAME}(val id: String) {`,

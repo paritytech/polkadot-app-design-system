@@ -68,8 +68,8 @@ If [Tokens Studio Git sync](https://docs.tokens.studio/sync-providers/sync-provi
 Manual copy:
 
 1. Run `node build.js` in this repo.
-2. Copy `out/android/` contents into the Android project at `design/src/main/java/io/pcf/polkadotapp/design/configs/`.
-3. The generated Kotlin packages match those file paths (`io.pcf.polkadotapp.designsystem.colors.*`, etc.) — copy is a direct mirror.
+2. Copy `out/android/` contents into [polkadot-app-design-system-android](https://github.com/paritytech/polkadot-app-design-system-android) at `design-system/src/main/java/io/paritytech/polkadotapp/designsystem/` — the publish workflow does the same in a PR on every push to `main`.
+3. The generated Kotlin packages match those file paths (`io.paritytech.polkadotapp.designsystem.colors.*`, etc.) — copy is a direct mirror.
 4. Replace handwritten `Spacings.kt`, `Typography.kt`, `FontFamilies.kt` with imports of the generated equivalents; update `Theme.kt` to construct and provide them via the existing `CompositionLocal`s.
 
 ## Adding a new platform (iOS Swift)
