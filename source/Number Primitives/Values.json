@@ -30,6 +30,16 @@
         },
         "$type": "text",
         "$value": "Manrope"
+      },
+      "smallCaps": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "ALL_SCOPES"
+          ],
+          "com.figma.hiddenFromPublishing": false
+        },
+        "$type": "text",
+        "$value": "Source Sans 3"
       }
     },
     "fontSize": {

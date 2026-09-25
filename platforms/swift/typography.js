@@ -11,6 +11,7 @@ const FONT_ROLE_BY_NAME = {
   Inter: 'sans',
   'Martian Mono': 'mono',
   Manrope: 'accent',
+  'Source Sans 3': 'smallCaps',
 };
 
 const fontRoleSlug = (fontName) => {
