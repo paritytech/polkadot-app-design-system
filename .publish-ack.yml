@@ -1,0 +1,28 @@
+version: 1
+repo: polkadot-app-design-system
+audited_at: 2026-11-20
+audited_commit: 8f9c556
+accepts:
+  - id: history-working-notes
+    item: 5
+    location: git history
+    finding: >-
+      Earlier revisions contain a working-notes file with a local filesystem
+      path, a host alias and references to repositories that are not public.
+      The file is no longer in the tree.
+    reason: >-
+      A full-history secret scan found no credentials. Rewriting history would
+      break the commit references used by the platform repositories.
+    mitigation: >-
+      The file is removed from the tree and nothing in the tree refers to it.
+    accepted_by: repository maintainers
+  - id: commit-author-emails
+    item: 5
+    location: git history
+    finding: >-
+      Commits carry the authors' real e-mail addresses.
+    reason: >-
+      Authorship metadata, not removable without rewriting history.
+    mitigation: >-
+      None required.
+    accepted_by: repository maintainers
