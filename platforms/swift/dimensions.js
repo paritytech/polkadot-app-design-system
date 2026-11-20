@@ -1,9 +1,8 @@
 import StyleDictionary from 'style-dictionary';
 import { camel } from '../../lib/utils.js';
 
-// iOS consumes radii and spaces. Borders deferred until the iOS team adopts
-// them (see STATUS.md). Adding new dimensions later is a config entry here
-// — the formatter is shape-independent.
+// iOS consumes radii and spaces; borders are not emitted. Adding a dimension is
+// a config entry here — the formatter is shape-independent.
 export const dimensionConfigs = [
   {
     root: 'Radius',

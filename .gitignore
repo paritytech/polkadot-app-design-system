@@ -1,4 +1,20 @@
 node_modules/
 out/
+coverage/
+
+# Environment
+.env*
+!.env.example
+*.local
+
+# OS / IDE
 .DS_Store
 /.idea/
+.vscode/
+
+# AI tooling state
+.claude/settings.local.json
+.claude/sessions/
+.claude/cache/
+.cursor/
+.mcp.json

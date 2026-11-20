@@ -1,8 +1,17 @@
 {
-  "name": "sd-poc",
+  "name": "polkadot-app-design-system",
   "version": "0.0.0",
   "private": true,
+  "description": "Design tokens for the Polkadot App and the generator that turns them into Kotlin and Swift.",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/paritytech/polkadot-app-design-system.git"
+  },
   "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
   "scripts": {
     "build": "node build.js"
   },
